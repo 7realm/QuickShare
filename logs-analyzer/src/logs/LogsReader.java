@@ -73,10 +73,11 @@ public class LogsReader {
         private void addData(String cellId, String lac, String rssi) {
             addData(Integer.parseInt(cellId), Integer.parseInt(lac), Integer.parseInt(rssi));
         }
+    }
 
-        private long getScatTime() {
-            return scanTime.getTime();
-        }
+    private static class Period {
+        private Date start;
+        private Date end;
     }
 
     public static final DateFormat DATE_LONG = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
@@ -104,12 +105,34 @@ public class LogsReader {
         readFile("logs/LOG [14-04-2012 at 18-40].txt");
         readFile("logs/LOG [14-04-2012 at 22-47].txt");
 
-        for (int i = 0; i < DATA.size() - COUNT_OF_MEASURES; i++) {
+        // moving periods for main and more precise function
+        List<Period> subMovingPeriods = calculateMovingPeriods(60, 25, 0);
+        List<Period> mainMovingPeriods = calculateMovingPeriods(60, 20, 1);
+        // correct main periods
+        for (int i = 0; i < mainMovingPeriods.size(); i++) {
+            mainMovingPeriods.get(i).start = subMovingPeriods.get(i).start;
+        }
+
+        System.out.println("Scanned, size: " + DATA.size());
+
+        System.out.println("Main periods.");
+        for (Period period : mainMovingPeriods) {
+            System.out.println("Moved: " + DATE_LONG.format(period.start) + " - " + DATE_LONG.format(period.end));
+        }
+    }
+
+    private static List<Period> calculateMovingPeriods(int scanPeriod, int threshold, int k) {
+        List<Period> mainMovingPeriods = new ArrayList<Period>();
+        Period mainCurrentPeriod = null;
+        for (int i = 0; i < DATA.size() - scanPeriod; i++) {
             Map<Integer, CellCalculatedInfo> map = new TreeMap<Integer, CellCalculatedInfo>();
+
+            // get scan data items
+            ScanData currentScanData = DATA.get(i + k * scanPeriod);
 
             // fill map for next n measures
             int j = 0;
-            while (j < COUNT_OF_MEASURES) {
+            while (j < scanPeriod) {
                 for (CellData item : DATA.get(i + j).cellData) {
                     CellCalculatedInfo info = map.get(item.cellId);
                     if (info == null) {
@@ -123,58 +146,40 @@ public class LogsReader {
             }
 
             // fill measures to array
+            // calculate change of RSSI
+            double rssi = 0;
             int n = map.size();
             double[] data = new double[n];
             int index = 0;
             for (CellCalculatedInfo info : map.values()) {
                 if (info.getCount() > IGNORE_CELLS) {
                     data[index++] = info.getCount();
-                }
-            }
-
-            // remove small
-            data = Arrays.copyOf(data, index);
-
-            // average
-            double avg = average(data);
-
-            // sort
-            Arrays.sort(data);
-            // double k1 = data[n * 3 / 4];
-            // double k2 = data[n / 2];
-
-            // calculate change of RSSI
-            double rssi = 0;
-            for (CellCalculatedInfo info : map.values()) {
-                if (info.getRssis().length > IGNORE_CELLS) {
                     rssi += deviation(info.getRssis());
                 }
             }
+            data = Arrays.copyOf(data, index);
 
+            // average and deviation
             double deviation = deviation(data);
 
-            // get scan data items
-            ScanData currentScanData = DATA.get(i + COUNT_OF_MEASURES);
-            ScanData previousScanData = DATA.get(i + COUNT_OF_MEASURES - 1);
-
             // calculate move function
-            currentScanData.moveFunction = rssi / deviation;
+            currentScanData.moveFunction = rssi * rssi / deviation / deviation;
 
-            boolean moved = rssi * 10 / deviation > 20;
-            System.out.println(currentScanData.caption +
-                // "\tto previous: " + (currentScanData.getScatTime() / 1000 - previousScanData.getScatTime() / 1000) +
-                // "\tn: " + n +
-                // "\taverage: " + DECIMAL.format(avg) +
-                "\t" + DECIMAL.format(rssi * 10 / avg) +
-                "\t" + DECIMAL.format(rssi / deviation) +
-                // "\tk1: " + DECIMAL.format(k1) +
-                // "\tk2: " + DECIMAL.format(k2) +
-                "\trssi change: " + DECIMAL.format(rssi) +
-                "\tmoved: " + (moved ? "yes" : "no")
-                );
+            // calculate move periods
+            boolean moved = currentScanData.moveFunction > threshold;
+            if (moved) {
+                if (mainCurrentPeriod == null) {
+                    mainCurrentPeriod = new Period();
+                    mainCurrentPeriod.start = currentScanData.scanTime;
+                    mainMovingPeriods.add(mainCurrentPeriod);
+                }
+
+                mainCurrentPeriod.end = currentScanData.scanTime;
+            } else if (mainCurrentPeriod != null) {
+                mainCurrentPeriod = null;
+            }
         }
-
-        System.out.println("Scanned, size: " + DATA.size());
+        return mainMovingPeriods;
     }
 
     private static double average(double[] data) {
