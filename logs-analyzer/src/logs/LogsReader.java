@@ -89,21 +89,21 @@ public class LogsReader {
 
     public static void main(String[] args) throws Exception {
         // first group
-        // readFile("logs_13-04/LOG [13-04-2012 at 00-14].txt");
-        // readFile("logs_13-04/LOG [13-04-2012 at 07-51].txt");
-        // readFile("logs_13-04/LOG [13-04-2012 at 08-14].txt");
-        // readFile("logs_13-04/LOG [13-04-2012 at 09-17].txt");
-        // readFile("logs_13-04/LOG [13-04-2012 at 09-59].txt");
-        // readFile("logs_13-04/LOG [13-04-2012 at 14-47].txt");
-        // readFile("logs_13-04/LOG [13-04-2012 at 19-20].txt");
-        // readFile("logs_13-04/LOG [13-04-2012 at 22-32].txt");
+        readFile("logs_13-04/LOG [13-04-2012 at 00-14].txt");
+        readFile("logs_13-04/LOG [13-04-2012 at 07-51].txt");
+        readFile("logs_13-04/LOG [13-04-2012 at 08-14].txt");
+        readFile("logs_13-04/LOG [13-04-2012 at 09-17].txt");
+        readFile("logs_13-04/LOG [13-04-2012 at 09-59].txt");
+        readFile("logs_13-04/LOG [13-04-2012 at 14-47].txt");
+        readFile("logs_13-04/LOG [13-04-2012 at 19-20].txt");
+        readFile("logs_13-04/LOG [13-04-2012 at 22-32].txt");
 
         // second group
-        // readFile("logs_14-04/LOG [14-04-2012 at 09-28].txt");
-        // readFile("logs_14-04/LOG [14-04-2012 at 14-39].txt");
-        // readFile("logs_14-04/LOG [14-04-2012 at 17-43].txt");
-        // readFile("logs_14-04/LOG [14-04-2012 at 18-40].txt");
-        // readFile("logs_14-04/LOG [14-04-2012 at 22-47].txt");
+        readFile("logs_14-04/LOG [14-04-2012 at 09-28].txt");
+        readFile("logs_14-04/LOG [14-04-2012 at 14-39].txt");
+        readFile("logs_14-04/LOG [14-04-2012 at 17-43].txt");
+        readFile("logs_14-04/LOG [14-04-2012 at 18-40].txt");
+        readFile("logs_14-04/LOG [14-04-2012 at 22-47].txt");
 
         // third group
         readFile("logs_15-04/LOG [15-04-2012 at 10-47].txt");
@@ -111,13 +111,8 @@ public class LogsReader {
         readFile("logs_15-04/LOG [15-04-2012 at 17-39].txt");
         readFile("logs_15-04/LOG [15-04-2012 at 18-15].txt");
 
-        // moving periods for main and more precise function
-        List<Period> subMovingPeriods = calculateMovingPeriods(60, 25, 0);
-        List<Period> mainMovingPeriods = calculateMovingPeriods(60, 20, 1);
-        // correct main periods
-        for (int i = 0; i < mainMovingPeriods.size(); i++) {
-            mainMovingPeriods.get(i).start = subMovingPeriods.get(i).start;
-        }
+        // moving periods for main function
+        List<Period> mainMovingPeriods = calculateMovingPeriods(60, 25);
 
         System.out.println("Scanned, size: " + DATA.size());
 
@@ -127,14 +122,14 @@ public class LogsReader {
         }
     }
 
-    private static List<Period> calculateMovingPeriods(int scanPeriod, int threshold, int k) {
+    private static List<Period> calculateMovingPeriods(int scanPeriod, int threshold) {
         List<Period> mainMovingPeriods = new ArrayList<Period>();
         Period mainCurrentPeriod = null;
         for (int i = 0; i < DATA.size() - scanPeriod; i++) {
             Map<Integer, CellCalculatedInfo> map = new TreeMap<Integer, CellCalculatedInfo>();
 
             // get scan data items
-            ScanData currentScanData = DATA.get(i + k * scanPeriod);
+            ScanData currentScanData = DATA.get(i + scanPeriod);
 
             // fill map for next n measures
             int j = 0;
@@ -176,11 +171,11 @@ public class LogsReader {
             if (moved) {
                 if (mainCurrentPeriod == null) {
                     mainCurrentPeriod = new Period();
-                    mainCurrentPeriod.start = currentScanData.scanTime;
+                    mainCurrentPeriod.start = DATA.get(i).scanTime;
                     mainMovingPeriods.add(mainCurrentPeriod);
                 }
 
-                mainCurrentPeriod.end = currentScanData.scanTime;
+                mainCurrentPeriod.end = DATA.get(i + scanPeriod).scanTime;
             } else if (mainCurrentPeriod != null) {
                 mainCurrentPeriod = null;
             }
