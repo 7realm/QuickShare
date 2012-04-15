@@ -89,21 +89,27 @@ public class LogsReader {
 
     public static void main(String[] args) throws Exception {
         // first group
-        // readFile("logs/LOG [13-04-2012 at 00-14].txt");
-        // readFile("logs/LOG [13-04-2012 at 07-51].txt");
-        // readFile("logs/LOG [13-04-2012 at 08-14].txt");
-        // readFile("logs/LOG [13-04-2012 at 09-17].txt");
-        // readFile("logs/LOG [13-04-2012 at 09-59].txt");
-        // readFile("logs/LOG [13-04-2012 at 14-47].txt");
-        // readFile("logs/LOG [13-04-2012 at 19-20].txt");
-        // readFile("logs/LOG [13-04-2012 at 22-32].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 00-14].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 07-51].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 08-14].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 09-17].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 09-59].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 14-47].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 19-20].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 22-32].txt");
 
         // second group
-        readFile("logs/LOG [14-04-2012 at 09-28].txt");
-        readFile("logs/LOG [14-04-2012 at 14-39].txt");
-        readFile("logs/LOG [14-04-2012 at 17-43].txt");
-        readFile("logs/LOG [14-04-2012 at 18-40].txt");
-        readFile("logs/LOG [14-04-2012 at 22-47].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 09-28].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 14-39].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 17-43].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 18-40].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 22-47].txt");
+
+        // third group
+        readFile("logs_15-04/LOG [15-04-2012 at 10-47].txt");
+        readFile("logs_15-04/LOG [15-04-2012 at 16-13].txt");
+        readFile("logs_15-04/LOG [15-04-2012 at 17-39].txt");
+        readFile("logs_15-04/LOG [15-04-2012 at 18-15].txt");
 
         // moving periods for main and more precise function
         List<Period> subMovingPeriods = calculateMovingPeriods(60, 25, 0);
