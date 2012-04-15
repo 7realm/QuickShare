@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, ActivityDemoActivity!</string>
+    <string name="app_name">ActivityDemo</string>
+    <string name="provider_prompt">Choose a planet</string>
+
+    <string-array name="provider_values">
+        <item>network</item>
+        <item>gps</item>
+        <item>passive</item>
+    </string-array>
+
+</resources>
