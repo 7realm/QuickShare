@@ -4,7 +4,6 @@ import static my.activity.demo.Helper.log;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import my.activity.demo.settings.Settings;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -56,9 +55,6 @@ public class LocationTrackingService extends Service {
                 log("service", "Exception in " + thread.getName() + ".", e);
             }
         });
-
-        // initialize settings
-        Settings.init(getApplicationContext());
     }
 
     @Override

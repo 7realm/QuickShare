@@ -80,6 +80,12 @@
             android:layout_height="wrap_content"
             android:onClick="tagClick"
             android:text="Tag" />
+        
+         <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showScanClick"
+            android:text="Show scanned data" />
     </LinearLayout>
 
 </LinearLayout>

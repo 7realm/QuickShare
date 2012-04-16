@@ -85,8 +85,4 @@ public class CellDetectionActivity extends ListActivity implements SharedListUpd
             return list.size();
         }
     }
-
-    private static class NetworkInfo {
-
-    }
 }

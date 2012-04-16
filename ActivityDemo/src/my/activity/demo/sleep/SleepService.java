@@ -81,7 +81,6 @@ public class SleepService extends Service {
 
         // init
         list = ListManager.getOrCreateList(CPU_SLEEP_LIST, new InMemoryList<Period>());
-        Settings.init(getApplicationContext());
 
         serviceHandler = new Handler(thread.getLooper()) {
             @Override

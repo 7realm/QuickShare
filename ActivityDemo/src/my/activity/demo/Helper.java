@@ -132,24 +132,26 @@ public class Helper {
         Log.i(tag, message, causeException);
 
         LOGGER.info("[" + tag + "]: " + message, causeException);
-        //
-        // File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        // try {
-        // FileOutputStream file = new FileOutputStream(new File(path, "service-log.txt"), true);
-        // try {
-        // StringBuilder builder = new StringBuilder();
-        // builder.append(formatNow());
-        // builder.append(" [").append(tag).append("] ");
-        // builder.append(message).append("\r\n");
-        // file.write(builder.toString().getBytes("utf-8"));
-        // if (causeException != null) {
-        // causeException.printStackTrace(new PrintStream(file, true));
-        // }
-        // } finally {
-        // file.close();
-        // }
-        // } catch (IOException e) {
-        // Log.e("error", "Error occurred while writing to file.", e);
-        // }
+    }
+
+    public static double average(double[] data) {
+        double avg = 0;
+        for (double element : data) {
+            avg += element / data.length;
+        }
+        return avg;
+    }
+
+    public static double deviation(double[] data) {
+        if (data.length < 2) {
+             return 0;
+        }
+        double avg = average(data);
+        double sum = 0;
+        for (double element : data) {
+            sum += (element - avg) * (element - avg);
+        }
+
+        return Math.sqrt(sum / (data.length - 1));
     }
 }

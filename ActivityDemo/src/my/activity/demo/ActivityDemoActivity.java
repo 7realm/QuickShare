@@ -8,7 +8,7 @@ import my.activity.demo.listmanager.inmemory.InMemoryList;
 import my.activity.demo.location.CellDetectionActivity;
 import my.activity.demo.location.CellScanService;
 import my.activity.demo.location.LocationTrackingService;
-import my.activity.demo.settings.Settings;
+import my.activity.demo.period.PeriodActivity;
 import my.activity.demo.settings.SettingsActivity;
 import my.activity.demo.sleep.SleepService;
 import android.app.Activity;
@@ -30,8 +30,6 @@ public class ActivityDemoActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        Settings.init(getApplicationContext());
     }
 
     @SuppressWarnings("unused")
@@ -108,5 +106,16 @@ public class ActivityDemoActivity extends Activity {
 
         Toast.makeText(this, tag, Toast.LENGTH_LONG).show();
     }
+
+
+    @SuppressWarnings("unused")
+    public void showScanClick(View v) {
+        Intent activityIntent = new Intent(this, PeriodActivity.class);
+        activityIntent.putExtra(PeriodActivity.LIST_NAME, CellScanService.LIST_CELL_SCAN);
+        activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        startActivity(activityIntent);
+    }
+
 
 }
