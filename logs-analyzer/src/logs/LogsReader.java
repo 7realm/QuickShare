@@ -94,7 +94,7 @@ public class LogsReader {
     public static final boolean DUMP_MOVE_FUNCTION = true;
 
     public static void main(String[] args) throws Exception {
-        // first group
+        // 13-04 group
         // readFile("logs_13-04/LOG [13-04-2012 at 00-14].txt");
         // readFile("logs_13-04/LOG [13-04-2012 at 07-51].txt");
         // readFile("logs_13-04/LOG [13-04-2012 at 08-14].txt");
@@ -104,19 +104,24 @@ public class LogsReader {
         // readFile("logs_13-04/LOG [13-04-2012 at 19-20].txt");
         // readFile("logs_13-04/LOG [13-04-2012 at 22-32].txt");
 
-        // second group
+        // 14-04 group
         // readFile("logs_14-04/LOG [14-04-2012 at 09-28].txt");
         // readFile("logs_14-04/LOG [14-04-2012 at 14-39].txt");
         // readFile("logs_14-04/LOG [14-04-2012 at 17-43].txt");
         // readFile("logs_14-04/LOG [14-04-2012 at 18-40].txt");
         // readFile("logs_14-04/LOG [14-04-2012 at 22-47].txt");
 
-        // third group
-        readFile("logs_15-04/LOG [15-04-2012 at 10-47].txt");
-        readFile("logs_15-04/LOG [15-04-2012 at 16-13].txt");
-        readFile("logs_15-04/LOG [15-04-2012 at 17-39].txt");
-        readFile("logs_15-04/LOG [15-04-2012 at 18-15].txt");
-        readFile("logs_15-04/LOG [15-04-2012 at 21-05].txt");
+        // 15-04 group
+        // readFile("logs_15-04/LOG [15-04-2012 at 10-47].txt");
+        // readFile("logs_15-04/LOG [15-04-2012 at 16-13].txt");
+        // readFile("logs_15-04/LOG [15-04-2012 at 17-39].txt");
+        // readFile("logs_15-04/LOG [15-04-2012 at 18-15].txt");
+        // readFile("logs_15-04/LOG [15-04-2012 at 21-05].txt");
+
+        // 16-04 group
+        readFile("logs_16-04/LOG [16-04-2012 at 00-45].txt");
+        readFile("logs_16-04/LOG [16-04-2012 at 07-20].txt");
+        readFile("logs_16-04/LOG [16-04-2012 at 09-05].txt");
 
         // remove empty scan
         removeEmptyScans();
