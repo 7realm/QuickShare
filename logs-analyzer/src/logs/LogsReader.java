@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -87,6 +88,8 @@ public class LogsReader {
     public static final int COUNT_OF_MEASURES = 60;
     public static final int IGNORE_CELLS = 1;
 
+    public static final boolean REMOVE_EMPTY_SCANS = false;
+
     public static void main(String[] args) throws Exception {
         // first group
         readFile("logs_13-04/LOG [13-04-2012 at 00-14].txt");
@@ -110,6 +113,10 @@ public class LogsReader {
         readFile("logs_15-04/LOG [15-04-2012 at 16-13].txt");
         readFile("logs_15-04/LOG [15-04-2012 at 17-39].txt");
         readFile("logs_15-04/LOG [15-04-2012 at 18-15].txt");
+        readFile("logs_15-04/LOG [15-04-2012 at 21-05].txt");
+
+        // remove empty scan
+        removeEmptyScans();
 
         // moving periods for main function
         List<Period> mainMovingPeriods = calculateMovingPeriods(60, 25);
@@ -119,6 +126,18 @@ public class LogsReader {
         System.out.println("Main periods.");
         for (Period period : mainMovingPeriods) {
             System.out.println("Moved: " + DATE_LONG.format(period.start) + " - " + DATE_LONG.format(period.end));
+        }
+    }
+
+    private static void removeEmptyScans() {
+        if (!REMOVE_EMPTY_SCANS) {
+            return;
+        }
+
+        for (Iterator<ScanData> i = DATA.iterator(); i.hasNext();) {
+            if (i.next().cellData.size() == 0) {
+                i.remove();
+            }
         }
     }
 
