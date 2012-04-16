@@ -32,14 +32,16 @@ public class LogsReader {
 
     public static class CellCalculatedInfo {
         private final List<Integer> rssis = new ArrayList<Integer>();
+        private final int cellId;
+
+        private CellCalculatedInfo(int cellId) {
+            this.cellId = cellId;
+        }
 
         private double[] getRssis() {
             double[] result = new double[rssis.size()];
             for (int i = 0; i < result.length; i++) {
-                if (rssis.get(i) == 99) {
-                    continue;
-                }
-                result[i] = rssis.get(i);
+                result[i] = rssis.get(i) == 99 ? 0 : rssis.get(i);
             }
             return result;
         }
@@ -89,24 +91,25 @@ public class LogsReader {
     public static final int IGNORE_CELLS = 1;
 
     public static final boolean REMOVE_EMPTY_SCANS = false;
+    public static final boolean DUMP_MOVE_FUNCTION = true;
 
     public static void main(String[] args) throws Exception {
         // first group
-        readFile("logs_13-04/LOG [13-04-2012 at 00-14].txt");
-        readFile("logs_13-04/LOG [13-04-2012 at 07-51].txt");
-        readFile("logs_13-04/LOG [13-04-2012 at 08-14].txt");
-        readFile("logs_13-04/LOG [13-04-2012 at 09-17].txt");
-        readFile("logs_13-04/LOG [13-04-2012 at 09-59].txt");
-        readFile("logs_13-04/LOG [13-04-2012 at 14-47].txt");
-        readFile("logs_13-04/LOG [13-04-2012 at 19-20].txt");
-        readFile("logs_13-04/LOG [13-04-2012 at 22-32].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 00-14].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 07-51].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 08-14].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 09-17].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 09-59].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 14-47].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 19-20].txt");
+        // readFile("logs_13-04/LOG [13-04-2012 at 22-32].txt");
 
         // second group
-        readFile("logs_14-04/LOG [14-04-2012 at 09-28].txt");
-        readFile("logs_14-04/LOG [14-04-2012 at 14-39].txt");
-        readFile("logs_14-04/LOG [14-04-2012 at 17-43].txt");
-        readFile("logs_14-04/LOG [14-04-2012 at 18-40].txt");
-        readFile("logs_14-04/LOG [14-04-2012 at 22-47].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 09-28].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 14-39].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 17-43].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 18-40].txt");
+        // readFile("logs_14-04/LOG [14-04-2012 at 22-47].txt");
 
         // third group
         readFile("logs_15-04/LOG [15-04-2012 at 10-47].txt");
@@ -156,7 +159,7 @@ public class LogsReader {
                 for (CellData item : DATA.get(i + j).cellData) {
                     CellCalculatedInfo info = map.get(item.cellId);
                     if (info == null) {
-                        info = new CellCalculatedInfo();
+                        info = new CellCalculatedInfo(item.cellId);
                         map.put(item.cellId, info);
                     }
                     info.addRssi(item.rssi);
@@ -184,6 +187,9 @@ public class LogsReader {
 
             // calculate move function
             currentScanData.moveFunction = rssi * rssi / deviation / deviation;
+            if (deviation < 1) {
+                currentScanData.moveFunction = deviation;
+            }
 
             // calculate move periods
             boolean moved = currentScanData.moveFunction > threshold;
@@ -198,6 +204,13 @@ public class LogsReader {
             } else if (mainCurrentPeriod != null) {
                 mainCurrentPeriod = null;
             }
+
+            if (DUMP_MOVE_FUNCTION) {
+                System.out.println(currentScanData.caption + "\t" + DECIMAL.format(currentScanData.moveFunction)
+                    + "\tdeviation: " + DECIMAL.format(deviation)
+                    + "\trssi: " + DECIMAL.format(rssi)
+                    + "\tcounts: " + Arrays.toString(data));
+            }
         }
         return mainMovingPeriods;
     }
@@ -211,6 +224,9 @@ public class LogsReader {
     }
 
     private static double deviation(double[] data) {
+        if (data.length < 2) {
+            return 0;
+        }
         double avg = average(data);
         double sum = 0;
         for (double element : data) {
