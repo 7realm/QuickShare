@@ -122,6 +122,12 @@ public class LogsReader {
         readFile("logs_16-04/LOG [16-04-2012 at 00-45].txt");
         readFile("logs_16-04/LOG [16-04-2012 at 07-20].txt");
         readFile("logs_16-04/LOG [16-04-2012 at 09-05].txt");
+        readFile("logs_16-04/LOG [16-04-2012 at 16-46].txt");
+        readFile("logs_16-04/LOG [16-04-2012 at 20-59].txt");
+
+        // 17-04 group
+        readFile("logs_17-04/LOG [17-04-2012 at 09-11].txt");
+        readFile("logs_17-04/LOG [17-04-2012 at 14-09].txt");
 
         // remove empty scan
         removeEmptyScans();
