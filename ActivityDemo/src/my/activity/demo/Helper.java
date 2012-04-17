@@ -33,7 +33,7 @@ public class Helper {
 
         LOGGER = DefaultLoggerRepository.INSTANCE.getRootLogger();
         FileAppender fileAppender = new FileAppender();
-        fileAppender.setFileName(".logs/LOG [" + new SimpleDateFormat("dd-MM-yyyy 'at' HH-mm").format(new Date()) + "].txt");
+        fileAppender.setFileName(".logs/LOG [" + new SimpleDateFormat("dd-MM-yyyy").format(new Date()) + "].txt");
         fileAppender.setAppend(true);
         fileAppender.setFormatter(new Formatter() {
 
