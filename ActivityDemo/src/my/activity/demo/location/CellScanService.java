@@ -10,7 +10,8 @@ import java.util.TreeMap;
 
 import my.activity.demo.Helper;
 import my.activity.demo.listmanager.ListManager;
-import my.activity.demo.listmanager.inmemory.InMemoryList;
+import my.activity.demo.listmanager.SharedList;
+import my.activity.demo.listmanager.persistence.file.FileList;
 import my.activity.demo.period.Period;
 import android.app.IntentService;
 import android.content.Intent;
@@ -157,12 +158,16 @@ public class CellScanService extends IntentService {
                 currentPeriod.start = data.get(data.size() - SCAN_HISTORY_SIZE).scanTime.getTime();
 
                 // add current period to 'cell_scan' list
-                ListManager.getOrCreateList(LIST_CELL_SCAN, new InMemoryList<Period>()).add(currentPeriod);
+                ListManager.getOrCreateList(LIST_CELL_SCAN, createList()).add(currentPeriod);
             }
 
             currentPeriod.end = data.get(data.size() - 1).scanTime.getTime();
         } else if (currentPeriod != null) {
             currentPeriod = null;
         }
+    }
+
+    private SharedList<Period> createList() {
+        return new FileList<Period>(new Period(), "moving_periods", getApplicationContext());
     }
 }
