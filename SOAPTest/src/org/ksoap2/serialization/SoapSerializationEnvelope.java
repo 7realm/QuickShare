@@ -86,7 +86,6 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         DEFAULT_MARSHAL.register(this);
     }
 
-
     /**
      * Set the bodyOut to be empty so that no un-needed xml is create. The null value for bodyOut will cause #writeBody
      * to skip writing anything redundant.
@@ -129,22 +128,9 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         }
     }
 
-    /** Read a SoapObject. This extracts any attributes and then reads the object as a KvmSerializable. */
-    protected void readSerializable(XmlPullParser parser, SoapObject obj) throws IOException,
-        XmlPullParserException
-    {
-        for (int counter = 0; counter < parser.getAttributeCount(); counter++) {
-            String attributeName = parser.getAttributeName(counter);
-            String value = parser.getAttributeValue(counter);
-            obj.addAttribute(attributeName, value);
-        }
-        readSerializable(parser, (KvmSerializable) obj);
-    }
-
     /** Read a KvmSerializable. */
     protected void readSerializable(XmlPullParser parser, KvmSerializable obj) throws IOException,
-        XmlPullParserException
-    {
+        XmlPullParserException {
         int testIndex = -1; // inc at beg. of loop for perf. reasons
         int propertyCount = obj.getPropertyCount();
         PropertyInfo info = new PropertyInfo();
@@ -253,19 +239,18 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         return result;
     }
 
-    private int getIndex(String value, int start, int dflt) {
+    private int getIndex(String value, int start, int defaultIndex) {
         if (value == null) {
-            return dflt;
+            return defaultIndex;
         }
-        return value.length() - start < 3 ? dflt : Integer.parseInt(value.substring(start + 1,
-            value.length() - 1));
+        return value.length() - start < 3 ? defaultIndex :
+            Integer.parseInt(value.substring(start + 1, value.length() - 1));
     }
 
-    protected void readVector(XmlPullParser parser, Vector v, PropertyInfo elementType) throws IOException,
-        XmlPullParserException {
+    protected void readList(XmlPullParser parser, Vector list, PropertyInfo elementType) throws IOException, XmlPullParserException {
         String namespace = null;
         String name = null;
-        int size = v.size();
+        int size = list.size();
         boolean dynamic = true;
         String type = parser.getAttributeValue(enc, ARRAY_TYPE_LABEL);
         if (type != null) {
@@ -276,7 +261,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             namespace = parser.getNamespace(prefix);
             size = getIndex(type, cut1, -1);
             if (size != -1) {
-                v.setSize(size);
+                list.setSize(size);
                 dynamic = false;
             }
         }
@@ -290,10 +275,10 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             position = getIndex(parser.getAttributeValue(enc, "position"), 0, position);
             if (dynamic && position >= size) {
                 size = position + 1;
-                v.setSize(size);
+                list.setSize(size);
             }
             // implicit handling of position exceeding specified size
-            v.setElementAt(read(parser, v, position, namespace, name, elementType), position);
+            list.setElementAt(read(parser, list, position, namespace, name, elementType), position);
             position++;
             parser.nextTag();
         }
@@ -397,11 +382,14 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             return null;
         }
         if (obj instanceof Marshal) {
-            return ((Marshal) obj).readInstance(parser, namespace, name, expected);
+            Marshal marshal = (Marshal) obj;
+            return marshal.readInstance(parser, namespace, name, expected);
         } else if (obj instanceof SoapObject) {
             obj = ((SoapObject) obj).newInstance();
         } else if (obj == SoapObject.class) {
             obj = new SoapObject(namespace, name);
+        } else if (obj == List.class) {
+            obj = new ArrayList<Object>();
         } else {
             try {
                 obj = ((Class) obj).newInstance();
@@ -411,11 +399,17 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         }
         // ok, obj is now the instance, fill it....
         if (obj instanceof SoapObject) {
-            readSerializable(parser, (SoapObject) obj);
+            SoapObject soapObject = (SoapObject) obj;
+            for (int counter = 0; counter < parser.getAttributeCount(); counter++) {
+                String attributeName = parser.getAttributeName(counter);
+                String value = parser.getAttributeValue(counter);
+                soapObject.addAttribute(attributeName, value);
+            }
+            readSerializable(parser, soapObject);
         } else if (obj instanceof KvmSerializable) {
             readSerializable(parser, (KvmSerializable) obj);
         } else if (obj instanceof Vector) {
-            readVector(parser, (Vector) obj, expected.elementType);
+            readList(parser, (Vector) obj, expected.elementType);
         } else {
             throw new RuntimeException("no deserializer for " + obj.getClass());
         }
@@ -486,18 +480,18 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         if (bodyIn instanceof SoapFault) {
             throw (SoapFault) bodyIn;
         }
-        KvmSerializable ks = (KvmSerializable) bodyIn;
+        KvmSerializable serailizableBody = (KvmSerializable) bodyIn;
 
-        if (ks.getPropertyCount() == 0) {
+        if (serailizableBody.getPropertyCount() == 0) {
             return null;
-        } else if (ks.getPropertyCount() == 1) {
-            return ks.getProperty(0);
+        } else if (serailizableBody.getPropertyCount() == 1) {
+            return serailizableBody.getProperty(0);
         } else {
-            Vector ret = new Vector();
-            for (int i = 0; i < ks.getPropertyCount(); i++) {
-                ret.add(ks.getProperty(i));
+            List<Object> result = new ArrayList<Object>();
+            for (int i = 0; i < serailizableBody.getPropertyCount(); i++) {
+                result.add(serailizableBody.getProperty(i));
             }
-            return ret;
+            return result;
         }
     }
 
@@ -521,22 +515,6 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
     }
 
     /**
-     * Writes the body of an SoapObject. This method write the attributes and then calls
-     * "writeObjectBody (writer, (KvmSerializable)obj);"
-     */
-    public void writeObjectBody(XmlSerializer writer, SoapObject obj) throws IOException {
-        SoapObject soapObject = obj;
-        int cnt = soapObject.getAttributeCount();
-        for (int counter = 0; counter < cnt; counter++) {
-            AttributeInfo attributeInfo = new AttributeInfo();
-            soapObject.getAttributeInfo(counter, attributeInfo);
-            writer.attribute(attributeInfo.getNamespace(), attributeInfo.getName(), attributeInfo.getValue()
-                .toString());
-        }
-        writeObjectBody(writer, (KvmSerializable) obj);
-    }
-
-    /**
      * Writes the body of an KvmSerializable object. This method is public for access from Marshal subclasses.
      */
     public void writeObjectBody(XmlSerializer writer, KvmSerializable obj) throws IOException {
@@ -551,14 +529,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             // and importantly also get the property info which holds the type potentially!
             obj.getPropertyInfo(i, properties, propertyInfo);
 
-            if (!(prop instanceof SoapObject)) {
-                // prop is a PropertyInfo
-                if ((propertyInfo.flags & PropertyInfo.TRANSIENT) == 0) {
-                    writer.startTag(propertyInfo.namespace, propertyInfo.name);
-                    writeProperty(writer, obj.getProperty(i), propertyInfo);
-                    writer.endTag(propertyInfo.namespace, propertyInfo.name);
-                }
-            } else {
+            if (prop instanceof SoapObject) {
                 // prop is a SoapObject
                 SoapObject nestedSoap = (SoapObject) prop;
                 // lets get the info from the soap object itself
@@ -578,6 +549,13 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                 writer.attribute(xsi, TYPE_LABEL, prefix + ":" + type);
                 writeObjectBody(writer, nestedSoap);
                 writer.endTag(namespace, name);
+            } else {
+                // prop is a PropertyInfo
+                if ((propertyInfo.flags & PropertyInfo.TRANSIENT) == 0) {
+                    writer.startTag(propertyInfo.namespace, propertyInfo.name);
+                    writeProperty(writer, obj.getProperty(i), propertyInfo);
+                    writer.endTag(propertyInfo.namespace, propertyInfo.name);
+                }
             }
         }
     }
@@ -609,17 +587,25 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         if (marshal != null) {
             ((Marshal) marshal).writeInstance(writer, element);
         } else if (element instanceof SoapObject) {
-            writeObjectBody(writer, (SoapObject) element);
+            SoapObject soapObject = (SoapObject) element;
+            int cnt = soapObject.getAttributeCount();
+            for (int counter = 0; counter < cnt; counter++) {
+                AttributeInfo info = new AttributeInfo();
+                soapObject.getAttributeInfo(counter, info);
+                writer.attribute(info.getNamespace(), info.getName(), info.getValue().toString());
+            }
+
+            writeObjectBody(writer, soapObject);
         } else if (element instanceof KvmSerializable) {
             writeObjectBody(writer, (KvmSerializable) element);
-        } else if (element instanceof Vector) {
-            writeVectorBody(writer, (Vector) element, type.elementType);
+        } else if (element instanceof List) {
+            writeListBody(writer, (List) element, type.elementType);
         } else {
             throw new RuntimeException("Cannot serialize: " + element);
         }
     }
 
-    protected void writeVectorBody(XmlSerializer writer, Vector vector, PropertyInfo elementType)
+    protected void writeListBody(XmlSerializer writer, List list, PropertyInfo elementType)
         throws IOException {
         String itemsTagName = ITEM_LABEL;
         String itemsNamespace = null;
@@ -633,7 +619,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             }
         }
 
-        int cnt = vector.size();
+        int cnt = list.size();
         QNameInfo arrType = getInfo(elementType.type, null);
 
         // This removes the arrayType attribute from the xml for arrays(required for most .Net services to work)
@@ -644,7 +630,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
 
         boolean skipped = false;
         for (int i = 0; i < cnt; i++) {
-            if (vector.elementAt(i) == null) {
+            if (list.get(i) == null) {
                 skipped = true;
             } else {
                 writer.startTag(itemsNamespace, itemsTagName);
@@ -652,7 +638,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                     writer.attribute(enc, "position", "[" + i + "]");
                     skipped = false;
                 }
-                writeProperty(writer, vector.elementAt(i), elementType);
+                writeProperty(writer, list.get(i), elementType);
                 writer.endTag(itemsNamespace, itemsTagName);
             }
         }
