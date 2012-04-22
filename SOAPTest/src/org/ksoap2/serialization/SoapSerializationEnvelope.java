@@ -18,7 +18,10 @@
 package org.ksoap2.serialization;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -35,24 +38,7 @@ import org.xmlpull.v1.XmlSerializer;
  *
  *         This class extends the SoapEnvelope with Soap Serialization functionality.
  */
-public class SoapSerializationEnvelope extends SoapEnvelope
-{
-    private static class QNameInfo {
-        private final String namespace;
-        private final String type;
-        private final Marshal marshal;
-
-        public QNameInfo(String namespace, String type, Marshal marshal) {
-            super();
-            this.namespace = namespace;
-            this.type = type;
-            this.marshal = marshal;
-        }
-    }
-
-    protected static final int QNAME_TYPE = 1;
-    protected static final int QNAME_NAMESPACE = 0;
-    protected static final int QNAME_MARSHAL = 3;
+public class SoapSerializationEnvelope extends SoapEnvelope {
     private static final String ANY_TYPE_LABEL = "anyType";
     private static final String ARRAY_MAPPING_NAME = "Array";
     private static final String NULL_LABEL = "null";
@@ -63,11 +49,17 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     private static final String TYPE_LABEL = "type";
     private static final String ITEM_LABEL = "item";
     private static final String ARRAY_TYPE_LABEL = "arrayType";
-    static final Marshal DEFAULT_MARSHAL = new MarshalDefault();
+    private static final Marshal DEFAULT_MARSHAL = new MarshalDefault();
+
+    /**
+     * Public properties that will be passed to getPropertyInfo method.
+     * <p>
+     * This field is not used int this class.
+     */
     public Hashtable properties = new Hashtable();
 
-    Hashtable idMap = new Hashtable();
-    Vector multiRef; // = new Vector();
+    private final Map<String, Object> idMap = new HashMap<String, Object>();
+    private List<Object> multiRef;
 
     /**
      * Set this variable to true if you don't want that type definitions for complex types/objects are automatically
@@ -80,13 +72,13 @@ public class SoapSerializationEnvelope extends SoapEnvelope
      * Map from XML qualified names to Java classes
      */
 
-    protected Hashtable qNameToClass = new Hashtable();
+    protected Map<QNameBase, Object> qNameToClass = new Hashtable();
 
     /**
      * Map from Java class names to XML type and namespace pairs
      */
 
-    protected Map<String, QNameInfo> classToQName = new Hashtable();
+    protected Map<String, QNameInfo> classToQName = new HashMap<String, QNameInfo>();
 
     /**
      * Set to true to add and ID and ROOT label to the envelope. Change to false for compatibility with WSDL.
@@ -421,7 +413,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
      */
     public Object readInstance(XmlPullParser parser, String namespace, String name, PropertyInfo expected)
         throws IOException, XmlPullParserException {
-        Object obj = qNameToClass.get(new SoapPrimitive(namespace, name, null));
+        Object obj = qNameToClass.get(new QNameBase(namespace, name));
         if (obj == null) {
             return null;
         }
@@ -435,7 +427,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
             try {
                 obj = ((Class) obj).newInstance();
             } catch (Exception e) {
-                throw new RuntimeException(e.toString());
+                throw new RuntimeException("Failed to create instance.", e);
             }
         }
         // ok, obj is now the instance, fill it....
@@ -485,8 +477,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
      * mechanism
      */
     public void addMapping(String namespace, String name, Class clazz, Marshal marshal) {
-        qNameToClass
-            .put(new SoapPrimitive(namespace, name, null), marshal == null ? (Object) clazz : marshal);
+        qNameToClass.put(new QNameBase(namespace, name), marshal == null ? (Object) clazz : marshal);
         classToQName.put(clazz.getName(), new QNameInfo(namespace, name, marshal));
     }
 
@@ -501,8 +492,8 @@ public class SoapSerializationEnvelope extends SoapEnvelope
      * Adds a SoapObject to the class map. During parsing, objects of the given type (namespace/type) will be mapped to
      * corresponding copies of the given SoapObject, maintaining the structure of the template.
      */
-    public void addTemplate(SoapObject so) {
-        qNameToClass.put(new SoapPrimitive(so.namespace, so.name, null), so);
+    public void addTemplate(SoapObject soapObject) {
+        qNameToClass.put(new QNameBase(soapObject.namespace, soapObject.name), soapObject);
     }
 
     /**
@@ -551,8 +542,8 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         // allow an empty body without any tags in it
         // see http://code.google.com/p/ksoap2-android/issues/detail?id=77
         if (bodyOut != null) {
-            multiRef = new Vector();
-            multiRef.addElement(bodyOut);
+            multiRef = new ArrayList<Object>();
+            multiRef.add(bodyOut);
             QNameInfo qName = getInfo(null, bodyOut);
             writer.startTag(qName.namespace, qName.type);
             if (addAdornments) {
@@ -636,7 +627,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
             int i = multiRef.indexOf(obj);
             if (i == -1) {
                 i = multiRef.size();
-                multiRef.addElement(obj);
+                multiRef.add(obj);
             }
             writer.attribute(null, HREF_LABEL, "#o" + i);
         } else {
@@ -707,5 +698,42 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         private FwdRef next;
         private Object obj;
         private int index;
+    }
+
+    private static class QNameBase {
+        protected final String namespace;
+        protected final String type;
+
+        protected QNameBase(String namespace, String type) {
+            super();
+            this.namespace = namespace;
+            this.type = type;
+        }
+
+        @Override
+        public boolean equals(Object otherObject) {
+            if (!(otherObject instanceof QNameBase)) {
+                return false;
+            }
+            QNameBase other = (QNameBase) otherObject;
+            return type.equals(other.type) &&
+                (namespace == null ? other.namespace == null : namespace.equals(other.namespace));
+        }
+
+        @Override
+        public int hashCode() {
+            return (type == null ? 0 : type.hashCode()) ^
+                (namespace == null ? 0 : namespace.hashCode());
+        }
+    }
+
+    private static class QNameInfo extends QNameBase {
+
+        private final Marshal marshal;
+
+        private QNameInfo(String namespace, String type, Marshal marshal) {
+            super(namespace, type);
+            this.marshal = marshal;
+        }
     }
 }
