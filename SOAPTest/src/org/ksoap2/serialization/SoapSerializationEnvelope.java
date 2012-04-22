@@ -19,6 +19,7 @@ package org.ksoap2.serialization;
 
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Vector;
 
 import org.ksoap2.SoapEnvelope;
@@ -36,6 +37,19 @@ import org.xmlpull.v1.XmlSerializer;
  */
 public class SoapSerializationEnvelope extends SoapEnvelope
 {
+    private static class QNameInfo {
+        private final String namespace;
+        private final String type;
+        private final Marshal marshal;
+
+        public QNameInfo(String namespace, String type, Marshal marshal) {
+            super();
+            this.namespace = namespace;
+            this.type = type;
+            this.marshal = marshal;
+        }
+    }
+
     protected static final int QNAME_TYPE = 1;
     protected static final int QNAME_NAMESPACE = 0;
     protected static final int QNAME_MARSHAL = 3;
@@ -69,10 +83,10 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     protected Hashtable qNameToClass = new Hashtable();
 
     /**
-     * Map from Java class names to XML name and namespace pairs
+     * Map from Java class names to XML type and namespace pairs
      */
 
-    protected Hashtable classToQName = new Hashtable();
+    protected Map<String, QNameInfo> classToQName = new Hashtable();
 
     /**
      * Set to true to add and ID and ROOT label to the envelope. Change to false for compatibility with WSDL.
@@ -363,9 +377,9 @@ public class SoapSerializationEnvelope extends SoapEnvelope
                         namespace = enc;
                         name = ARRAY_MAPPING_NAME;
                     } else {
-                        Object[] names = getInfo(expected.type, null);
-                        namespace = (String) names[0];
-                        name = (String) names[1];
+                        QNameInfo names = getInfo(expected.type, null);
+                        namespace = names.namespace;
+                        name = names.type;
                     }
                 }
                 // be sure to set this flag if we don't know the types.
@@ -438,10 +452,10 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     }
 
     /**
-     * Returns a string array containing the namespace, name, id and Marshal object for the given java object. This
+     * Returns a string array containing the namespace, type, id and Marshal object for the given java object. This
      * method is used by the SoapWriter in order to map Java objects to the corresponding SOAP section five XML code.
      */
-    public Object[] getInfo(Object type, Object instance) {
+    public QNameInfo getInfo(Object type, Object instance) {
         if (type == null) {
             if (instance instanceof SoapObject || instance instanceof SoapPrimitive) {
                 type = instance;
@@ -451,40 +465,40 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         }
         if (type instanceof SoapObject) {
             SoapObject so = (SoapObject) type;
-            return new Object[] {so.getNamespace(), so.getName(), null, null};
+            return new QNameInfo(so.getNamespace(), so.getName(), null);
         }
         if (type instanceof SoapPrimitive) {
             SoapPrimitive sp = (SoapPrimitive) type;
-            return new Object[] {sp.getNamespace(), sp.getName(), null, DEFAULT_MARSHAL};
+            return new QNameInfo(sp.getNamespace(), sp.getName(), DEFAULT_MARSHAL);
         }
         if (type instanceof Class && type != PropertyInfo.OBJECT_CLASS) {
-            Object[] tmp = (Object[]) classToQName.get(((Class) type).getName());
+            QNameInfo tmp = classToQName.get(((Class) type).getName());
             if (tmp != null) {
                 return tmp;
             }
         }
-        return new Object[] {xsd, ANY_TYPE_LABEL, null, null};
+        return new QNameInfo(xsd, ANY_TYPE_LABEL, null);
     }
 
     /**
-     * Defines a direct mapping from a namespace and name to a java class (and vice versa), using the given marshal
+     * Defines a direct mapping from a namespace and type to a java class (and vice versa), using the given marshal
      * mechanism
      */
     public void addMapping(String namespace, String name, Class clazz, Marshal marshal) {
         qNameToClass
             .put(new SoapPrimitive(namespace, name, null), marshal == null ? (Object) clazz : marshal);
-        classToQName.put(clazz.getName(), new Object[] {namespace, name, null, marshal});
+        classToQName.put(clazz.getName(), new QNameInfo(namespace, name, marshal));
     }
 
     /**
-     * Defines a direct mapping from a namespace and name to a java class (and vice versa)
+     * Defines a direct mapping from a namespace and type to a java class (and vice versa)
      */
     public void addMapping(String namespace, String name, Class clazz) {
         addMapping(namespace, name, clazz, null);
     }
 
     /**
-     * Adds a SoapObject to the class map. During parsing, objects of the given type (namespace/name) will be mapped to
+     * Adds a SoapObject to the class map. During parsing, objects of the given type (namespace/type) will be mapped to
      * corresponding copies of the given SoapObject, maintaining the structure of the template.
      */
     public void addTemplate(SoapObject so) {
@@ -539,14 +553,14 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         if (bodyOut != null) {
             multiRef = new Vector();
             multiRef.addElement(bodyOut);
-            Object[] qName = getInfo(null, bodyOut);
-            writer.startTag((String) qName[QNAME_NAMESPACE], (String) qName[QNAME_TYPE]);
+            QNameInfo qName = getInfo(null, bodyOut);
+            writer.startTag(qName.namespace, qName.type);
             if (addAdornments) {
-                writer.attribute(null, ID_LABEL, qName[2] == null ? "o" + 0 : (String) qName[2]);
+                writer.attribute(null, ID_LABEL, "id0");
                 writer.attribute(enc, ROOT_LABEL, "1");
             }
-            writeElement(writer, bodyOut, null, qName[QNAME_MARSHAL]);
-            writer.endTag((String) qName[QNAME_NAMESPACE], (String) qName[QNAME_TYPE]);
+            writeElement(writer, bodyOut, null, qName.marshal);
+            writer.endTag(qName.namespace, qName.type);
         }
     }
 
@@ -578,7 +592,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         for (int i = 0; i < cnt; i++) {
             // get the property
             Object prop = obj.getProperty(i);
-            // and importantly also get the property info which holds the name potentially!
+            // and importantly also get the property info which holds the type potentially!
             obj.getPropertyInfo(i, properties, propertyInfo);
 
             if (!(prop instanceof SoapObject)) {
@@ -592,15 +606,15 @@ public class SoapSerializationEnvelope extends SoapEnvelope
                 // prop is a SoapObject
                 SoapObject nestedSoap = (SoapObject) prop;
                 // lets get the info from the soap object itself
-                Object[] qName = getInfo(null, nestedSoap);
-                namespace = (String) qName[QNAME_NAMESPACE];
-                type = (String) qName[QNAME_TYPE];
+                QNameInfo qName = getInfo(null, nestedSoap);
+                namespace = qName.namespace;
+                type = qName.type;
 
-                // prefer the name from the property info
+                // prefer the type from the property info
                 if (propertyInfo.name != null && propertyInfo.name.length() > 0) {
                     name = propertyInfo.name;
                 } else {
-                    name = (String) qName[QNAME_TYPE];
+                    name = qName.type;
                 }
 
                 writer.startTag(namespace, name);
@@ -617,20 +631,20 @@ public class SoapSerializationEnvelope extends SoapEnvelope
             writer.attribute(xsi, version >= VER12 ? NIL_LABEL : NULL_LABEL, "true");
             return;
         }
-        Object[] qName = getInfo(null, obj);
-        if (type.multiRef || qName[2] != null) {
+        QNameInfo qName = getInfo(null, obj);
+        if (type.multiRef) {
             int i = multiRef.indexOf(obj);
             if (i == -1) {
                 i = multiRef.size();
                 multiRef.addElement(obj);
             }
-            writer.attribute(null, HREF_LABEL, qName[2] == null ? "#o" + i : "#" + qName[2]);
+            writer.attribute(null, HREF_LABEL, "#o" + i);
         } else {
             if (!implicitTypes || obj.getClass() != type.type) {
-                String prefix = writer.getPrefix((String) qName[QNAME_NAMESPACE], true);
-                writer.attribute(xsi, TYPE_LABEL, prefix + ":" + qName[QNAME_TYPE]);
+                String prefix = writer.getPrefix(qName.namespace, true);
+                writer.attribute(xsi, TYPE_LABEL, prefix + ":" + qName.type);
             }
-            writeElement(writer, obj, type, qName[QNAME_MARSHAL]);
+            writeElement(writer, obj, type, qName.marshal);
         }
     }
 
@@ -664,12 +678,12 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         }
 
         int cnt = vector.size();
-        Object[] arrType = getInfo(elementType.type, null);
+        QNameInfo arrType = getInfo(elementType.type, null);
 
         // This removes the arrayType attribute from the xml for arrays(required for most .Net services to work)
         if (!implicitTypes) {
-            writer.attribute(enc, ARRAY_TYPE_LABEL, writer.getPrefix((String) arrType[0], false) + ":"
-                + arrType[1] + "[" + cnt + "]");
+            writer.attribute(enc, ARRAY_TYPE_LABEL, writer.getPrefix(arrType.namespace, false) + ":"
+                + arrType.type + "[" + cnt + "]");
         }
 
         boolean skipped = false;
