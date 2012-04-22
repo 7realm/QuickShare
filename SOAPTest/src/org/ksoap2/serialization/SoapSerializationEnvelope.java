@@ -80,33 +80,12 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
 
     protected Map<String, QNameInfo> classToQName = new HashMap<String, QNameInfo>();
 
-    /**
-     * Set to true to add and ID and ROOT label to the envelope. Change to false for compatibility with WSDL.
-     */
-    protected boolean addAdornments = true;
-
-    public SoapSerializationEnvelope(int version)
-    {
+    public SoapSerializationEnvelope(int version) {
         super(version);
         addMapping(enc, ARRAY_MAPPING_NAME, PropertyInfo.VECTOR_CLASS);
         DEFAULT_MARSHAL.register(this);
     }
 
-    /**
-     * @return the addAdornments
-     */
-    public boolean isAddAdornments()
-    {
-        return addAdornments;
-    }
-
-    /**
-     * @param addAdornments the addAdornments to set
-     */
-    public void setAddAdornments(boolean addAdornments)
-    {
-        this.addAdornments = addAdornments;
-    }
 
     /**
      * Set the bodyOut to be empty so that no un-needed xml is create. The null value for bodyOut will cause #writeBody
@@ -523,16 +502,6 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
     }
 
     /**
-     * @deprecated Please use the getResponse going forward
-     * @see #getResponse()
-     */
-    @Deprecated
-    public Object getResult() {
-        KvmSerializable ks = (KvmSerializable) bodyIn;
-        return ks.getPropertyCount() == 0 ? null : ks.getProperty(0);
-    }
-
-    /**
      * Serializes the request object to the given XmlSerliazer object
      *
      * @param writer XmlSerializer object to write the body into.
@@ -546,10 +515,6 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             multiRef.add(bodyOut);
             QNameInfo qName = getInfo(null, bodyOut);
             writer.startTag(qName.namespace, qName.type);
-            if (addAdornments) {
-                writer.attribute(null, ID_LABEL, "id0");
-                writer.attribute(enc, ROOT_LABEL, "1");
-            }
             writeElement(writer, bodyOut, null, qName.marshal);
             writer.endTag(qName.namespace, qName.type);
         }
