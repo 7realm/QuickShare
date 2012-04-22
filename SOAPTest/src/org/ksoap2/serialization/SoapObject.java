@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2003,2004, Stefan Haustein, Oberhausen, Rhld., Germany
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,14 +18,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * Contributor(s): John D. Beatty, Dave Dash, Andre Gerard, F. Hunter, Renaud
  * Tognelli
  */
 
 package org.ksoap2.serialization;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * A simple dynamic object that can be used to build soap calls without
@@ -71,6 +72,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
         this.name = name;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof SoapObject)) {
             return false;
@@ -137,6 +139,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
     /**
      * @deprecated use #getProperty
      */
+    @Deprecated
     public Object getNestedSoap(int index) {
         return getProperty(index);
     }
@@ -144,12 +147,13 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
     /**
      * @inheritDoc
      */
+    @Override
     public Object getProperty(int index) {
         Object prop = properties.elementAt(index);
         if(prop instanceof PropertyInfo) {
             return ((PropertyInfo)prop).getValue();
         } else {
-            return ((SoapObject)prop);
+            return prop;
         }
     }
 
@@ -245,6 +249,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
     /**
      * @deprecated use #getPropertySafely
      */
+    @Deprecated
     public Object safeGetProperty(final String name) {
         return getPropertySafely(name);
     }
@@ -291,6 +296,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
     /**
      * @deprecated use #getPropertySafely
      */
+    @Deprecated
     public Object safeGetProperty(final String name, final Object defaultThing) {
         return getPropertySafely(name, defaultThing);
     }
@@ -312,7 +318,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
                 propertyInfo.setType(String.class);
                 propertyInfo.setValue("");
                 propertyInfo.setName(name);
-                return (Object) propertyInfo.getValue();
+                return propertyInfo.getValue();
             }
         } else {
             throw new RuntimeException("illegal property: " + name);
@@ -359,7 +365,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
                 propertyInfo.setType(String.class);
                 propertyInfo.setValue("");
                 propertyInfo.setName(name);
-                return (Object) propertyInfo.getValue();
+                return propertyInfo.getValue();
             }
         } else {
             return new NullSoapObject();
@@ -407,6 +413,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
      *
      * @return the number of properties
      */
+    @Override
     public int getPropertyCount() {
         return properties.size();
     }
@@ -435,10 +442,11 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
      *            index of desired property
      * @param propertyInfo
      *            designated retainer of desired property
-     * @deprecated
      */
-    public void getPropertyInfo(int index, Hashtable properties, PropertyInfo propertyInfo) {
-        getPropertyInfo(index, propertyInfo);
+    @Deprecated
+    @Override
+    public PropertyInfo getPropertyInfo(int index, Hashtable properties) {
+      return  getPropertyInfo(index);
     }
 
     /**
@@ -450,15 +458,17 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
      * @param propertyInfo
      *            designated retainer of desired property
      */
-    public void getPropertyInfo(int index, PropertyInfo propertyInfo) {
-        PropertyInfo p = (PropertyInfo) properties.elementAt(index);
-        propertyInfo.name = p.name;
-        propertyInfo.namespace = p.namespace;
-        propertyInfo.flags = p.flags;
-        propertyInfo.type = p.type;
-        propertyInfo.elementType = p.elementType;
-        propertyInfo.value = p.value;
-        propertyInfo.multiRef = p.multiRef;
+    public PropertyInfo getPropertyInfo(int index) {
+        PropertyInfo propertyInfo = (PropertyInfo) properties.elementAt(index);
+        PropertyInfo result = new PropertyInfo();
+        result.name = propertyInfo.name;
+        result.namespace = propertyInfo.namespace;
+        result.flags = propertyInfo.flags;
+        result.type = propertyInfo.type;
+        result.elementType = propertyInfo.elementType;
+        result.value = propertyInfo.value;
+        result.multiRef = propertyInfo.multiRef;
+        return result;
     }
 
     /**
@@ -497,6 +507,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
      * @param value
      *            the new value of the property
      */
+    @Override
     public void setProperty(int index, Object value) {
         Object prop = properties.elementAt(index);
         if(prop instanceof PropertyInfo) {
@@ -517,8 +528,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
     public SoapObject addProperty(String name, Object value) {
         PropertyInfo propertyInfo = new PropertyInfo();
         propertyInfo.name = name;
-        propertyInfo.type = value == null ? PropertyInfo.OBJECT_CLASS : value
-                .getClass();
+        propertyInfo.type = value == null ? PropertyInfo.OBJECT_CLASS : value                .getClass();
         propertyInfo.value = value;
         return addProperty(propertyInfo);
     }
@@ -548,6 +558,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
      *            the value of the property
      * @deprecated property info now contains the value
      */
+    @Deprecated
     public SoapObject addProperty(PropertyInfo propertyInfo, Object value) {
         propertyInfo.setValue(value);
         addProperty(propertyInfo);
@@ -613,6 +624,7 @@ public class SoapObject extends AttributeContainer implements KvmSerializable {
      *
      * @return
      */
+    @Override
     public String toString() {
         StringBuffer buf = new StringBuffer("" + name + "{");
         for (int i = 0; i < getPropertyCount(); i++) {

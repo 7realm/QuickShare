@@ -133,7 +133,6 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         XmlPullParserException {
         int testIndex = -1; // inc at beg. of loop for perf. reasons
         int propertyCount = obj.getPropertyCount();
-        PropertyInfo info = new PropertyInfo();
         while (parser.nextTag() != XmlPullParser.END_TAG) {
             String name = parser.getName();
             int countdown = propertyCount;
@@ -144,6 +143,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             // So, here's a little CYA since I think the code is only broken for
             // implicitTypes
             if (!implicitTypes || !(obj instanceof SoapObject)) {
+                PropertyInfo info;
                 while (true) {
                     if (countdown-- == 0) {
                         throw new RuntimeException("Unknown Property: " + name);
@@ -151,7 +151,8 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                     if (++testIndex >= propertyCount) {
                         testIndex = 0;
                     }
-                    obj.getPropertyInfo(testIndex, properties, info);
+
+                    info = obj.getPropertyInfo(testIndex, properties);
                     if (info.namespace == null && name.equals(info.name) || info.name == null
                         && testIndex == 0 || name.equals(info.name)
                         && parser.getNamespace().equals(info.namespace)) {
@@ -518,26 +519,24 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
      * Writes the body of an KvmSerializable object. This method is public for access from Marshal subclasses.
      */
     public void writeObjectBody(XmlSerializer writer, KvmSerializable obj) throws IOException {
-        int cnt = obj.getPropertyCount();
-        PropertyInfo propertyInfo = new PropertyInfo();
-        String namespace;
-        String name;
-        String type;
-        for (int i = 0; i < cnt; i++) {
+        for (int i = 0; i < obj.getPropertyCount(); i++) {
             // get the property
-            Object prop = obj.getProperty(i);
+            Object propertyValue = obj.getProperty(i);
             // and importantly also get the property info which holds the type potentially!
-            obj.getPropertyInfo(i, properties, propertyInfo);
+            PropertyInfo propertyInfo = obj.getPropertyInfo(i, properties);
 
-            if (prop instanceof SoapObject) {
+            if (propertyValue == null) {
+                // skip null properties
+            } else if (propertyValue instanceof SoapObject) {
                 // prop is a SoapObject
-                SoapObject nestedSoap = (SoapObject) prop;
+                SoapObject soapObject = (SoapObject) propertyValue;
                 // lets get the info from the soap object itself
-                QNameInfo qName = getInfo(null, nestedSoap);
-                namespace = qName.namespace;
-                type = qName.type;
+                QNameInfo qName = getInfo(null, soapObject);
+                String namespace = qName.namespace;
+                String type = qName.type;
 
                 // prefer the type from the property info
+                String name;
                 if (propertyInfo.name != null && propertyInfo.name.length() > 0) {
                     name = propertyInfo.name;
                 } else {
@@ -547,7 +546,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                 writer.startTag(namespace, name);
                 String prefix = writer.getPrefix(namespace, true);
                 writer.attribute(xsi, TYPE_LABEL, prefix + ":" + type);
-                writeObjectBody(writer, nestedSoap);
+                writeObjectBody(writer, soapObject);
                 writer.endTag(namespace, name);
             } else {
                 // prop is a PropertyInfo
@@ -562,8 +561,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
 
     protected void writeProperty(XmlSerializer writer, Object obj, PropertyInfo type) throws IOException {
         if (obj == null) {
-            writer.attribute(xsi, version >= VER12 ? NIL_LABEL : NULL_LABEL, "true");
-            return;
+            throw new RuntimeException("Property value should not be null.");
         }
         QNameInfo qName = getInfo(null, obj);
         if (type.multiRef) {

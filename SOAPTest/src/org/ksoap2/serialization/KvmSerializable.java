@@ -16,7 +16,7 @@
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE. 
+ * IN THE SOFTWARE.
  *
  * Contributor(s): John D. Beatty, F. Hunter, Renaud Tognelli
  *
@@ -39,14 +39,14 @@ public interface KvmSerializable {
      */
     Object getProperty(int index);
 
-    /** 
-     * @return the number of serializable properties 
+    /**
+     * @return the number of serializable properties
      */
     int getPropertyCount();
 
     /**
      * Sets the property with the given index to the given value.
-     * 
+     *
      * @param index
      *            the index to be set
      * @param value
@@ -56,15 +56,15 @@ public interface KvmSerializable {
 
     /**
      * Fills the given property info record.
-     * 
+     *
      * @param index
      *            the index to be queried
      * @param properties
      *            information about the (de)serializer.  Not frequently used.
-     * @param info
+     * @return
      *            The return parameter, to be filled with information about the
      *            property with the given index.
      */
-    void getPropertyInfo(int index, Hashtable properties, PropertyInfo info);
+    PropertyInfo getPropertyInfo(int index, Hashtable properties);
 
 }

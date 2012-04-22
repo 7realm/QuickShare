@@ -37,7 +37,7 @@ public abstract class BaseObject implements KvmSerializable{
         Log.i("soap", "Class: " + getClass().getName());
         for (Field field : fields) {
             field.setAccessible(true);
-            Log.i("soap", field.getName() + " = " + fields.getClass());
+            Log.i("soap", field.getName() + " = " + field.getType());
         }
     }
 
@@ -57,14 +57,17 @@ public abstract class BaseObject implements KvmSerializable{
 
     @Override
     @SuppressWarnings("rawtypes")
-    public void getPropertyInfo(int i, Hashtable hashtable, PropertyInfo propertyinfo) {
+    public PropertyInfo getPropertyInfo(int i, Hashtable hashtable ) {
+        PropertyInfo propertyinfo = new PropertyInfo();
         propertyinfo.name = getFieldName(i);
         propertyinfo.type = fields[i].getType();
-        if (fields[i].getClass().equals(List.class)) {
+        if (fields[i].getType().equals(List.class)) {
             ParameterizedType stringListType = (ParameterizedType) fields[i].getGenericType();
             propertyinfo.elementType.name = "items";
             propertyinfo.elementType.type = stringListType.getActualTypeArguments()[0];
         }
+
+        return propertyinfo;
     }
 
     private String getFieldName(int i) {
