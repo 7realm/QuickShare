@@ -1,5 +1,6 @@
 package gov.nasa.pds.entities.response;
 
+import gov.nasa.pds.entities.BaseObject;
 import gov.nasa.pds.entities.XmlElement;
 import gov.nasa.pds.entities.XmlType;
 
@@ -31,7 +32,7 @@ import java.util.List;
     "results",
     "total"
 })
-public class PagedResults {
+public class PagedResults extends BaseObject {
 
     @XmlElement(nillable = true)
     protected List<Object> results;

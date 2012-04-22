@@ -1,6 +1,7 @@
 
 package gov.nasa.pds.entities.response;
 
+import gov.nasa.pds.entities.BaseObject;
 import gov.nasa.pds.entities.XmlType;
 
 
@@ -28,7 +29,7 @@ import gov.nasa.pds.entities.XmlType;
     "id",
     "name"
 })
-public class EntityInfo {
+public class EntityInfo extends BaseObject {
 
     protected long id;
     protected String name;

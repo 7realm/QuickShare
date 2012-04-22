@@ -1,22 +1,15 @@
 /*
- * Copyright (c) 2003,2004, Stefan Haustein, Oberhausen, Rhld., Germany
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
- * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
- * EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
- * USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
- * Contributor(s): John D. Beatty, F. Hunter, Renaud Tognelli
+ * Copyright (c) 2003,2004, Stefan Haustein, Oberhausen, Rhld., Germany Permission is hereby granted, free of charge, to
+ * any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the
+ * Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions: The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ * ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. Contributor(s): John D. Beatty, F. Hunter,
+ * Renaud Tognelli
  */
 
 package org.ksoap2.serialization;
@@ -94,8 +87,7 @@ public class PropertyInfo
     }
 
     /**
-     * @param elementType
-     *            The elementType to set.
+     * @param elementType The elementType to set.
      */
     public void setElementType(PropertyInfo elementType)
     {
@@ -111,8 +103,7 @@ public class PropertyInfo
     }
 
     /**
-     * @param flags
-     *            The flags to set.
+     * @param flags The flags to set.
      */
     public void setFlags(int flags)
     {
@@ -128,8 +119,7 @@ public class PropertyInfo
     }
 
     /**
-     * @param multiRef
-     *            The multiRef to set.
+     * @param multiRef The multiRef to set.
      */
     public void setMultiRef(boolean multiRef)
     {
@@ -145,8 +135,7 @@ public class PropertyInfo
     }
 
     /**
-     * @param name
-     *            The name to set.
+     * @param name The name to set.
      */
     public void setName(String name)
     {
@@ -162,8 +151,7 @@ public class PropertyInfo
     }
 
     /**
-     * @param namespace
-     *            The namespace to set.
+     * @param namespace The namespace to set.
      */
     public void setNamespace(String namespace)
     {
@@ -179,8 +167,7 @@ public class PropertyInfo
     }
 
     /**
-     * @param type
-     *            The type to set.
+     * @param type The type to set.
      */
     public void setType(Object type)
     {
@@ -196,8 +183,7 @@ public class PropertyInfo
     }
 
     /**
-     * @param value
-     *            The value to set.
+     * @param value The value to set.
      */
     public void setValue(Object value)
     {
@@ -209,17 +195,17 @@ public class PropertyInfo
      *
      * @see java.lang.Object#toString()
      */
-    public String toString()
-    {
+    @Override
+    public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(name);
-        sb.append(" : ");
-        if (value != null)
-        {
+        sb.append("(");
+        sb.append(type);
+        sb.append(")");
+        sb.append(" = ");
+        if (value != null) {
             sb.append(value);
-        }
-        else
-        {
+        } else {
             sb.append("(not set)");
         }
         return sb.toString();

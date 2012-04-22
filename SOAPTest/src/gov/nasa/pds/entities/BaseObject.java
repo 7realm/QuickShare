@@ -63,11 +63,17 @@ public abstract class BaseObject implements KvmSerializable{
         propertyinfo.type = fields[i].getType();
         if (fields[i].getType().equals(List.class)) {
             ParameterizedType stringListType = (ParameterizedType) fields[i].getGenericType();
-            propertyinfo.elementType.name = "items";
+            propertyinfo.elementType = new PropertyInfo();
+            propertyinfo.elementType.name = getElementName(getFieldName(i));
             propertyinfo.elementType.type = stringListType.getActualTypeArguments()[0];
         }
 
         return propertyinfo;
+    }
+
+    @SuppressWarnings("static-method")
+    protected String getElementName(String fieldName) {
+        return "items";
     }
 
     private String getFieldName(int i) {

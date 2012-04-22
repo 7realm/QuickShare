@@ -12,7 +12,6 @@ import java.io.IOException;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
@@ -87,11 +86,11 @@ public class SOAPTestActivity extends Activity {
             Log.d("soap", "Request DUMP: " + httpTransport.requestDump);
             Log.d("soap", "Response DUMP: " + httpTransport.responseDump);
             try {
-                SoapObject result = (SoapObject) envelope.getResponse();
-                Log.i("soap", "Result property count: " + result.getPropertyCount());
-                for (int i = 0; i < result.getPropertyCount(); i++) {
-                    Log.i("soap", "Result [" + i + "] property : " + result.getProperty(i).getClass());
-                }
+                Object result = envelope.getResponse();
+//                Log.i("soap", "Result property count: " + result.getPropertyCount());
+//                for (int i = 0; i < result.getPropertyCount(); i++) {
+//                    Log.i("soap", "Result [" + i + "] property : " + result.getProperty(i).getClass());
+//                }
                 Log.i("soap", "Result: " + result);
             } catch (SoapFault soapFault) {
                 Log.e("soap", "Error: " + soapFault.faultstring);
