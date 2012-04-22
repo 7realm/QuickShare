@@ -8,11 +8,12 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
 
 import android.util.Log;
 
-public abstract class BaseObject {
+public abstract class BaseObject implements KvmSerializable{
     private Field[] fields;
 
     public BaseObject() {
@@ -40,6 +41,7 @@ public abstract class BaseObject {
         }
     }
 
+    @Override
     public Object getProperty(int i) {
         try {
             return fields[i].get(this);
@@ -48,10 +50,12 @@ public abstract class BaseObject {
         }
     }
 
+    @Override
     public int getPropertyCount() {
         return fields.length;
     }
 
+    @Override
     @SuppressWarnings("rawtypes")
     public void getPropertyInfo(int i, Hashtable hashtable, PropertyInfo propertyinfo) {
         propertyinfo.name = getFieldName(i);
@@ -68,6 +72,7 @@ public abstract class BaseObject {
         return fieldName.startsWith("_") ? fieldName.substring(1) : fieldName;
     }
 
+    @Override
     public void setProperty(int i, Object obj) {
         try {
             fields[i].set(this, obj);

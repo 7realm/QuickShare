@@ -1,5 +1,6 @@
 package gov.nasa.pds.entities.calls;
 
+import gov.nasa.pds.entities.BaseObject;
 import gov.nasa.pds.entities.XmlType;
 import gov.nasa.pds.entities.request.Page;
 
@@ -26,7 +27,7 @@ import gov.nasa.pds.entities.request.Page;
 @XmlType(name = "getTargetTypesInfo", propOrder = {
     "page"
 })
-public class GetTargetTypesInfo {
+public class GetTargetTypesInfo extends BaseObject {
 
     protected Page page;
 
