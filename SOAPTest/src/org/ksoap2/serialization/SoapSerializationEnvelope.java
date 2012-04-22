@@ -1,20 +1,18 @@
-/*
+/**
  * Copyright (c) 2003,2004, Stefan Haustein, Oberhausen, Rhld., Germany
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+ * Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
- * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
- * EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
- * USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ksoap2.serialization;
@@ -58,19 +56,11 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     Vector multiRef; // = new Vector();
 
     /**
-     * Set this variable to true if you don't want that type definitions for complex types/objects
-     * are automatically generated (with type "anyType") in the XML-Request, if you don't call the
-     * Method addMapping. This is needed by some Servers which have problems with these type-definitions.
+     * Set this variable to true if you don't want that type definitions for complex types/objects are automatically
+     * generated (with type "anyType") in the XML-Request, if you don't call the Method addMapping. This is needed by
+     * some Servers which have problems with these type-definitions.
      */
     public boolean implicitTypes;
-
-    /**
-     * Set this variable to true for compatibility with what seems to be the default encoding for
-     * .Net-Services. This feature is an extremely ugly hack. A much better option is to change the
-     * configuration of the .Net-Server to standard Soap Serialization!
-     */
-
-    public boolean dotNet;
 
     /**
      * Map from XML qualified names to Java classes
@@ -105,8 +95,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     }
 
     /**
-     * @param addAdornments
-     *            the addAdornments to set
+     * @param addAdornments the addAdornments to set
      */
     public void setAddAdornments(boolean addAdornments)
     {
@@ -114,8 +103,9 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     }
 
     /**
-     * Set the bodyOut to be empty so that no un-needed xml is create. The null value for bodyOut will
-     * cause #writeBody to skip writing anything redundant.
+     * Set the bodyOut to be empty so that no un-needed xml is create. The null value for bodyOut will cause #writeBody
+     * to skip writing anything redundant.
+     *
      * @param emptyBody
      * @see "http://code.google.com/p/ksoap2-android/issues/detail?id=77"
      */
@@ -131,7 +121,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         bodyIn = null;
         parser.nextTag();
         if (parser.getEventType() == XmlPullParser.START_TAG && parser.getNamespace().equals(env)
-                && parser.getName().equals("Fault")) {
+            && parser.getName().equals("Fault")) {
             SoapFault fault;
             if (this.version < SoapEnvelope.VER12) {
                 fault = new SoapFault(this.version);
@@ -145,7 +135,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
                 String rootAttr = parser.getAttributeValue(enc, ROOT_LABEL);
 
                 Object o = read(parser, null, -1, parser.getNamespace(), parser.getName(),
-                        PropertyInfo.OBJECT_TYPE);
+                    PropertyInfo.OBJECT_TYPE);
                 if ("1".equals(rootAttr) || bodyIn == null) {
                     bodyIn = o;
                 }
@@ -156,7 +146,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
 
     /** Read a SoapObject. This extracts any attributes and then reads the object as a KvmSerializable. */
     protected void readSerializable(XmlPullParser parser, SoapObject obj) throws IOException,
-            XmlPullParserException
+        XmlPullParserException
     {
         for (int counter = 0; counter < parser.getAttributeCount(); counter++) {
             String attributeName = parser.getAttributeName(counter);
@@ -168,7 +158,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
 
     /** Read a KvmSerializable. */
     protected void readSerializable(XmlPullParser parser, KvmSerializable obj) throws IOException,
-            XmlPullParserException
+        XmlPullParserException
     {
         int testIndex = -1; // inc at beg. of loop for perf. reasons
         int propertyCount = obj.getPropertyCount();
@@ -192,8 +182,8 @@ public class SoapSerializationEnvelope extends SoapEnvelope
                     }
                     obj.getPropertyInfo(testIndex, properties, info);
                     if (info.namespace == null && name.equals(info.name) || info.name == null
-                            && testIndex == 0 || name.equals(info.name)
-                            && parser.getNamespace().equals(info.namespace)) {
+                        && testIndex == 0 || name.equals(info.name)
+                        && parser.getNamespace().equals(info.namespace)) {
                         break;
                     }
                 }
@@ -202,15 +192,15 @@ public class SoapSerializationEnvelope extends SoapEnvelope
                 // I can only make this work for SoapObjects - hence the check above
                 // I don't understand namespaces well enough to know whether it is correct in the next line...
                 ((SoapObject) obj).addProperty(parser.getName(), read(parser, obj, obj.getPropertyCount(),
-                        ((SoapObject) obj).getNamespace(), name, PropertyInfo.OBJECT_TYPE));
+                    ((SoapObject) obj).getNamespace(), name, PropertyInfo.OBJECT_TYPE));
             }
         }
         parser.require(XmlPullParser.END_TAG, null, null);
     }
 
     /**
-     * If the type of the object cannot be determined, and thus no Marshal class can handle the object, this
-     * method is called. It will build either a SoapPrimitive or a SoapObject
+     * If the type of the object cannot be determined, and thus no Marshal class can handle the object, this method is
+     * called. It will build either a SoapPrimitive or a SoapObject
      *
      * @param parser
      * @param typeNamespace
@@ -221,13 +211,13 @@ public class SoapSerializationEnvelope extends SoapEnvelope
      */
 
     protected Object readUnknown(XmlPullParser parser, String typeNamespace, String typeName)
-            throws IOException, XmlPullParserException {
+        throws IOException, XmlPullParserException {
         String name = parser.getName();
         String namespace = parser.getNamespace();
 
         // cache the attribute info list from the current element before we move on
         Vector attributeInfoVector = new Vector();
-        for (int attributeCount = 0; attributeCount < parser.getAttributeCount(); attributeCount ++) {
+        for (int attributeCount = 0; attributeCount < parser.getAttributeCount(); attributeCount++) {
             AttributeInfo attributeInfo = new AttributeInfo();
             attributeInfo.setName(parser.getAttributeName(attributeCount));
             attributeInfo.setValue(parser.getAttributeValue(attributeCount));
@@ -243,7 +233,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
             text = parser.getText();
             SoapPrimitive sp = new SoapPrimitive(typeNamespace, typeName, text);
             result = sp;
-              // apply all the cached attribute info list before we add the property and descend further for parsing
+            // apply all the cached attribute info list before we add the property and descend further for parsing
             for (int i = 0; i < attributeInfoVector.size(); i++) {
                 sp.addAttribute((AttributeInfo) attributeInfoVector.elementAt(i));
             }
@@ -269,7 +259,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
 
             while (parser.getEventType() != XmlPullParser.END_TAG) {
                 so.addProperty(parser.getName(), read(parser, so, so.getPropertyCount(), null, null,
-                        PropertyInfo.OBJECT_TYPE));
+                    PropertyInfo.OBJECT_TYPE));
                 parser.nextTag();
             }
             result = so;
@@ -283,11 +273,11 @@ public class SoapSerializationEnvelope extends SoapEnvelope
             return dflt;
         }
         return value.length() - start < 3 ? dflt : Integer.parseInt(value.substring(start + 1,
-                value.length() - 1));
+            value.length() - 1));
     }
 
     protected void readVector(XmlPullParser parser, Vector v, PropertyInfo elementType) throws IOException,
-            XmlPullParserException {
+        XmlPullParserException {
         String namespace = null;
         String name = null;
         int size = v.size();
@@ -326,12 +316,12 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     }
 
     /**
-     * Builds an object from the XML stream. This method is public for usage in conjuction with Marshal
-     * subclasses. Precondition: On the start tag of the object or property, so href can be read.
+     * Builds an object from the XML stream. This method is public for usage in conjuction with Marshal subclasses.
+     * Precondition: On the start tag of the object or property, so href can be read.
      */
 
     public Object read(XmlPullParser parser, Object owner, int index, String namespace, String name,
-            PropertyInfo expected) throws IOException, XmlPullParserException {
+        PropertyInfo expected) throws IOException, XmlPullParserException {
         String elementName = parser.getName();
         String href = parser.getAttributeValue(null, HREF_LABEL);
         Object obj;
@@ -399,8 +389,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
                             ((Vector) f.obj).setElementAt(obj, f.index);
                         }
                         f = f.next;
-                    }
-                    while (f != null);
+                    } while (f != null);
                 } else if (hlp != null) {
                     throw new RuntimeException("double ID");
                 }
@@ -413,18 +402,18 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     }
 
     /**
-     * Returns a new object read from the given parser. If no mapping is found, null is returned. This method
-     * is used by the SoapParser in order to convert the XML code to Java objects.
+     * Returns a new object read from the given parser. If no mapping is found, null is returned. This method is used by
+     * the SoapParser in order to convert the XML code to Java objects.
      */
     public Object readInstance(XmlPullParser parser, String namespace, String name, PropertyInfo expected)
-            throws IOException, XmlPullParserException {
+        throws IOException, XmlPullParserException {
         Object obj = qNameToClass.get(new SoapPrimitive(namespace, name, null));
         if (obj == null) {
             return null;
         }
         if (obj instanceof Marshal) {
             return ((Marshal) obj).readInstance(parser, namespace, name, expected);
-        } else if (obj instanceof SoapObject)  {
+        } else if (obj instanceof SoapObject) {
             obj = ((SoapObject) obj).newInstance();
         } else if (obj == SoapObject.class) {
             obj = new SoapObject(namespace, name);
@@ -449,9 +438,8 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     }
 
     /**
-     * Returns a string array containing the namespace, name, id and Marshal object for the given java object.
-     * This method is used by the SoapWriter in order to map Java objects to the corresponding SOAP section
-     * five XML code.
+     * Returns a string array containing the namespace, name, id and Marshal object for the given java object. This
+     * method is used by the SoapWriter in order to map Java objects to the corresponding SOAP section five XML code.
      */
     public Object[] getInfo(Object type, Object instance) {
         if (type == null) {
@@ -463,11 +451,11 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         }
         if (type instanceof SoapObject) {
             SoapObject so = (SoapObject) type;
-            return new Object[] { so.getNamespace(), so.getName(), null, null };
+            return new Object[] {so.getNamespace(), so.getName(), null, null};
         }
         if (type instanceof SoapPrimitive) {
             SoapPrimitive sp = (SoapPrimitive) type;
-            return new Object[] { sp.getNamespace(), sp.getName(), null, DEFAULT_MARSHAL };
+            return new Object[] {sp.getNamespace(), sp.getName(), null, DEFAULT_MARSHAL};
         }
         if (type instanceof Class && type != PropertyInfo.OBJECT_CLASS) {
             Object[] tmp = (Object[]) classToQName.get(((Class) type).getName());
@@ -475,17 +463,17 @@ public class SoapSerializationEnvelope extends SoapEnvelope
                 return tmp;
             }
         }
-        return new Object[] { xsd, ANY_TYPE_LABEL, null, null };
+        return new Object[] {xsd, ANY_TYPE_LABEL, null, null};
     }
 
     /**
-     * Defines a direct mapping from a namespace and name to a java class (and vice versa), using the given
-     * marshal mechanism
+     * Defines a direct mapping from a namespace and name to a java class (and vice versa), using the given marshal
+     * mechanism
      */
     public void addMapping(String namespace, String name, Class clazz, Marshal marshal) {
         qNameToClass
-                .put(new SoapPrimitive(namespace, name, null), marshal == null ? (Object) clazz : marshal);
-        classToQName.put(clazz.getName(), new Object[] { namespace, name, null, marshal });
+            .put(new SoapPrimitive(namespace, name, null), marshal == null ? (Object) clazz : marshal);
+        classToQName.put(clazz.getName(), new Object[] {namespace, name, null, marshal});
     }
 
     /**
@@ -496,8 +484,8 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     }
 
     /**
-     * Adds a SoapObject to the class map. During parsing, objects of the given type (namespace/name) will be
-     * mapped to corresponding copies of the given SoapObject, maintaining the structure of the template.
+     * Adds a SoapObject to the class map. During parsing, objects of the given type (namespace/name) will be mapped to
+     * corresponding copies of the given SoapObject, maintaining the structure of the template.
      */
     public void addTemplate(SoapObject so) {
         qNameToClass.put(new SoapPrimitive(so.namespace, so.name, null), so);
@@ -516,13 +504,13 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         }
         KvmSerializable ks = (KvmSerializable) bodyIn;
 
-        if (ks.getPropertyCount()==0) {
+        if (ks.getPropertyCount() == 0) {
             return null;
-        } else if(ks.getPropertyCount()==1) {
+        } else if (ks.getPropertyCount() == 1) {
             return ks.getProperty(0);
         } else {
             Vector ret = new Vector();
-            for(int i=0;i<ks.getPropertyCount();i++){
+            for (int i = 0; i < ks.getPropertyCount(); i++) {
                 ret.add(ks.getProperty(i));
             }
             return ret;
@@ -542,8 +530,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     /**
      * Serializes the request object to the given XmlSerliazer object
      *
-     * @param writer
-     *            XmlSerializer object to write the body into.
+     * @param writer XmlSerializer object to write the body into.
      */
     @Override
     public void writeBody(XmlSerializer writer) throws IOException {
@@ -553,16 +540,13 @@ public class SoapSerializationEnvelope extends SoapEnvelope
             multiRef = new Vector();
             multiRef.addElement(bodyOut);
             Object[] qName = getInfo(null, bodyOut);
-            writer.startTag(dotNet ? "" : (String) qName[QNAME_NAMESPACE], (String) qName[QNAME_TYPE]);
-            if (dotNet) {
-                writer.attribute(null, "xmlns", (String) qName[QNAME_NAMESPACE]);
-            }
+            writer.startTag((String) qName[QNAME_NAMESPACE], (String) qName[QNAME_TYPE]);
             if (addAdornments) {
                 writer.attribute(null, ID_LABEL, qName[2] == null ? "o" + 0 : (String) qName[2]);
                 writer.attribute(enc, ROOT_LABEL, "1");
             }
             writeElement(writer, bodyOut, null, qName[QNAME_MARSHAL]);
-            writer.endTag(dotNet ? "" : (String) qName[QNAME_NAMESPACE], (String) qName[QNAME_TYPE]);
+            writer.endTag((String) qName[QNAME_NAMESPACE], (String) qName[QNAME_TYPE]);
         }
     }
 
@@ -577,7 +561,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
             AttributeInfo attributeInfo = new AttributeInfo();
             soapObject.getAttributeInfo(counter, attributeInfo);
             writer.attribute(attributeInfo.getNamespace(), attributeInfo.getName(), attributeInfo.getValue()
-                    .toString());
+                .toString());
         }
         writeObjectBody(writer, (KvmSerializable) obj);
     }
@@ -587,7 +571,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
      */
     public void writeObjectBody(XmlSerializer writer, KvmSerializable obj) throws IOException {
         int cnt = obj.getPropertyCount();
-        PropertyInfo propertyInfo= new PropertyInfo();
+        PropertyInfo propertyInfo = new PropertyInfo();
         String namespace;
         String name;
         String type;
@@ -597,7 +581,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
             // and importantly also get the property info which holds the name potentially!
             obj.getPropertyInfo(i, properties, propertyInfo);
 
-            if(!(prop instanceof SoapObject)) {
+            if (!(prop instanceof SoapObject)) {
                 // prop is a PropertyInfo
                 if ((propertyInfo.flags & PropertyInfo.TRANSIENT) == 0) {
                     writer.startTag(propertyInfo.namespace, propertyInfo.name);
@@ -606,7 +590,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
                 }
             } else {
                 // prop is a SoapObject
-                SoapObject nestedSoap = (SoapObject)prop;
+                SoapObject nestedSoap = (SoapObject) prop;
                 // lets get the info from the soap object itself
                 Object[] qName = getInfo(null, nestedSoap);
                 namespace = (String) qName[QNAME_NAMESPACE];
@@ -619,11 +603,11 @@ public class SoapSerializationEnvelope extends SoapEnvelope
                     name = (String) qName[QNAME_TYPE];
                 }
 
-                writer.startTag(dotNet ? "" : namespace, name);
+                writer.startTag(namespace, name);
                 String prefix = writer.getPrefix(namespace, true);
                 writer.attribute(xsi, TYPE_LABEL, prefix + ":" + type);
                 writeObjectBody(writer, nestedSoap);
-                writer.endTag(dotNet ? "" : namespace, name);
+                writer.endTag(namespace, name);
             }
         }
     }
@@ -651,7 +635,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     }
 
     private void writeElement(XmlSerializer writer, Object element, PropertyInfo type, Object marshal)
-            throws IOException {
+        throws IOException {
         if (marshal != null) {
             ((Marshal) marshal).writeInstance(writer, element);
         } else if (element instanceof SoapObject) {
@@ -666,7 +650,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
     }
 
     protected void writeVectorBody(XmlSerializer writer, Vector vector, PropertyInfo elementType)
-            throws IOException {
+        throws IOException {
         String itemsTagName = ITEM_LABEL;
         String itemsNamespace = null;
 
@@ -683,9 +667,9 @@ public class SoapSerializationEnvelope extends SoapEnvelope
         Object[] arrType = getInfo(elementType.type, null);
 
         // This removes the arrayType attribute from the xml for arrays(required for most .Net services to work)
-        if(!implicitTypes) {
-             writer.attribute(enc, ARRAY_TYPE_LABEL, writer.getPrefix((String) arrType[0], false) + ":"
-                    + arrType[1] + "[" + cnt + "]");
+        if (!implicitTypes) {
+            writer.attribute(enc, ARRAY_TYPE_LABEL, writer.getPrefix((String) arrType[0], false) + ":"
+                + arrType[1] + "[" + cnt + "]");
         }
 
         boolean skipped = false;
