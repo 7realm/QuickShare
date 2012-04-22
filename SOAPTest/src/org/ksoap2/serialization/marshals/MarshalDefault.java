@@ -52,7 +52,7 @@ public class MarshalDefault implements Marshal {
         case 'b':
             return new Boolean(SoapEnvelope.stringToBoolean(text));
         default:
-            throw new RuntimeException();
+            throw new RuntimeException("Failed to parse: " + name);
         }
     }
 
@@ -80,9 +80,13 @@ public class MarshalDefault implements Marshal {
 
     @Override
     public void register(SoapSerializationEnvelope cm) {
-        cm.addMapping(cm.xsd, "int", PropertyInfo.INTEGER_CLASS, this);
-        cm.addMapping(cm.xsd, "long", PropertyInfo.LONG_CLASS, this);
+        cm.addMapping(cm.xsd, "int", int.class, this);
+        cm.addMapping(cm.xsd, "int", Integer.class, this);
+        cm.addMapping(cm.xsd, "long", long.class, this);
+        cm.addMapping(cm.xsd, "long", Long.class, this);
+        cm.addMapping(cm.xsd, "boolean", boolean.class, this);
+        cm.addMapping(cm.xsd, "boolean", Boolean.class, this);
         cm.addMapping(cm.xsd, "string", PropertyInfo.STRING_CLASS, this);
-        cm.addMapping(cm.xsd, "boolean", PropertyInfo.BOOLEAN_CLASS, this);
+
     }
 }

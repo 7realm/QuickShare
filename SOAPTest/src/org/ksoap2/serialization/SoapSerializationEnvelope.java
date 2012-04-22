@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -40,15 +39,9 @@ import org.xmlpull.v1.XmlSerializer;
  */
 public class SoapSerializationEnvelope extends SoapEnvelope {
     private static final String ANY_TYPE_LABEL = "anyType";
-    private static final String ARRAY_MAPPING_NAME = "Array";
-    private static final String NULL_LABEL = "null";
-    private static final String NIL_LABEL = "nil";
-    private static final String HREF_LABEL = "href";
-    private static final String ID_LABEL = "id";
     private static final String ROOT_LABEL = "root";
     private static final String TYPE_LABEL = "type";
     private static final String ITEM_LABEL = "item";
-    private static final String ARRAY_TYPE_LABEL = "arrayType";
     private static final Marshal DEFAULT_MARSHAL = new MarshalDefault();
 
     /**
@@ -58,31 +51,18 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
      */
     public Hashtable properties = new Hashtable();
 
-    private final Map<String, Object> idMap = new HashMap<String, Object>();
-    private List<Object> multiRef;
-
-    /**
-     * Set this variable to true if you don't want that type definitions for complex types/objects are automatically
-     * generated (with type "anyType") in the XML-Request, if you don't call the Method addMapping. This is needed by
-     * some Servers which have problems with these type-definitions.
-     */
-    public boolean implicitTypes;
-
     /**
      * Map from XML qualified names to Java classes
      */
-
     protected Map<QNameBase, Object> qNameToClass = new Hashtable();
 
     /**
      * Map from Java class names to XML type and namespace pairs
      */
-
     protected Map<String, QNameInfo> classToQName = new HashMap<String, QNameInfo>();
 
     public SoapSerializationEnvelope(int version) {
         super(version);
-        addMapping(enc, ARRAY_MAPPING_NAME, PropertyInfo.VECTOR_CLASS);
         DEFAULT_MARSHAL.register(this);
     }
 
@@ -117,7 +97,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             while (parser.getEventType() == XmlPullParser.START_TAG) {
                 String rootAttr = parser.getAttributeValue(enc, ROOT_LABEL);
 
-                Object object = read(parser, null, -1, parser.getNamespace(), parser.getName(), PropertyInfo.OBJECT_TYPE);
+                Object object = readObject(parser, null, parser.getNamespace(), parser.getName(), PropertyInfo.OBJECT_TYPE);
                 if ("1".equals(rootAttr) || bodyIn == null) {
                     bodyIn = object;
                 }
@@ -126,13 +106,12 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         }
     }
 
-    /** Read a KvmSerializable.  */
-    protected void readSerializable(XmlPullParser parser, KvmSerializable obj) throws IOException,
+    protected void readSerializable(XmlPullParser parser, String namespace, KvmSerializable obj) throws IOException,
         XmlPullParserException {
         int propertyCount = obj.getPropertyCount();
         while (parser.nextTag() != XmlPullParser.END_TAG) {
             String parsedName = parser.getName();
-            String parsedNamespace = parser.getNamespace();
+            String parsedNamespace = "".equals(namespace) ? parser.getNamespace() : namespace;
 
             int foundIndex = -1;
             PropertyInfo propertyInfo = null;
@@ -145,58 +124,18 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                 }
             }
 
-            if (foundIndex != -1) {
-                Object value = read(parser, obj, foundIndex, null, null, propertyInfo);
-                obj.setProperty(foundIndex, value);
+            if (foundIndex != -1 && propertyInfo != null) {
+                Object value = readObject(parser, obj, parsedNamespace, parsedName, propertyInfo);
+
+                if (propertyInfo.type.equals(List.class)) {
+                    List<Object> list = (List<Object>) obj.getProperty(foundIndex);
+                    list.add(value);
+                } else {
+                    obj.setProperty(foundIndex, value);
+                }
             } else {
                 throw new RuntimeException("Failed to find property " + parsedName + " in " + obj);
             }
-        }
-        parser.require(XmlPullParser.END_TAG, null, null);
-    }
-
-    private static int getIndex(String value, int start, int defaultIndex) {
-        if (value == null) {
-            return defaultIndex;
-        }
-        return value.length() - start < 3 ? defaultIndex :
-            Integer.parseInt(value.substring(start + 1, value.length() - 1));
-    }
-
-    protected void readList(XmlPullParser parser, Vector list, PropertyInfo elementType) throws IOException, XmlPullParserException {
-        String namespace = null;
-        String name = null;
-        int size = list.size();
-        boolean dynamic = true;
-        String type = parser.getAttributeValue(enc, ARRAY_TYPE_LABEL);
-        if (type != null) {
-            int cut0 = type.indexOf(':');
-            int cut1 = type.indexOf("[", cut0);
-            name = type.substring(cut0 + 1, cut1);
-            String prefix = cut0 == -1 ? "" : type.substring(0, cut0);
-            namespace = parser.getNamespace(prefix);
-            size = getIndex(type, cut1, -1);
-            if (size != -1) {
-                list.setSize(size);
-                dynamic = false;
-            }
-        }
-        if (elementType == null) {
-            elementType = PropertyInfo.OBJECT_TYPE;
-        }
-        parser.nextTag();
-        int position = getIndex(parser.getAttributeValue(enc, "offset"), 0, 0);
-        while (parser.getEventType() != XmlPullParser.END_TAG) {
-            // handle position
-            position = getIndex(parser.getAttributeValue(enc, "position"), 0, position);
-            if (dynamic && position >= size) {
-                size = position + 1;
-                list.setSize(size);
-            }
-            // implicit handling of position exceeding specified size
-            list.setElementAt(read(parser, list, position, namespace, name, elementType), position);
-            position++;
-            parser.nextTag();
         }
         parser.require(XmlPullParser.END_TAG, null, null);
     }
@@ -206,121 +145,50 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
      * Precondition: On the start tag of the object or property, so href can be read.
      */
 
-    public Object read(XmlPullParser parser, Object owner, int index, String namespace, String name,
+    public Object readObject(XmlPullParser parser, Object owner, String namespace, String name,
         PropertyInfo expected) throws IOException, XmlPullParserException {
-        System.out.println("Reading element: " + parser.getName());
-        System.out.println("Owner: " + owner);
-        System.out.println("Expected: " + expected);
+        String parsedName = parser.getName();
 
-        String elementName = parser.getName();
-        String href = parser.getAttributeValue(null, HREF_LABEL);
-        Object obj;
-        if (href != null) {
-            if (owner == null) {
-                throw new RuntimeException("href at root level?!?");
-            }
-            href = href.substring(1);
-            obj = idMap.get(href);
-            if (obj == null || obj instanceof FwdRef) {
-                FwdRef f = new FwdRef();
-                f.next = (FwdRef) obj;
-                f.obj = owner;
-                f.index = index;
-                idMap.put(href, f);
-                obj = null;
-            }
-            parser.nextTag(); // start tag
-            parser.require(XmlPullParser.END_TAG, null, elementName);
-        } else {
-            String nullAttr = parser.getAttributeValue(xsi, NIL_LABEL);
-            String id = parser.getAttributeValue(null, ID_LABEL);
-            if (nullAttr == null) {
-                nullAttr = parser.getAttributeValue(xsi, NULL_LABEL);
-            }
-            if (nullAttr != null && SoapEnvelope.stringToBoolean(nullAttr)) {
-                obj = null;
-                parser.nextTag();
-                parser.require(XmlPullParser.END_TAG, null, elementName);
-            } else {
-                String type = parser.getAttributeValue(xsi, TYPE_LABEL);
-                if (type != null) {
-                    int cut = type.indexOf(':');
-                    name = type.substring(cut + 1);
-                    String prefix = cut == -1 ? "" : type.substring(0, cut);
-                    namespace = parser.getNamespace(prefix);
-                } else if (name == null && namespace == null) {
-                    if (parser.getAttributeValue(enc, ARRAY_TYPE_LABEL) != null) {
-                        namespace = enc;
-                        name = ARRAY_MAPPING_NAME;
-                    } else {
-                        QNameInfo names = getInfo(expected.type, null);
-                        namespace = names.namespace;
-                        name = names.type;
-                    }
-                }
-                // be sure to set this flag if we don't know the types.
-                if (type == null) {
-                    implicitTypes = true;
-                }
-                obj = readInstance(parser, namespace, name, expected);
-                if (obj == null) {
-                    throw new RuntimeException("Failed to read object, name " + name + ", expected " + expected);
-                }
-            }
-            // finally, care about the id....
-            if (id != null) {
-                Object hlp = idMap.get(id);
-                if (hlp instanceof FwdRef) {
-                    FwdRef f = (FwdRef) hlp;
-                    do {
-                        if (f.obj instanceof KvmSerializable) {
-                            ((KvmSerializable) f.obj).setProperty(f.index, obj);
-                        } else {
-                            ((Vector) f.obj).setElementAt(obj, f.index);
-                        }
-                        f = f.next;
-                    } while (f != null);
-                } else if (hlp != null) {
-                    throw new RuntimeException("double ID");
-                }
-                idMap.put(id, obj);
-            }
-        }
-
-        parser.require(XmlPullParser.END_TAG, null, elementName);
-        return obj;
-    }
-
-    /**
-     * Returns a new object read from the given parser. If no mapping is found, null is returned. This method is used by
-     * the SoapParser in order to convert the XML code to Java objects.
-     */
-    public Object readInstance(XmlPullParser parser, String namespace, String name, PropertyInfo expected)
-        throws IOException, XmlPullParserException {
         Object obj = qNameToClass.get(new QNameBase(namespace, name));
         if (obj == null) {
-            return null;
-        }
-        if (obj instanceof Marshal) {
-            Marshal marshal = (Marshal) obj;
-            return marshal.readInstance(parser, namespace, name, expected);
-        } else if (obj == List.class) {
-            obj = new ArrayList<Object>();
-        } else {
-            try {
-                obj = ((Class) obj).newInstance();
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to create instance.", e);
+            // get namespace and name from type attribute
+            String type = parser.getAttributeValue(xsi, TYPE_LABEL);
+            if (type != null) {
+                int cut = type.indexOf(':');
+                name = type.substring(cut + 1);
+                String prefix = cut == -1 ? "" : type.substring(0, cut);
+                namespace = parser.getNamespace(prefix);
+                obj = qNameToClass.get(new QNameBase(namespace, name));
+            } else if (expected != null) {
+                QNameInfo info = getInfo(expected.type, null);
+                name = info.type;
+                namespace = info.namespace;
+                obj = qNameToClass.get(info);
+                if (obj == null) {
+                    obj = info.marshal;
+                }
             }
         }
 
-        if (obj instanceof KvmSerializable) {
-            readSerializable(parser, (KvmSerializable) obj);
-        } else if (obj instanceof Vector) {
-            readList(parser, (Vector) obj, expected.elementType);
-        } else {
-            throw new RuntimeException("no deserializer for " + obj.getClass());
+        if (obj == null) {
+            throw new RuntimeException("No mapping for " + name);
+        } else if (obj instanceof Marshal) {
+            Marshal marshal = (Marshal) obj;
+            return marshal.readInstance(parser, namespace, name, expected);
         }
+
+        try {
+            obj = ((Class) obj).newInstance();
+            if (obj instanceof KvmSerializable) {
+                readSerializable(parser, namespace, (KvmSerializable) obj);
+            } else {
+                throw new RuntimeException("no deserializer for " + obj.getClass());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create instance.", e);
+        }
+
+        parser.require(XmlPullParser.END_TAG, null, parsedName);
         return obj;
     }
 
@@ -360,9 +228,8 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
     /**
      * Response from the soap call. Pulls the object from the wrapper object and returns it.
      *
-     * @since 2.0.3
      * @return response from the soap call.
-     * @throws SoapFault
+     * @throws SoapFault if response is fault
      */
     public Object getResponse() throws SoapFault {
         if (bodyIn instanceof SoapFault) {
@@ -393,8 +260,6 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         // allow an empty body without any tags in it
         // see http://code.google.com/p/ksoap2-android/issues/detail?id=77
         if (bodyOut != null) {
-            multiRef = new ArrayList<Object>();
-            multiRef.add(bodyOut);
             QNameInfo qName = getInfo(null, bodyOut);
             writer.startTag(qName.namespace, qName.type);
             writeElement(writer, bodyOut, null, qName.marshal);
@@ -430,20 +295,11 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             throw new RuntimeException("Property value should not be null.");
         }
         QNameInfo qName = getInfo(null, obj);
-        if (type.multiRef) {
-            int i = multiRef.indexOf(obj);
-            if (i == -1) {
-                i = multiRef.size();
-                multiRef.add(obj);
-            }
-            writer.attribute(null, HREF_LABEL, "#o" + i);
-        } else {
-            if (!implicitTypes || obj.getClass() != type.type) {
-                String prefix = writer.getPrefix(qName.namespace, true);
-                writer.attribute(xsi, TYPE_LABEL, prefix + ":" + qName.type);
-            }
-            writeElement(writer, obj, type, qName.marshal);
+        if (obj.getClass() != type.type) {
+            String prefix = writer.getPrefix(qName.namespace, true);
+            writer.attribute(xsi, TYPE_LABEL, prefix + ":" + qName.type);
         }
+        writeElement(writer, obj, type, qName.marshal);
     }
 
     private void writeElement(XmlSerializer writer, Object element, PropertyInfo type, Object marshal)
@@ -453,37 +309,26 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         } else if (element instanceof KvmSerializable) {
             writeObjectBody(writer, (KvmSerializable) element);
         } else if (element instanceof List) {
-            writeListBody(writer, (List) element, type.elementType);
+            writeListBody(writer, (List<?>) element, type.elementType);
         } else {
             throw new RuntimeException("Cannot serialize: " + element);
         }
     }
 
-    protected void writeListBody(XmlSerializer writer, List list, PropertyInfo elementType)
+    protected void writeListBody(XmlSerializer writer, List<?> list, PropertyInfo elementType)
         throws IOException {
         String itemsTagName = ITEM_LABEL;
         String itemsNamespace = null;
 
         if (elementType == null) {
             elementType = PropertyInfo.OBJECT_TYPE;
-        } else if (elementType instanceof PropertyInfo) {
-            if (elementType.name != null) {
-                itemsTagName = elementType.name;
-                itemsNamespace = elementType.namespace;
-            }
-        }
-
-        int cnt = list.size();
-        QNameInfo arrType = getInfo(elementType.type, null);
-
-        // This removes the arrayType attribute from the xml for arrays(required for most .Net services to work)
-        if (!implicitTypes) {
-            writer.attribute(enc, ARRAY_TYPE_LABEL, writer.getPrefix(arrType.namespace, false) + ":"
-                + arrType.type + "[" + cnt + "]");
+        } else if (elementType.name != null) {
+            itemsTagName = elementType.name;
+            itemsNamespace = elementType.namespace;
         }
 
         boolean skipped = false;
-        for (int i = 0; i < cnt; i++) {
+        for (int i = 0; i < list.size(); i++) {
             if (list.get(i) == null) {
                 skipped = true;
             } else {
@@ -496,13 +341,6 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                 writer.endTag(itemsNamespace, itemsTagName);
             }
         }
-    }
-
-    private static class FwdRef {
-
-        private FwdRef next;
-        private Object obj;
-        private int index;
     }
 
     private static class QNameBase {

@@ -1,6 +1,6 @@
 package gov.nasa.pds.soap;
 
-import gov.nasa.pds.entities.calls.GetTargetTypesInfo;
+import gov.nasa.pds.entities.calls.GetTargetTypesInfoRequest;
 import gov.nasa.pds.entities.calls.GetTargetTypesInfoResponse;
 import gov.nasa.pds.entities.calls.SearchEntitiesRequest;
 import gov.nasa.pds.entities.calls.SearchEntitiesResponse;
@@ -52,12 +52,12 @@ public class SOAPTestActivity extends Activity {
         }
 
         private SoapSerializationEnvelope getTargetTypesInfo() {
-            GetTargetTypesInfo request = new GetTargetTypesInfo();
+            GetTargetTypesInfoRequest request = new GetTargetTypesInfoRequest();
 
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             envelope.setOutputSoapObject(request);
 
-            envelope.addMapping(NAMESPACE, "getTargetTypesInfo", GetTargetTypesInfo.class);
+            envelope.addMapping(NAMESPACE, "getTargetTypesInfo", GetTargetTypesInfoRequest.class);
             envelope.addMapping(NAMESPACE, "getTargetTypesInfoResponse", GetTargetTypesInfoResponse.class);
             envelope.addMapping(NAMESPACE, "return", PagedResults.class);
             envelope.addMapping(NAMESPACE, "entityInfo", EntityInfo.class);
