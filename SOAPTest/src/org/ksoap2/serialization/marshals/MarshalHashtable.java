@@ -22,11 +22,15 @@
  *
  * */
 
-package org.ksoap2.serialization;
+package org.ksoap2.serialization.marshals;
 
 import java.io.*;
 import java.util.*;
 
+import org.ksoap2.serialization.Marshal;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.xmlpull.v1.*;
 
 /**

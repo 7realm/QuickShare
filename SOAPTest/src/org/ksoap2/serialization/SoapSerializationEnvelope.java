@@ -26,6 +26,7 @@ import java.util.Vector;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
 import org.ksoap2.SoapFault12;
+import org.ksoap2.serialization.marshals.MarshalDefault;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;

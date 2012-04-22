@@ -19,10 +19,13 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE. */
 
-package org.ksoap2.serialization;
+package org.ksoap2.serialization.marshals;
 
 import java.io.*;
 
+import org.ksoap2.serialization.Marshal;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.xmlpull.v1.*;
 
 public class MarshalFloat implements Marshal {
