@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -84,6 +85,8 @@ public class LogsReader {
     }
 
     public static final DateFormat DATE_LONG = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
+    public static final DateFormat DATE_ELAPSED = new SimpleDateFormat("HH:mm:ss");
+
     public static final List<ScanData> DATA = new ArrayList<ScanData>();
     public static final Pattern DATA_PATTERN = Pattern.compile("Cell ID: (\\d*), LAC: (\\d*), RSSI: (\\d*)");
     public static final DecimalFormat DECIMAL = new DecimalFormat("0.00");
@@ -94,6 +97,8 @@ public class LogsReader {
     public static final boolean DUMP_MOVE_FUNCTION = true;
 
     public static void main(String[] args) throws Exception {
+        DATE_ELAPSED.setTimeZone(TimeZone.getTimeZone("UTC"));
+
         // 13-04 group
         // readFile("logs_13-04/LOG [13-04-2012 at 00-14].txt");
         // readFile("logs_13-04/LOG [13-04-2012 at 07-51].txt");
@@ -119,11 +124,11 @@ public class LogsReader {
         // readFile("logs_15-04/LOG [15-04-2012 at 21-05].txt");
 
         // 16-04 group
-        readFile("logs_16-04/LOG [16-04-2012 at 00-45].txt");
-        readFile("logs_16-04/LOG [16-04-2012 at 07-20].txt");
-        readFile("logs_16-04/LOG [16-04-2012 at 09-05].txt");
-        readFile("logs_16-04/LOG [16-04-2012 at 16-46].txt");
-        readFile("logs_16-04/LOG [16-04-2012 at 20-59].txt");
+        // readFile("logs_16-04/LOG [16-04-2012 at 00-45].txt");
+        // readFile("logs_16-04/LOG [16-04-2012 at 07-20].txt");
+        // readFile("logs_16-04/LOG [16-04-2012 at 09-05].txt");
+        // readFile("logs_16-04/LOG [16-04-2012 at 16-46].txt");
+        // readFile("logs_16-04/LOG [16-04-2012 at 20-59].txt");
 
         // 17-04 group
         readFile("logs_17-04/LOG [17-04-2012 at 09-11].txt");
@@ -131,16 +136,23 @@ public class LogsReader {
 
         // remove empty scan
         removeEmptyScans();
+        System.out.println("Scanned, size: " + DATA.size());
 
         // moving periods for main function
         List<Period> mainMovingPeriods = calculateMovingPeriods(60, 25);
-
-        System.out.println("Scanned, size: " + DATA.size());
-
         System.out.println("Main periods.");
         for (Period period : mainMovingPeriods) {
-            System.out.println("Moved: " + DATE_LONG.format(period.start) + " - " + DATE_LONG.format(period.end));
+            System.out.println("Moved for " + DATE_ELAPSED.format(period.end.getTime() - period.start.getTime())
+                + " from " + DATE_LONG.format(period.start) + " - " + DATE_LONG.format(period.end));
         }
+
+        // moving periods for precise function
+//        List<Period> subMovingPeriods = calculateMovingPeriods(40, 2);
+//        System.out.println("Sub periods.");
+//        for (Period period : subMovingPeriods) {
+//            System.out.println("Moved for " + DATE_ELAPSED.format(period.end.getTime() - period.start.getTime())
+//                + " from " + DATE_LONG.format(period.start) + " - " + DATE_LONG.format(period.end));
+//        }
     }
 
     private static void removeEmptyScans() {
@@ -211,16 +223,17 @@ public class LogsReader {
                     mainMovingPeriods.add(mainCurrentPeriod);
                 }
 
-                mainCurrentPeriod.end = DATA.get(i + scanPeriod).scanTime;
+                mainCurrentPeriod.end = DATA.get(i).scanTime;
             } else if (mainCurrentPeriod != null) {
                 mainCurrentPeriod = null;
             }
 
             if (DUMP_MOVE_FUNCTION) {
                 System.out.println(currentScanData.caption + "\t" + DECIMAL.format(currentScanData.moveFunction)
-                    + "\tdeviation: " + DECIMAL.format(deviation)
-                    + "\trssi: " + DECIMAL.format(rssi)
-                    + "\tcounts: " + Arrays.toString(data));
+//                    + "\tdeviation: " + DECIMAL.format(deviation)
+                    + "\t" + DECIMAL.format(rssi)
+                    // + "\tcounts: " + Arrays.toString(data)
+                    );
             }
         }
         return mainMovingPeriods;
