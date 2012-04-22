@@ -20,9 +20,13 @@
 
 package org.ksoap2;
 
-import java.io.*;
-import org.kxml2.kdom.*;
-import org.xmlpull.v1.*;
+import java.io.IOException;
+
+import org.kxml2.kdom.Element;
+import org.kxml2.kdom.Node;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * A SOAP envelope, holding head and body objects. While this basic envelope
@@ -63,7 +67,7 @@ public class SoapEnvelope {
             return false;
         }
         booleanAsString = booleanAsString.trim().toLowerCase();
-        return (booleanAsString.equals("1") || booleanAsString.equals("true"));
+        return booleanAsString.equals("1") || booleanAsString.equals("true");
     }
 
     /**
@@ -182,7 +186,7 @@ public class SoapEnvelope {
             fault.parse(parser);
             bodyIn = fault;
         } else {
-            Node node = (bodyIn instanceof Node) ? (Node) bodyIn : new Node();
+            Node node = bodyIn instanceof Node ? (Node) bodyIn : new Node();
             node.parse(parser);
             bodyIn = node;
         }
@@ -196,7 +200,7 @@ public class SoapEnvelope {
         writer.setPrefix("i", xsi);
         writer.setPrefix("d", xsd);
         writer.setPrefix("c", enc);
-        writer.setPrefix("v", env);
+        writer.setPrefix("soap", env);
         writer.startTag(env, "Envelope");
         writer.startTag(env, "Header");
         writeHeader(writer);
@@ -212,8 +216,8 @@ public class SoapEnvelope {
      */
     public void writeHeader(XmlSerializer writer) throws IOException {
         if (headerOut != null) {
-            for (int i = 0; i < headerOut.length; i++) {
-                headerOut[i].write(writer);
+            for (Element element : headerOut) {
+                element.write(writer);
             }
         }
     }
