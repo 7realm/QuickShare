@@ -1,7 +1,9 @@
 package gov.nasa.pds.entities.response;
 
+import gov.nasa.pds.entities.BaseObject;
 
-public class SearchResults {
+
+public class SearchResults extends BaseObject {
     protected PagedResults dataFiles;
     protected PagedResults datasets;
     protected PagedResults instruments;

@@ -4,7 +4,6 @@ import gov.nasa.pds.entities.calls.GetTargetTypesInfoRequest;
 import gov.nasa.pds.entities.calls.GetTargetTypesInfoResponse;
 import gov.nasa.pds.entities.calls.SearchEntitiesRequest;
 import gov.nasa.pds.entities.calls.SearchEntitiesResponse;
-import gov.nasa.pds.entities.request.Page;
 import gov.nasa.pds.entities.response.EntityInfo;
 import gov.nasa.pds.entities.response.PagedResults;
 
@@ -41,7 +40,7 @@ public class SOAPTestActivity extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
             try {
-                SoapSerializationEnvelope envelope = getTargetTypesInfo();
+                SoapSerializationEnvelope envelope = searchEntities();
 
                 executeMethod(envelope);
             } catch (Exception e) {
@@ -72,8 +71,9 @@ public class SOAPTestActivity extends Activity {
             envelope.setOutputSoapObject(request);
 
             envelope.addMapping(NAMESPACE, "searchEntities", SearchEntitiesRequest.class);
-            envelope.addMapping(NAMESPACE, "page", Page.class);
             envelope.addMapping(NAMESPACE, "searchEntitiesResponse", SearchEntitiesResponse.class);
+            envelope.addMapping(NAMESPACE, "entityInfo", EntityInfo.class);
+
             return envelope;
         }
 
@@ -87,10 +87,10 @@ public class SOAPTestActivity extends Activity {
             Log.d("soap", "Response DUMP: " + httpTransport.responseDump);
             try {
                 Object result = envelope.getResponse();
-//                Log.i("soap", "Result property count: " + result.getPropertyCount());
-//                for (int i = 0; i < result.getPropertyCount(); i++) {
-//                    Log.i("soap", "Result [" + i + "] property : " + result.getProperty(i).getClass());
-//                }
+                // Log.i("soap", "Result property count: " + result.getPropertyCount());
+                // for (int i = 0; i < result.getPropertyCount(); i++) {
+                // Log.i("soap", "Result [" + i + "] property : " + result.getProperty(i).getClass());
+                // }
                 Log.i("soap", "Result: " + result);
             } catch (SoapFault soapFault) {
                 Log.e("soap", "Error: " + soapFault.faultstring);

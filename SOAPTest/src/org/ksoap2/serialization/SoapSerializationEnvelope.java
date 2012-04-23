@@ -125,12 +125,13 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             }
 
             if (foundIndex != -1 && propertyInfo != null) {
-                Object value = readObject(parser, obj, parsedNamespace, parsedName, propertyInfo);
 
                 if (propertyInfo.type.equals(List.class)) {
+                    Object value = readObject(parser, obj, parsedNamespace, parsedName, propertyInfo.elementType);
                     List<Object> list = (List<Object>) obj.getProperty(foundIndex);
                     list.add(value);
                 } else {
+                    Object value = readObject(parser, obj, parsedNamespace, parsedName, propertyInfo);
                     obj.setProperty(foundIndex, value);
                 }
             } else {
@@ -161,17 +162,21 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                 obj = qNameToClass.get(new QNameBase(namespace, name));
             } else if (expected != null) {
                 QNameInfo info = getInfo(expected.type, null);
-                name = info.type;
-                namespace = info.namespace;
-                obj = qNameToClass.get(info);
-                if (obj == null) {
-                    obj = info.marshal;
+                if (info != null) {
+                    name = info.type;
+                    namespace = info.namespace;
+                    obj = qNameToClass.get(info);
+                    if (obj == null) {
+                        obj = info.marshal;
+                    }
+                } else {
+                    obj = expected.type;
                 }
             }
         }
 
         if (obj == null) {
-            throw new RuntimeException("No mapping for " + name);
+            throw new RuntimeException("No mapping for " + parsedName);
         } else if (obj instanceof Marshal) {
             Marshal marshal = (Marshal) obj;
             return marshal.readInstance(parser, namespace, name, expected);
@@ -206,7 +211,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                 return tmp;
             }
         }
-        return new QNameInfo(xsd, ANY_TYPE_LABEL, null);
+        return null;
     }
 
     /**
