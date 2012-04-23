@@ -1,5 +1,7 @@
 package gov.nasa.pds.entities.response;
 
+import gov.nasa.pds.entities.BaseObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +27,8 @@ import java.util.List;
  *
  *
  */
-public class PagedResults {
-
-    protected List<Object> results;
+public class PagedResults extends BaseObject {
+    protected final List<Object> results = new ArrayList<Object>();;
     protected long total;
 
     /**
@@ -52,9 +53,6 @@ public class PagedResults {
      *
      */
     public List<Object> getResults() {
-        if (results == null) {
-            results = new ArrayList<Object>();
-        }
         return this.results;
     }
 

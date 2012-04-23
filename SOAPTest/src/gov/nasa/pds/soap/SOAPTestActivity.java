@@ -1,15 +1,20 @@
 package gov.nasa.pds.soap;
 
+import gov.nasa.pds.entities.calls.GetTargetRequest;
+import gov.nasa.pds.entities.calls.GetTargetResponse;
 import gov.nasa.pds.entities.calls.GetTargetTypeRequest;
 import gov.nasa.pds.entities.calls.GetTargetTypeResponse;
 import gov.nasa.pds.entities.calls.GetTargetTypesInfoRequest;
 import gov.nasa.pds.entities.calls.GetTargetTypesInfoResponse;
+import gov.nasa.pds.entities.calls.GetTargetsInfoRequest;
+import gov.nasa.pds.entities.calls.GetTargetsInfoResponse;
 import gov.nasa.pds.entities.calls.SearchEntitiesRequest;
 import gov.nasa.pds.entities.calls.SearchEntitiesResponse;
 import gov.nasa.pds.entities.response.EntityInfo;
 import gov.nasa.pds.entities.response.PagedResults;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -44,7 +49,7 @@ public class SOAPTestActivity extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
             try {
-                SoapSerializationEnvelope envelope = getTargetType();
+                SoapSerializationEnvelope envelope = getTarget();
 
                 executeMethod(envelope);
             } catch (Exception e) {
@@ -63,7 +68,6 @@ public class SOAPTestActivity extends Activity {
             envelope.addMapping(NAMESPACE, "getTargetTypesInfo", GetTargetTypesInfoRequest.class);
             envelope.addMapping(NAMESPACE, "getTargetTypesInfoResponse", GetTargetTypesInfoResponse.class);
             envelope.addMapping(NAMESPACE, "return", PagedResults.class);
-            envelope.addMapping(NAMESPACE, "entityInfo", EntityInfo.class);
             return envelope;
         }
 
@@ -79,6 +83,30 @@ public class SOAPTestActivity extends Activity {
             return envelope;
         }
 
+        private SoapSerializationEnvelope getTargetsInfo() {
+            GetTargetsInfoRequest request = new GetTargetsInfoRequest();
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+
+            envelope.addMapping(NAMESPACE, "getTargetsInfo", GetTargetsInfoRequest.class);
+            envelope.addMapping(NAMESPACE, "getTargetsInfoResponse", GetTargetsInfoResponse.class);
+            envelope.addMapping(NAMESPACE, "entityInfo", EntityInfo.class);
+            return envelope;
+        }
+
+        private SoapSerializationEnvelope getTarget() {
+            GetTargetRequest request = new GetTargetRequest();
+            request.setId(2);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+
+            envelope.addMapping(NAMESPACE, "getTarget", GetTargetRequest.class);
+            envelope.addMapping(NAMESPACE, "getTargetResponse", GetTargetResponse.class);
+            return envelope;
+        }
+
         private SoapSerializationEnvelope searchEntities() {
             SearchEntitiesRequest request = new SearchEntitiesRequest();
             request.setSearchText("deep");
@@ -89,7 +117,6 @@ public class SOAPTestActivity extends Activity {
             envelope.addMapping(NAMESPACE, "searchEntities", SearchEntitiesRequest.class);
             envelope.addMapping(NAMESPACE, "searchEntitiesResponse", SearchEntitiesResponse.class);
             envelope.addMapping(NAMESPACE, "entityInfo", EntityInfo.class);
-
             return envelope;
         }
 
@@ -120,6 +147,13 @@ public class SOAPTestActivity extends Activity {
                 Log.i("soap", indent + info.getName() + " = " + value);
                 if (value instanceof KvmSerializable) {
                     dumpProperties((KvmSerializable) value, indent + "\t");
+                } else if (value instanceof List) {
+                    List<?> list = (List<?>) value;
+                    for (Object item : list) {
+                        if (item instanceof KvmSerializable) {
+                            dumpProperties((KvmSerializable) item, indent + " ");
+                        }
+                    }
                 }
             }
         }

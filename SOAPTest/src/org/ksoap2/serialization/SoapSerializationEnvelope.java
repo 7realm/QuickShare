@@ -129,6 +129,10 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                 if (propertyInfo.type.equals(List.class)) {
                     Object value = readObject(parser, obj, parsedNamespace, parsedName, propertyInfo.elementType);
                     List<Object> list = (List<Object>) obj.getProperty(foundIndex);
+                    if (list == null) {
+                        list = new ArrayList<Object>();
+                        obj.setProperty(foundIndex, list);
+                    }
                     list.add(value);
                 } else {
                     Object value = readObject(parser, obj, parsedNamespace, parsedName, propertyInfo);
