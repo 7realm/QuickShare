@@ -1,4 +1,3 @@
-
 package gov.nasa.pds.entities.response;
 
 import gov.nasa.pds.entities.NamedEntity;
@@ -6,11 +5,12 @@ import gov.nasa.pds.entities.NamedEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * <p>Java class for volume complex type.
+ * <p>
+ * Java class for volume complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="volume">
@@ -32,9 +32,7 @@ import java.util.List;
  *
  *
  */
-public class Volume
-    extends NamedEntity
-{
+public class Volume extends NamedEntity {
 
     protected String description;
     protected List<MetadataObject> otherChildren;
@@ -47,9 +45,7 @@ public class Volume
     /**
      * Gets the value of the description property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getDescription() {
@@ -59,9 +55,7 @@ public class Volume
     /**
      * Sets the value of the description property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setDescription(String value) {
@@ -72,21 +66,20 @@ public class Volume
      * Gets the value of the otherChildren property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the otherChildren property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the otherChildren property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getOtherChildren().add(newItem);
+     * getOtherChildren().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link MetadataObject }
+     * Objects of the following type(s) are allowed in the list {@link MetadataObject }
      *
      *
      */
@@ -101,21 +94,20 @@ public class Volume
      * Gets the value of the otherProperties property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the otherProperties property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the otherProperties property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getOtherProperties().add(newItem);
+     * getOtherProperties().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Property }
+     * Objects of the following type(s) are allowed in the list {@link Property }
      *
      *
      */
@@ -129,9 +121,7 @@ public class Volume
     /**
      * Gets the value of the seriesName property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getSeriesName() {
@@ -141,9 +131,7 @@ public class Volume
     /**
      * Sets the value of the seriesName property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setSeriesName(String value) {
@@ -153,9 +141,7 @@ public class Volume
     /**
      * Gets the value of the setName property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getSetName() {
@@ -165,9 +151,7 @@ public class Volume
     /**
      * Sets the value of the setName property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setSetName(String value) {
@@ -177,9 +161,7 @@ public class Volume
     /**
      * Gets the value of the setTextId property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getSetTextId() {
@@ -189,9 +171,7 @@ public class Volume
     /**
      * Sets the value of the setTextId property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setSetTextId(String value) {
@@ -201,9 +181,7 @@ public class Volume
     /**
      * Gets the value of the textId property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getTextId() {
@@ -213,9 +191,7 @@ public class Volume
     /**
      * Sets the value of the textId property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setTextId(String value) {

@@ -1,4 +1,3 @@
-
 package gov.nasa.pds.entities.response;
 
 import gov.nasa.pds.entities.NamedEntity;
@@ -6,11 +5,12 @@ import gov.nasa.pds.entities.NamedEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * <p>Java class for property complex type.
+ * <p>
+ * Java class for property complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="property">
@@ -26,9 +26,7 @@ import java.util.List;
  *
  *
  */
-public class Property
-    extends NamedEntity
-{
+public class Property extends NamedEntity {
 
     protected List<String> values;
 
@@ -36,21 +34,20 @@ public class Property
      * Gets the value of the values property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the values property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the values property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getValues().add(newItem);
+     * getValues().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      *
      *
      */

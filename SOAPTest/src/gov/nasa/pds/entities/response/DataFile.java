@@ -1,14 +1,13 @@
-
 package gov.nasa.pds.entities.response;
 
 import gov.nasa.pds.entities.NamedEntity;
 
-
-
 /**
- * <p>Java class for dataFile complex type.
+ * <p>
+ * Java class for dataFile complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="dataFile">
@@ -25,9 +24,7 @@ import gov.nasa.pds.entities.NamedEntity;
  *
  *
  */
-public class DataFile
-    extends NamedEntity
-{
+public class DataFile extends NamedEntity {
 
     protected String content;
     protected String path;
@@ -35,9 +32,7 @@ public class DataFile
     /**
      * Gets the value of the content property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getContent() {
@@ -47,9 +42,7 @@ public class DataFile
     /**
      * Sets the value of the content property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setContent(String value) {
@@ -59,9 +52,7 @@ public class DataFile
     /**
      * Gets the value of the path property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getPath() {
@@ -71,9 +62,7 @@ public class DataFile
     /**
      * Sets the value of the path property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setPath(String value) {

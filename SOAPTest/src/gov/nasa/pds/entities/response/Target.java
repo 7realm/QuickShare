@@ -1,4 +1,3 @@
-
 package gov.nasa.pds.entities.response;
 
 import gov.nasa.pds.entities.NamedEntity;
@@ -6,11 +5,12 @@ import gov.nasa.pds.entities.NamedEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * <p>Java class for target complex type.
+ * <p>
+ * Java class for target complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="target">
@@ -27,10 +27,7 @@ import java.util.List;
  *
  *
  */
-public class Target
-    extends NamedEntity
-{
-
+public class Target extends NamedEntity {
     protected List<Reference> references;
     protected List<TargetType> types;
 
@@ -38,21 +35,20 @@ public class Target
      * Gets the value of the references property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the references property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the references property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getReferences().add(newItem);
+     * getReferences().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Reference }
+     * Objects of the following type(s) are allowed in the list {@link Reference }
      *
      *
      */
@@ -67,21 +63,20 @@ public class Target
      * Gets the value of the types property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the types property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the types property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getTypes().add(newItem);
+     * getTypes().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link TargetType }
+     * Objects of the following type(s) are allowed in the list {@link TargetType }
      *
      *
      */

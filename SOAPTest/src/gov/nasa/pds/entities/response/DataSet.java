@@ -1,4 +1,3 @@
-
 package gov.nasa.pds.entities.response;
 
 import gov.nasa.pds.entities.NamedEntity;
@@ -8,11 +7,12 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-
 /**
- * <p>Java class for dataSet complex type.
+ * <p>
+ * Java class for dataSet complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="dataSet">
@@ -38,9 +38,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *
  *
  */
-public class DataSet
-    extends NamedEntity
-{
+public class DataSet extends NamedEntity {
 
     protected String description;
     protected List<Instrument> instruments;
@@ -57,9 +55,7 @@ public class DataSet
     /**
      * Gets the value of the description property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getDescription() {
@@ -69,9 +65,7 @@ public class DataSet
     /**
      * Sets the value of the description property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setDescription(String value) {
@@ -82,21 +76,20 @@ public class DataSet
      * Gets the value of the instruments property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the instruments property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the instruments property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getInstruments().add(newItem);
+     * getInstruments().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Instrument }
+     * Objects of the following type(s) are allowed in the list {@link Instrument }
      *
      *
      */
@@ -111,21 +104,20 @@ public class DataSet
      * Gets the value of the missions property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the missions property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the missions property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getMissions().add(newItem);
+     * getMissions().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Mission }
+     * Objects of the following type(s) are allowed in the list {@link Mission }
      *
      *
      */
@@ -140,21 +132,20 @@ public class DataSet
      * Gets the value of the otherChildren property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the otherChildren property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the otherChildren property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getOtherChildren().add(newItem);
+     * getOtherChildren().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link MetadataObject }
+     * Objects of the following type(s) are allowed in the list {@link MetadataObject }
      *
      *
      */
@@ -168,9 +159,7 @@ public class DataSet
     /**
      * Gets the value of the rating property.
      *
-     * @return
-     *     possible object is
-     *     {@link Float }
+     * @return possible object is {@link Float }
      *
      */
     public Float getRating() {
@@ -180,9 +169,7 @@ public class DataSet
     /**
      * Sets the value of the rating property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link Float }
+     * @param value allowed object is {@link Float }
      *
      */
     public void setRating(Float value) {
@@ -193,21 +180,20 @@ public class DataSet
      * Gets the value of the references property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the references property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the references property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getReferences().add(newItem);
+     * getReferences().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Reference }
+     * Objects of the following type(s) are allowed in the list {@link Reference }
      *
      *
      */
@@ -221,9 +207,7 @@ public class DataSet
     /**
      * Gets the value of the startDate property.
      *
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
+     * @return possible object is {@link XMLGregorianCalendar }
      *
      */
     public XMLGregorianCalendar getStartDate() {
@@ -233,9 +217,7 @@ public class DataSet
     /**
      * Sets the value of the startDate property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
+     * @param value allowed object is {@link XMLGregorianCalendar }
      *
      */
     public void setStartDate(XMLGregorianCalendar value) {
@@ -245,9 +227,7 @@ public class DataSet
     /**
      * Gets the value of the stopDate property.
      *
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
+     * @return possible object is {@link XMLGregorianCalendar }
      *
      */
     public XMLGregorianCalendar getStopDate() {
@@ -257,9 +237,7 @@ public class DataSet
     /**
      * Sets the value of the stopDate property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
+     * @param value allowed object is {@link XMLGregorianCalendar }
      *
      */
     public void setStopDate(XMLGregorianCalendar value) {
@@ -270,21 +248,20 @@ public class DataSet
      * Gets the value of the targets property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the targets property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the targets property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getTargets().add(newItem);
+     * getTargets().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Target }
+     * Objects of the following type(s) are allowed in the list {@link Target }
      *
      *
      */
@@ -298,9 +275,7 @@ public class DataSet
     /**
      * Gets the value of the textId property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getTextId() {
@@ -310,9 +285,7 @@ public class DataSet
     /**
      * Sets the value of the textId property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setTextId(String value) {
@@ -323,21 +296,20 @@ public class DataSet
      * Gets the value of the volumes property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the volumes property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the volumes property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getVolumes().add(newItem);
+     * getVolumes().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Volume }
+     * Objects of the following type(s) are allowed in the list {@link Volume }
      *
      *
      */

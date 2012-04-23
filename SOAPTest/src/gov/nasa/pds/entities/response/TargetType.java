@@ -22,9 +22,6 @@ import gov.nasa.pds.entities.NamedEntity;
  *
  *
  */
-public class TargetType
-    extends NamedEntity
-{
-    // empty
-
+public class TargetType extends NamedEntity {
+    // empty, same class as NamedEntity
 }

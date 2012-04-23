@@ -1,4 +1,3 @@
-
 package gov.nasa.pds.entities.response;
 
 import gov.nasa.pds.entities.NamedEntity;
@@ -8,11 +7,12 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-
 /**
- * <p>Java class for mission complex type.
+ * <p>
+ * Java class for mission complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="mission">
@@ -32,9 +32,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *
  *
  */
-public class Mission
-    extends NamedEntity
-{
+public class Mission extends NamedEntity {
 
     protected String description;
     protected XMLGregorianCalendar endDate;
@@ -45,9 +43,7 @@ public class Mission
     /**
      * Gets the value of the description property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getDescription() {
@@ -57,9 +53,7 @@ public class Mission
     /**
      * Sets the value of the description property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setDescription(String value) {
@@ -69,9 +63,7 @@ public class Mission
     /**
      * Gets the value of the endDate property.
      *
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
+     * @return possible object is {@link XMLGregorianCalendar }
      *
      */
     public XMLGregorianCalendar getEndDate() {
@@ -81,9 +73,7 @@ public class Mission
     /**
      * Sets the value of the endDate property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
+     * @param value allowed object is {@link XMLGregorianCalendar }
      *
      */
     public void setEndDate(XMLGregorianCalendar value) {
@@ -94,21 +84,20 @@ public class Mission
      * Gets the value of the otherChildren property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the otherChildren property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the otherChildren property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getOtherChildren().add(newItem);
+     * getOtherChildren().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link MetadataObject }
+     * Objects of the following type(s) are allowed in the list {@link MetadataObject }
      *
      *
      */
@@ -123,21 +112,20 @@ public class Mission
      * Gets the value of the references property.
      *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the references property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the references property.
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getReferences().add(newItem);
+     * getReferences().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Reference }
+     * Objects of the following type(s) are allowed in the list {@link Reference }
      *
      *
      */
@@ -151,9 +139,7 @@ public class Mission
     /**
      * Gets the value of the startDate property.
      *
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
+     * @return possible object is {@link XMLGregorianCalendar }
      *
      */
     public XMLGregorianCalendar getStartDate() {
@@ -163,9 +149,7 @@ public class Mission
     /**
      * Sets the value of the startDate property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
+     * @param value allowed object is {@link XMLGregorianCalendar }
      *
      */
     public void setStartDate(XMLGregorianCalendar value) {
