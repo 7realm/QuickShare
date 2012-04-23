@@ -19,7 +19,6 @@ public abstract class BaseObject implements KvmSerializable{
     public BaseObject() {
         super();
 
-        fields = this.getClass().getDeclaredFields();
         List<Field> fieldList = new ArrayList<Field>();
         Class<?> clazz = this.getClass();
         while (!clazz.equals(BaseObject.class)) {
@@ -27,6 +26,7 @@ public abstract class BaseObject implements KvmSerializable{
 
             clazz = clazz.getSuperclass();
         }
+        fields = fieldList.toArray(new Field[fieldList.size()]);
         Arrays.sort(fields, new Comparator<Field>() {
             @Override
             public int compare(Field lhs, Field rhs) {

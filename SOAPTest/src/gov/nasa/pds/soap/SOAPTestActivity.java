@@ -1,5 +1,7 @@
 package gov.nasa.pds.soap;
 
+import gov.nasa.pds.entities.calls.GetTargetTypeRequest;
+import gov.nasa.pds.entities.calls.GetTargetTypeResponse;
 import gov.nasa.pds.entities.calls.GetTargetTypesInfoRequest;
 import gov.nasa.pds.entities.calls.GetTargetTypesInfoResponse;
 import gov.nasa.pds.entities.calls.SearchEntitiesRequest;
@@ -11,6 +13,8 @@ import java.io.IOException;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
+import org.ksoap2.serialization.KvmSerializable;
+import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
@@ -40,7 +44,7 @@ public class SOAPTestActivity extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
             try {
-                SoapSerializationEnvelope envelope = searchEntities();
+                SoapSerializationEnvelope envelope = getTargetType();
 
                 executeMethod(envelope);
             } catch (Exception e) {
@@ -60,6 +64,18 @@ public class SOAPTestActivity extends Activity {
             envelope.addMapping(NAMESPACE, "getTargetTypesInfoResponse", GetTargetTypesInfoResponse.class);
             envelope.addMapping(NAMESPACE, "return", PagedResults.class);
             envelope.addMapping(NAMESPACE, "entityInfo", EntityInfo.class);
+            return envelope;
+        }
+
+        private SoapSerializationEnvelope getTargetType() {
+            GetTargetTypeRequest request = new GetTargetTypeRequest();
+            request.setId(2);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+
+            envelope.addMapping(NAMESPACE, "getTargetType", GetTargetTypeRequest.class);
+            envelope.addMapping(NAMESPACE, "getTargetTypeResponse", GetTargetTypeResponse.class);
             return envelope;
         }
 
@@ -87,16 +103,27 @@ public class SOAPTestActivity extends Activity {
             Log.d("soap", "Response DUMP: " + httpTransport.responseDump);
             try {
                 Object result = envelope.getResponse();
-                // Log.i("soap", "Result property count: " + result.getPropertyCount());
-                // for (int i = 0; i < result.getPropertyCount(); i++) {
-                // Log.i("soap", "Result [" + i + "] property : " + result.getProperty(i).getClass());
-                // }
                 Log.i("soap", "Result: " + result);
+                if (result instanceof KvmSerializable) {
+                    dumpProperties((KvmSerializable) result, "");
+                }
             } catch (SoapFault soapFault) {
                 Log.e("soap", "Error: " + soapFault.faultstring);
                 throw soapFault;
             }
         }
+
+        private void dumpProperties(KvmSerializable object, String indent) {
+            for (int i = 0; i < object.getPropertyCount(); i++) {
+                PropertyInfo info = object.getPropertyInfo(i, null);
+                Object value = object.getProperty(i);
+                Log.i("soap", indent + info.getName() + " = " + value);
+                if (value instanceof KvmSerializable) {
+                    dumpProperties((KvmSerializable) value, indent + "\t");
+                }
+            }
+        }
+
     }
 
     public void callService(View v) {
