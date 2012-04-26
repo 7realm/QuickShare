@@ -14,5 +14,4 @@ public class PagedQuery extends BaseQuery {
     public Page getPage() {
         return page;
     }
-
 }
