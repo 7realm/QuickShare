@@ -68,5 +68,4 @@ public class AddRestrictionView extends RelativeLayout {
         MISSION,
         INSTRUMENT
     }
-
 }

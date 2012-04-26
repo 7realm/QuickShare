@@ -13,8 +13,8 @@ public class PageResultsProvider {
     private final PagedQuery pagedQuery;
     private final int itemsPerPage;
 
-    private long lastPageSize;
-    private long total;
+    private int lastPageSize;
+    private int total;
     private PagedResults lastResult;
 
     public PageResultsProvider(String caption, PagedQuery pagedQuery) {
@@ -24,16 +24,17 @@ public class PageResultsProvider {
         this.itemsPerPage = pagedQuery.getPage().getItemsPerPage();
     }
 
-    public long getPageCount() {
+    public int getPageCount() {
         return total / itemsPerPage + (lastPageSize == 0 ? 0 : lastPageSize);
     }
 
-    public long getPageSize(int pageIndex) {
-        int itemsPerPage = pagedQuery.getPage().getItemsPerPage();
-        long lastPageSize = total % itemsPerPage;
+    public int getCurrentPage() {
+        return pagedQuery.getPage().getPageNumber();
+    }
 
+    public int getCurrentPageSize() {
         // last page is exactly full or we have not last page
-        return lastPageSize == 0 || getPageCount() > pageIndex + 1 ? itemsPerPage : lastPageSize;
+        return lastPageSize == 0 || getPageCount() > getCurrentPage() + 1 ? itemsPerPage : lastPageSize;
     }
 
     public void fillView(int itemIndex, View pageView) {
@@ -69,7 +70,7 @@ public class PageResultsProvider {
         lastResult = DataCenter.executePagedQuery(pagedQuery);
 
         // update total and last page size
-        total = lastResult.getTotal();
+        total = (int) lastResult.getTotal();
         lastPageSize = total % itemsPerPage;
     }
 

@@ -12,6 +12,12 @@
         <activity
             android:name=".NasaSearchActivity"
             android:label="@string/app_name" >
+            
+        </activity>
+        
+         <activity
+            android:name=".PageViewActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -6,6 +6,14 @@ import gov.nasa.pds.data.temp.PagedResults;
 
 public class DataCenter {
     public static PagedResults executePagedQuery(PagedQuery query) {
+        switch (query.getQueryType()) {
+        case GET_TYPES_INFO:
+
+            break;
+
+        default:
+            break;
+        }
         return null;
     }
 
