@@ -27,6 +27,7 @@ import java.util.Map;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
 import org.ksoap2.SoapFault12;
+import org.ksoap2.serialization.marshals.MarshalDate;
 import org.ksoap2.serialization.marshals.MarshalDefault;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -64,6 +65,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
     public SoapSerializationEnvelope(int version) {
         super(version);
         DEFAULT_MARSHAL.register(this);
+        new MarshalDate().register(this);
     }
 
     /**

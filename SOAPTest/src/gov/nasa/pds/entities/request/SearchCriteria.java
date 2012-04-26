@@ -1,4 +1,4 @@
-package gov.nasa.pds.entities.response;
+package gov.nasa.pds.entities.request;
 
 import java.util.ArrayList;
 import java.util.List;

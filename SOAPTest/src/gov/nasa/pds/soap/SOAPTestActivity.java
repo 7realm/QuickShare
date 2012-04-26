@@ -1,5 +1,9 @@
 package gov.nasa.pds.soap;
 
+import gov.nasa.pds.entities.calls.GetMissionRequest;
+import gov.nasa.pds.entities.calls.GetMissionResponse;
+import gov.nasa.pds.entities.calls.GetMissionsInfoRequest;
+import gov.nasa.pds.entities.calls.GetMissionsInfoResponse;
 import gov.nasa.pds.entities.calls.GetTargetRequest;
 import gov.nasa.pds.entities.calls.GetTargetResponse;
 import gov.nasa.pds.entities.calls.GetTargetTypeRequest;
@@ -49,7 +53,7 @@ public class SOAPTestActivity extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
             try {
-                SoapSerializationEnvelope envelope = getTarget();
+                SoapSerializationEnvelope envelope = getMission();
 
                 executeMethod(envelope);
             } catch (Exception e) {
@@ -104,6 +108,30 @@ public class SOAPTestActivity extends Activity {
 
             envelope.addMapping(NAMESPACE, "getTarget", GetTargetRequest.class);
             envelope.addMapping(NAMESPACE, "getTargetResponse", GetTargetResponse.class);
+            return envelope;
+        }
+
+        private SoapSerializationEnvelope getMissionsInfo() {
+            GetMissionsInfoRequest request = new GetMissionsInfoRequest();
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+
+            envelope.addMapping(NAMESPACE, "getMissionsInfo", GetMissionsInfoRequest.class);
+            envelope.addMapping(NAMESPACE, "getMissionsInfoResponse", GetMissionsInfoResponse.class);
+            envelope.addMapping(NAMESPACE, "entityInfo", EntityInfo.class);
+            return envelope;
+        }
+
+        private SoapSerializationEnvelope getMission() {
+            GetMissionRequest request = new GetMissionRequest();
+            request.setId(3);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+
+            envelope.addMapping(NAMESPACE, "getMission", GetMissionRequest.class);
+            envelope.addMapping(NAMESPACE, "getMissionResponse", GetMissionResponse.class);
             return envelope;
         }
 

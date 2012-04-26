@@ -3,9 +3,8 @@ package gov.nasa.pds.entities.response;
 import gov.nasa.pds.entities.NamedEntity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * <p>
@@ -35,10 +34,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 public class Mission extends NamedEntity {
 
     protected String description;
-    protected XMLGregorianCalendar endDate;
+    protected Date endDate;
     protected List<MetadataObject> otherChildren;
     protected List<Reference> references;
-    protected XMLGregorianCalendar startDate;
+    protected Date startDate;
 
     /**
      * Gets the value of the description property.
@@ -63,20 +62,20 @@ public class Mission extends NamedEntity {
     /**
      * Gets the value of the endDate property.
      *
-     * @return possible object is {@link XMLGregorianCalendar }
+     * @return possible object is {@link Date }
      *
      */
-    public XMLGregorianCalendar getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
     /**
      * Sets the value of the endDate property.
      *
-     * @param value allowed object is {@link XMLGregorianCalendar }
+     * @param value allowed object is {@link Date }
      *
      */
-    public void setEndDate(XMLGregorianCalendar value) {
+    public void setEndDate(Date value) {
         this.endDate = value;
     }
 
@@ -139,20 +138,20 @@ public class Mission extends NamedEntity {
     /**
      * Gets the value of the startDate property.
      *
-     * @return possible object is {@link XMLGregorianCalendar }
+     * @return possible object is {@link Date }
      *
      */
-    public XMLGregorianCalendar getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
     /**
      * Sets the value of the startDate property.
      *
-     * @param value allowed object is {@link XMLGregorianCalendar }
+     * @param value allowed object is {@link Date }
      *
      */
-    public void setStartDate(XMLGregorianCalendar value) {
+    public void setStartDate(Date value) {
         this.startDate = value;
     }
 
