@@ -3,7 +3,7 @@ package gov.nasa.pds.android;
 import gov.nasa.pds.data.PageResultsProvider;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.data.queries.PagedQuery;
-import gov.nasa.pds.data.temp.Page;
+import gov.nasa.pds.soap.entities.Page;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;

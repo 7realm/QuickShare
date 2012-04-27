@@ -1,11 +1,11 @@
-package gov.nasa.pds.data.temp;
+package gov.nasa.pds.soap.entities;
+
+import gov.nasa.pds.soap.BaseObject;
 
 /**
- * <p>
- * Java class for entityInfo complex type.
+ * <p>Java class for entityInfo complex type.
  *
- * <p>
- * The following schema fragment specifies the expected content contained within this class.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="entityInfo">
@@ -22,7 +22,7 @@ package gov.nasa.pds.data.temp;
  *
  *
  */
-public class EntityInfo {
+public class EntityInfo extends BaseObject {
     protected long id;
     protected String name;
 
@@ -45,7 +45,9 @@ public class EntityInfo {
     /**
      * Gets the value of the name property.
      *
-     * @return possible object is {@link String }
+     * @return
+     *     possible object is
+     *     {@link String }
      *
      */
     public String getName() {
@@ -55,7 +57,9 @@ public class EntityInfo {
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is {@link String }
+     * @param value
+     *     allowed object is
+     *     {@link String }
      *
      */
     public void setName(String value) {

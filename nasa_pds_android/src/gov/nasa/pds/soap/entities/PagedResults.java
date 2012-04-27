@@ -1,4 +1,6 @@
-package gov.nasa.pds.data.temp;
+package gov.nasa.pds.soap.entities;
+
+import gov.nasa.pds.soap.BaseObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ import java.util.List;
  *
  *
  */
-public class PagedResults {
+public class PagedResults extends BaseObject {
     protected final List<Object> results = new ArrayList<Object>();;
     protected long total;
 

@@ -2,8 +2,8 @@ package gov.nasa.pds.data;
 
 import gov.nasa.pds.android.R;
 import gov.nasa.pds.data.queries.PagedQuery;
-import gov.nasa.pds.data.temp.EntityInfo;
-import gov.nasa.pds.data.temp.PagedResults;
+import gov.nasa.pds.soap.entities.EntityInfo;
+import gov.nasa.pds.soap.entities.PagedResults;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;

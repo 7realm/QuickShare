@@ -2,7 +2,7 @@ package gov.nasa.pds.data;
 
 import gov.nasa.pds.data.queries.ObjectQuery;
 import gov.nasa.pds.data.queries.PagedQuery;
-import gov.nasa.pds.data.temp.PagedResults;
+import gov.nasa.pds.soap.entities.PagedResults;
 
 public class DataCenter {
     public static PagedResults executePagedQuery(PagedQuery query) {
