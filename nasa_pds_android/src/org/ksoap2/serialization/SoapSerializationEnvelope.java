@@ -39,6 +39,7 @@ import org.xmlpull.v1.XmlSerializer;
  *         This class extends the SoapEnvelope with Soap Serialization functionality.
  */
 public class SoapSerializationEnvelope extends SoapEnvelope {
+    private static final String DEFAULT_NAMESPACE = "http://pds.nasa.gov/";
     private static final String ANY_TYPE_LABEL = "anyType";
     private static final String ROOT_LABEL = "root";
     private static final String TYPE_LABEL = "type";
@@ -66,19 +67,6 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         super(version);
         DEFAULT_MARSHAL.register(this);
         new MarshalDate().register(this);
-    }
-
-    /**
-     * Set the bodyOut to be empty so that no un-needed xml is create. The null value for bodyOut will cause #writeBody
-     * to skip writing anything redundant.
-     *
-     * @param emptyBody
-     * @see "http://code.google.com/p/ksoap2-android/issues/detail?id=77"
-     */
-    public void setBodyOutEmpty(boolean emptyBody) {
-        if (emptyBody) {
-            bodyOut = null;
-        }
     }
 
     @Override
@@ -224,16 +212,29 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
      * Defines a direct mapping from a namespace and type to a java class (and vice versa), using the given marshal
      * mechanism
      */
-    public void addMapping(String namespace, String name, Class clazz, Marshal marshal) {
+    public SoapSerializationEnvelope addMapping(String namespace, String name, Class clazz, Marshal marshal) {
         qNameToClass.put(new QNameBase(namespace, name), marshal == null ? (Object) clazz : marshal);
         classToQName.put(clazz.getName(), new QNameInfo(namespace, name, marshal));
+        return this;
     }
 
     /**
      * Defines a direct mapping from a namespace and type to a java class (and vice versa)
      */
-    public void addMapping(String namespace, String name, Class clazz) {
-        addMapping(namespace, name, clazz, null);
+    public SoapSerializationEnvelope addMapping(String namespace, String name, Class clazz) {
+        return addMapping(namespace, name, clazz, null);
+    }
+
+    /**
+     * Defines a direct mapping from a namespace and type to a java class (and vice versa)
+     */
+    public SoapSerializationEnvelope addMapping(String name, Class clazz) {
+        return addMapping(DEFAULT_NAMESPACE, name, clazz, null);
+    }
+
+    public SoapSerializationEnvelope addRequest(Object request) {
+        setOutputSoapObject(request);
+        return this;
     }
 
     /**

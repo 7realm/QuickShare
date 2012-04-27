@@ -1,5 +1,6 @@
 package gov.nasa.pds.android;
 
+import gov.nasa.pds.data.queries.RestrictionType;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -60,12 +61,5 @@ public class AddRestrictionView extends RelativeLayout {
         }
         builder.append(">");
         return builder;
-    }
-
-    public static enum RestrictionType {
-        TARGET_TYPE,
-        TARGET,
-        MISSION,
-        INSTRUMENT
     }
 }

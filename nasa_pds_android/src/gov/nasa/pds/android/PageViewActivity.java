@@ -2,7 +2,7 @@ package gov.nasa.pds.android;
 
 import gov.nasa.pds.data.PageResultsProvider;
 import gov.nasa.pds.data.QueryType;
-import gov.nasa.pds.data.queries.PagedQuery;
+import gov.nasa.pds.data.queries.InfoPagedQuery;
 import gov.nasa.pds.soap.entities.Page;
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -34,7 +34,7 @@ public class PageViewActivity extends Activity {
         Page page = new Page();
         page.setItemsPerPage(20);
         page.setPageNumber(0);
-        provider = new PageResultsProvider(queryType.name(), new PagedQuery(queryType, page));
+        provider = new PageResultsProvider(queryType.name(), new InfoPagedQuery(queryType, 0));
 
         // load first page
         new DataLoadTast().execute(0);
