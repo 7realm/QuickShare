@@ -14,7 +14,9 @@ public class DataCenter {
         default:
             break;
         }
-        return null;
+        PagedResults result = new PagedResults();
+        result.setTotal(0);
+        return result;
     }
 
     public static <T> T executeObjectQuery(ObjectQuery<T> query) {

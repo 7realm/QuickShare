@@ -1,6 +1,8 @@
 package gov.nasa.pds.android;
 
+import gov.nasa.pds.data.QueryType;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -60,6 +62,13 @@ public class NasaSearchActivity extends Activity {
                 return false;
             }
         });
+    }
+
+    @SuppressWarnings("unused")
+    public void searchButtonClick(View v) {
+        Intent intent = new Intent(this, PageViewActivity.class);
+        intent.putExtra("query_type", QueryType.SEARCH_BY_TYPE.name());
+        startActivity(intent);
     }
 
     private class EmptyTabFactory implements TabContentFactory {

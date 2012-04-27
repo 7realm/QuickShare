@@ -1,6 +1,9 @@
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.data.PageResultsProvider;
+import gov.nasa.pds.data.QueryType;
+import gov.nasa.pds.data.queries.PagedQuery;
+import gov.nasa.pds.data.temp.Page;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +28,13 @@ public class PageViewActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_results);
+
+        // create provider form intent
+        QueryType queryType = QueryType.valueOf(getIntent().getStringExtra("query_type"));
+        Page page = new Page();
+        page.setItemsPerPage(20);
+        page.setPageNumber(0);
+        provider = new PageResultsProvider(queryType.name(), new PagedQuery(queryType, page));
 
         // load first page
         new DataLoadTast().execute(0);
