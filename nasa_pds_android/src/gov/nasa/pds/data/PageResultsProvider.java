@@ -2,66 +2,58 @@ package gov.nasa.pds.data;
 
 import gov.nasa.pds.android.R;
 import gov.nasa.pds.data.queries.PagedQuery;
-import gov.nasa.pds.soap.entities.EntityInfo;
-import gov.nasa.pds.soap.entities.PagedResults;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
-public class PageResultsProvider {
-    private final String caption;
+public class PageResultsProvider extends ResultsProvider {
     private final PagedQuery pagedQuery;
     private final int itemsPerPage;
 
     private int lastPageSize;
     private int total;
-    private PagedResults lastResult;
 
-    public PageResultsProvider(String caption, PagedQuery pagedQuery) {
+    public PageResultsProvider(PagedQuery pagedQuery) {
         super();
-        this.caption = caption;
         this.pagedQuery = pagedQuery;
         this.itemsPerPage = pagedQuery.getPage().getItemsPerPage();
     }
 
+    /**
+     *
+     *
+     * @return
+     */
+    @Override
     public int getPageCount() {
-        return total / itemsPerPage + (lastPageSize == 0 ? 0 : lastPageSize);
+        return total / itemsPerPage + (lastPageSize == 0 ? 0 : 1);
     }
 
+    /**
+     *
+     *
+     * @return
+     */
+    @Override
     public int getCurrentPage() {
         return pagedQuery.getPage().getPageNumber();
     }
 
+    /**
+     *
+     *
+     * @return
+     */
+    @Override
     public int getCurrentPageSize() {
         // last page is exactly full or we have not last page
-        return lastPageSize == 0 || getPageCount() > getCurrentPage() + 1 ? itemsPerPage : lastPageSize;
-    }
-
-    public void fillView(int itemIndex, View pageView) {
-        // for safety skip empty items
-        EntityInfo item = getItem(itemIndex);
-        if (item == null) {
-            return;
-        }
-
-        // set caption of the item
-        TextView captionTextView = (TextView) pageView.findViewById(R.id.entityNameText);
-        captionTextView.setText(item.getName());
-
-        // show or hide select button depending on query
-        View selectButton = pageView.findViewById(R.id.entitySelectButton);
-        if (pagedQuery.getQueryType() == QueryType.SEARCH_BY_TYPE) {
-            selectButton.setVisibility(View.GONE);
-        } else {
-            selectButton.setVisibility(View.VISIBLE);
-        }
+        return lastPageSize == 0 || getPageCount() > getCurrentPage() ? itemsPerPage : lastPageSize;
     }
 
     /**
-     * Moves to specified page. Can be also used to move to first page.
      *
-     * @param pageIndex the index of target page
+     *
+     * @param pageIndex
      */
+    @Override
     public void moveToPage(int pageIndex) {
         // set new page index
         pagedQuery.getPage().setPageNumber(pageIndex);
@@ -74,20 +66,16 @@ public class PageResultsProvider {
         lastPageSize = total % itemsPerPage;
     }
 
-    public EntityInfo getItem(int itemIndex) {
-        if (lastResult == null) {
-            return null;
+    @Override
+    public void fillView(int itemIndex, View pageView) {
+        super.fillView(itemIndex, pageView);
+
+        // show or hide select button depending on query
+        View selectButton = pageView.findViewById(R.id.entitySelectButton);
+        if (pagedQuery.getQueryType() == QueryType.SEARCH_BY_TYPE) {
+            selectButton.setVisibility(View.GONE);
+        } else {
+            selectButton.setVisibility(View.VISIBLE);
         }
-
-        if (lastResult.getResults().size() >= itemIndex + 1) {
-            Log.w("page_result", "Getting item beyond the result size.");
-            return null;
-        }
-
-        return (EntityInfo) lastResult.getResults().get(itemIndex);
-    }
-
-    public String getCaption() {
-        return caption;
     }
 }

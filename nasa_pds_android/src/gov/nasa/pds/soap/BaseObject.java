@@ -11,9 +11,7 @@ import java.util.List;
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
 
-import android.util.Log;
-
-public abstract class BaseObject implements KvmSerializable{
+public abstract class BaseObject implements KvmSerializable {
     private Field[] fields;
 
     public BaseObject() {
@@ -34,10 +32,9 @@ public abstract class BaseObject implements KvmSerializable{
             }
         });
 
-        Log.i("soap", "Class: " + getClass().getName());
+        // make fields accessible
         for (Field field : fields) {
             field.setAccessible(true);
-            Log.i("soap", field.getName() + " = " + field.getType());
         }
     }
 
@@ -57,7 +54,7 @@ public abstract class BaseObject implements KvmSerializable{
 
     @Override
     @SuppressWarnings("rawtypes")
-    public PropertyInfo getPropertyInfo(int i, Hashtable hashtable ) {
+    public PropertyInfo getPropertyInfo(int i, Hashtable hashtable) {
         PropertyInfo propertyinfo = new PropertyInfo();
         propertyinfo.name = getFieldName(i);
         propertyinfo.type = fields[i].getType();

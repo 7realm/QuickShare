@@ -41,37 +41,19 @@
             android:text="next" />
 
         <TextView
+            android:id="@+id/pageCaption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/nextButton"
             android:layout_toRightOf="@id/previousButton"
-            android:gravity="center"
-            android:text="Page 1" />
+            android:gravity="center" />
     </RelativeLayout>
 
     <ViewFlipper
         android:id="@+id/flipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FF0000" >
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFF00" >
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FF00FF" >
-        </FrameLayout>
     </ViewFlipper>
 
 </LinearLayout>

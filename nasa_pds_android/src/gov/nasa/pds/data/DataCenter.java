@@ -22,6 +22,8 @@ public class DataCenter {
     private static final String URL = "http://192.168.0.101:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
     public static PagedResults executePagedQuery(PagedQuery query) {
+        Log.i("soap", "Execution paged query: " + query.getQueryType());
+
         PagedResults result = (PagedResults) executeMethod(query.getEnvelope());
 
         if (result == null) {
@@ -63,9 +65,11 @@ public class DataCenter {
         } catch (SoapFault soapFault) {
             Log.e("soap", "Soap fault : " + soapFault.faultstring);
         } catch (IOException e) {
-            Log.e("soap", "I/O error: " + e.getMessage());
+            Log.e("soap", "I/O error: " + e.getMessage(), e);
         } catch (XmlPullParserException e) {
-            Log.e("soap", "Xml parser error: " + e.getMessage());
+            Log.e("soap", "Xml parser error: " + e.getMessage(), e);
+        } catch (Exception e) {
+            Log.e("soap", "Unexpected exception when calling soap method: " + e.getMessage(), e);
         }
         return null;
 

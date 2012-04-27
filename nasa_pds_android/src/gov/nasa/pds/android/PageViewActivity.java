@@ -2,8 +2,9 @@ package gov.nasa.pds.android;
 
 import gov.nasa.pds.data.PageResultsProvider;
 import gov.nasa.pds.data.QueryType;
+import gov.nasa.pds.data.ResultsProvider;
+import gov.nasa.pds.data.TargetTypesResultsProvider;
 import gov.nasa.pds.data.queries.InfoPagedQuery;
-import gov.nasa.pds.soap.entities.Page;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,12 +16,15 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 public class PageViewActivity extends Activity {
+    public static final String EXTRA_QUERY_TYPE = "query_type";
+    public static final int REQUEST_SELECT_RESTRICTION = 1001;
     private ViewFlipper viewFlipper;
-    private PageResultsProvider provider;
+    private ResultsProvider provider;
     private boolean firstRun = true;
     private final PageResultsAdapter adapter = new PageResultsAdapter();;
 
@@ -30,14 +34,12 @@ public class PageViewActivity extends Activity {
         setContentView(R.layout.page_results);
 
         // create provider form intent
-        QueryType queryType = QueryType.valueOf(getIntent().getStringExtra("query_type"));
-        Page page = new Page();
-        page.setItemsPerPage(20);
-        page.setPageNumber(0);
-        provider = new PageResultsProvider(queryType.name(), new InfoPagedQuery(queryType, 0));
+        QueryType queryType = QueryType.valueOf(getIntent().getStringExtra(EXTRA_QUERY_TYPE));
+        provider = queryType == QueryType.GET_TYPES_INFO ?
+            new TargetTypesResultsProvider() : new PageResultsProvider(new InfoPagedQuery(queryType, 0));
 
         // load first page
-        new DataLoadTast().execute(0);
+        new DataLoadTast().execute(1);
 
         // get view flipper
         viewFlipper = (ViewFlipper) findViewById(R.id.flipper);
@@ -83,8 +85,8 @@ public class PageViewActivity extends Activity {
 
         // get number of next page
         int nextPage = provider.getCurrentPage() + 1;
-        if (nextPage == provider.getPageCount()) {
-            nextPage = 0;
+        if (nextPage == provider.getPageCount() + 1) {
+            nextPage = 1;
         }
 
         // move to next page
@@ -92,6 +94,8 @@ public class PageViewActivity extends Activity {
 
         // slide the view
         viewFlipper.showNext();
+
+        setPageCaption(nextPage);
     }
 
     private void goToPrevious() {
@@ -99,7 +103,7 @@ public class PageViewActivity extends Activity {
         // get number of previous page
         int previousPage = provider.getCurrentPage() - 1;
         if (previousPage == 0) {
-            previousPage = provider.getPageCount() - 1;
+            previousPage = provider.getPageCount();
         }
 
         // move to previous page
@@ -107,6 +111,12 @@ public class PageViewActivity extends Activity {
 
         // slide the view
         viewFlipper.showPrevious();
+
+        setPageCaption(previousPage);
+    }
+
+    private void setPageCaption(int nextPage) {
+        ((TextView) findViewById(R.id.pageCaption)).setText("Page " + nextPage + " of " + provider.getPageCount());
     }
 
     private final class DataLoadTast extends AsyncTask<Integer, Void, Void> {
@@ -127,6 +137,7 @@ public class PageViewActivity extends Activity {
                     viewFlipper.addView(view, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 }
                 firstRun = false;
+                setPageCaption(1);
             }
 
             // notify list about content change
@@ -138,7 +149,7 @@ public class PageViewActivity extends Activity {
         @Override
         public View getView(int i, View view, ViewGroup viewgroup) {
             if (view == null) {
-                view = LayoutInflater.from(PageViewActivity.this).inflate(R.layout.entity_item, viewgroup);
+                view = LayoutInflater.from(PageViewActivity.this).inflate(R.layout.entity_item, null, true);
             }
             provider.fillView(i, view);
             return view;

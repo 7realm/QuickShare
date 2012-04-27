@@ -17,6 +17,8 @@
 
 package org.ksoap2.serialization;
 
+import gov.nasa.pds.soap.SerializationException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -273,6 +275,9 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         // see http://code.google.com/p/ksoap2-android/issues/detail?id=77
         if (bodyOut != null) {
             QNameInfo qName = getInfo(null, bodyOut);
+            if (qName == null) {
+                throw new SerializationException("Not mapped class: " + bodyOut);
+            }
             writer.startTag(qName.namespace, qName.type);
             writeElement(writer, bodyOut, null, qName.marshal);
             writer.endTag(qName.namespace, qName.type);
@@ -295,7 +300,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                 // skip transient properties
                 if ((propertyInfo.flags & PropertyInfo.TRANSIENT) == 0) {
                     writer.startTag(propertyInfo.namespace, propertyInfo.name);
-                    writeProperty(writer, obj.getProperty(i), propertyInfo);
+                    writeProperty(writer, propertyValue, propertyInfo);
                     writer.endTag(propertyInfo.namespace, propertyInfo.name);
                 }
             }
@@ -304,14 +309,14 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
 
     protected void writeProperty(XmlSerializer writer, Object obj, PropertyInfo type) throws IOException {
         if (obj == null) {
-            throw new RuntimeException("Property value should not be null.");
+            throw new SerializationException("Property value should not be null.");
         }
         QNameInfo qName = getInfo(null, obj);
         if (obj.getClass() != type.type) {
             String prefix = writer.getPrefix(qName.namespace, true);
             writer.attribute(xsi, TYPE_LABEL, prefix + ":" + qName.type);
         }
-        writeElement(writer, obj, type, qName.marshal);
+        writeElement(writer, obj, type, qName == null ? null : qName.marshal);
     }
 
     private void writeElement(XmlSerializer writer, Object element, PropertyInfo type, Object marshal)

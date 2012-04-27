@@ -22,7 +22,7 @@ import gov.nasa.pds.soap.entities.PagedResults;
  * &lt;/complexType>
  * </pre>
  */
-public class GetTargetsInfoResponse extends BaseObject {
+public class GetEntitiesInfoResponse extends BaseObject {
     protected PagedResults _return;
 
     /**
