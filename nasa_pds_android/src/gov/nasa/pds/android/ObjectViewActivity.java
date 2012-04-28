@@ -4,7 +4,16 @@ import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.data.queries.ObjectQuery;
 import gov.nasa.pds.soap.ReferencedEntity;
+import gov.nasa.pds.soap.entities.MetadataObject;
+import gov.nasa.pds.soap.entities.Mission;
+import gov.nasa.pds.soap.entities.Property;
 import gov.nasa.pds.soap.entities.Target;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class ObjectViewActivity extends Activity {
@@ -84,7 +94,7 @@ public class ObjectViewActivity extends Activity {
                 if (currentObject instanceof Target) {
                     Target target = (Target) currentObject;
 
-                    // fill object view
+                    // inflate target view
                     LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_target, objectViewContainer, true);
                     setText(R.id.targetName, target.getName());
 
@@ -95,11 +105,56 @@ public class ObjectViewActivity extends Activity {
                     }
                     findListView(R.id.targetTypesList).setAdapter(new ArrayAdapter<String>(ObjectViewActivity.this,
                         android.R.layout.simple_list_item_1, android.R.id.text1, data));
+                } else if (currentObject instanceof Mission) {
+                    Mission mission = (Mission) currentObject;
+
+                    // inflate and fill mission view
+                    LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_mission, objectViewContainer, true);
+                    setText(R.id.missionName, mission.getName());
+                    setText(R.id.missionPeriod, "From " + mission.getStartDate() + " to " + mission.getEndDate() + ".");
+                    setText(R.id.missionDescription, mission.getDescription());
+
+                    // fill metadata
+                    findListView(R.id.targetTypesList).setAdapter(new SimpleAdapter(ObjectViewActivity.this,
+                        buildMetaData(mission), android.R.layout.simple_list_item_2,
+                        new String[] {"name", "description"}, new int[] {android.R.id.text1, android.R.id.text2}));
+
                 } else {
                     Log.w("soap", "Unexpected object type: " + result);
                 }
             } else {
                 Log.w("soap", "Result: " + result + " is not referenced object.");
+            }
+        }
+
+        private List<Map<String, Object>> buildMetaData(Mission mission) {
+            List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+            doBuild(list, "", mission.getOtherChildren());
+            return list;
+        }
+
+        private void doBuild(List<Map<String, Object>> list, String prefix, List<MetadataObject> metaDataList) {
+            if (metaDataList == null) {
+                return;
+            }
+            for (MetadataObject metadataObject : metaDataList) {
+                String newPrefix = prefix + "." + metadataObject.getName();
+
+                Map<String, Object> item = new HashMap<String, Object>();
+                item.put("name", newPrefix);
+                StringBuilder builder = new StringBuilder();
+                for (Property property : metadataObject.getProperties()) {
+                    builder.append("{").append(property.getName()).append(" = ");
+                    for (String propertyValue : property.getValues()) {
+                        builder.append(propertyValue).append("; ");
+                    }
+                    builder.append("}");
+                }
+                item.put("description", builder.toString());
+                list.add(item);
+
+                // add children
+                doBuild(list, prefix, metadataObject.getChildren());
             }
         }
 
