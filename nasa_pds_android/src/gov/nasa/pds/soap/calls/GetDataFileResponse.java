@@ -1,21 +1,21 @@
 package gov.nasa.pds.soap.calls;
 
 import gov.nasa.pds.soap.BaseObject;
-import gov.nasa.pds.soap.entities.TargetType;
+import gov.nasa.pds.soap.entities.WsDataFile;
 
 /**
  * <p>
- * Java class for getTargetTypeResponse complex type.
+ * Java class for getDataFileResponse complex type.
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="getTargetTypeResponse">
+ * &lt;complexType name="getDataFileResponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://pds.nasa.gov/}targetType" minOccurs="0"/>
+ *         &lt;element name="return" type="{http://pds.nasa.gov/}wsDataFile" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -24,26 +24,27 @@ import gov.nasa.pds.soap.entities.TargetType;
  *
  *
  */
-public class GetTargetTypeResponse extends BaseObject {
-    protected TargetType _return;
+public class GetDataFileResponse extends BaseObject {
+
+    protected WsDataFile _return;
 
     /**
      * Gets the value of the return property.
      *
-     * @return possible object is {@link TargetType }
+     * @return possible object is {@link WsDataFile }
      *
      */
-    public TargetType getReturn() {
+    public WsDataFile getReturn() {
         return _return;
     }
 
     /**
      * Sets the value of the return property.
      *
-     * @param value allowed object is {@link TargetType }
+     * @param value allowed object is {@link WsDataFile }
      *
      */
-    public void setReturn(TargetType value) {
+    public void setReturn(WsDataFile value) {
         this._return = value;
     }
 

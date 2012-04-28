@@ -1,6 +1,7 @@
 package gov.nasa.pds.soap.entities;
 
-import gov.nasa.pds.soap.NamedEntity;
+
+import gov.nasa.pds.soap.ReferencedEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +32,11 @@ import java.util.List;
  *
  *
  */
-public class Instrument extends NamedEntity {
+public class Instrument extends ReferencedEntity {
 
     protected String description;
     protected List<InstrumentHost> hosts;
     protected List<MetadataObject> otherChildren;
-    protected List<Reference> references;
     protected String textId;
     protected String type;
 
@@ -114,34 +114,6 @@ public class Instrument extends NamedEntity {
             otherChildren = new ArrayList<MetadataObject>();
         }
         return this.otherChildren;
-    }
-
-    /**
-     * Gets the value of the references property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
-     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
-     * the references property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     *
-     * <pre>
-     * getReferences().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list {@link Reference }
-     *
-     *
-     */
-    public List<Reference> getReferences() {
-        if (references == null) {
-            references = new ArrayList<Reference>();
-        }
-        return this.references;
     }
 
     /**

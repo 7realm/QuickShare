@@ -18,11 +18,10 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 
 public class DataCenter {
-    private static final String NAMESPACE = "http://pds.nasa.gov/";
     private static final String URL = "http://192.168.0.101:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
     public static PagedResults executePagedQuery(PagedQuery query) {
-        Log.i("soap", "Execution paged query: " + query.getQueryType());
+        Log.i("soap", "Executing paged query: " + query.getQueryType());
 
         PagedResults result = (PagedResults) executeMethod(query.getEnvelope());
 
@@ -33,10 +32,14 @@ public class DataCenter {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T executeObjectQuery(ObjectQuery<T> query) {
-        return null;
+        Log.i("soap", "Executing object query: " + query.getQueryType());
+
+        return (T) executeMethod(query.getEnvelope());
     }
 
+    @SuppressWarnings("unused")
     public static boolean isCached(Query query) {
         return false;
     }

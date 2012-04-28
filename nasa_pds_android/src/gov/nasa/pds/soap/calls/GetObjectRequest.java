@@ -4,13 +4,13 @@ import gov.nasa.pds.soap.BaseObject;
 
 /**
  * <p>
- * Java class for getTargetType complex type.
+ * Java class for TODO complex type.
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="getTargetType">
+ * &lt;complexType name="getTarget">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -20,10 +20,8 @@ import gov.nasa.pds.soap.BaseObject;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
-public class GetTargetTypeRequest extends BaseObject {
+public class GetObjectRequest extends BaseObject {
 
     protected long id;
 
