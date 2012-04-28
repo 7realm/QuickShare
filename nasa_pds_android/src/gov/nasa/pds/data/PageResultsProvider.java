@@ -1,8 +1,6 @@
 package gov.nasa.pds.data;
 
-import gov.nasa.pds.android.R;
 import gov.nasa.pds.data.queries.PagedQuery;
-import android.view.View;
 
 public class PageResultsProvider extends ResultsProvider {
     private final PagedQuery pagedQuery;
@@ -64,18 +62,5 @@ public class PageResultsProvider extends ResultsProvider {
         // update total and last page size
         total = (int) lastResult.getTotal();
         lastPageSize = total % itemsPerPage;
-    }
-
-    @Override
-    public void fillView(int itemIndex, View pageView) {
-        super.fillView(itemIndex, pageView);
-
-        // show or hide select button depending on query
-        View selectButton = pageView.findViewById(R.id.entitySelectButton);
-        if (queryType == QueryType.SEARCH_BY_TYPE) {
-            selectButton.setVisibility(View.GONE);
-        } else {
-            selectButton.setVisibility(View.VISIBLE);
-        }
     }
 }

@@ -36,7 +36,8 @@ public abstract class ResultsProvider {
         TextView captionTextView = (TextView) pageView.findViewById(R.id.entityNameText);
         captionTextView.setText(item.getName());
 
-        // set id tag to goto button
+        // set id tag to open and goto buttons
+        pageView.findViewById(R.id.entityOpenButton).setTag(item.getId());
         pageView.findViewById(R.id.entityGotoButton).setTag(item.getId());
     }
 

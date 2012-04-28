@@ -1,7 +1,7 @@
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.data.QueryType;
-import gov.nasa.pds.data.queries.RestrictionType;
+import gov.nasa.pds.data.queries.EntityType;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class AddRestrictionView extends RelativeLayout {
     private Button selectButton;
     private TextView restrictionText;
-    private RestrictionType restrictionType;
+    private EntityType restrictionType;
 
     public AddRestrictionView(Context context) {
         super(context);
@@ -29,7 +29,7 @@ public class AddRestrictionView extends RelativeLayout {
         // get attribute value and convert it to enum
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.AddRestrictionView);
         int attributeValue = attributes.getInt(R.styleable.AddRestrictionView_restrictionType, 0);
-        restrictionType = RestrictionType.values()[attributeValue];
+        restrictionType = EntityType.values()[attributeValue];
         attributes.recycle();
 
         // inflate content view
@@ -50,7 +50,7 @@ public class AddRestrictionView extends RelativeLayout {
         });
     }
 
-    private static QueryType convert(RestrictionType restrictionType) {
+    private static QueryType convert(EntityType restrictionType) {
         switch (restrictionType) {
         case TARGET_TYPE:
             return QueryType.GET_TYPES_INFO;

@@ -24,7 +24,7 @@ public class InfoPagedQuery extends PagedQuery {
         restriction = null;
     }
 
-    public InfoPagedQuery(QueryType queryType, int pageNumber, RestrictionType restrictionType, long idValue) {
+    public InfoPagedQuery(QueryType queryType, int pageNumber, EntityType restrictionType, long idValue) {
         super(queryType, pageNumber);
         restriction = new Restriction();
         restriction.setRestrictionEntityClass(restrictionType.getClassName());

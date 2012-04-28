@@ -5,6 +5,7 @@ import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.data.ResultsProvider;
 import gov.nasa.pds.data.TargetTypesResultsProvider;
 import gov.nasa.pds.data.queries.InfoPagedQuery;
+import gov.nasa.pds.data.queries.EntityType;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -33,6 +34,7 @@ public class PageViewActivity extends Activity {
     public static final int REQUEST_SELECT_RESTRICTION = 1001;
     private ViewFlipper viewFlipper;
     private ResultsProvider provider;
+    private EntityType entityType;
     private final AtomicBoolean firstRun = new AtomicBoolean();
     private final PageResultsAdapter adapter = new PageResultsAdapter();
 
@@ -106,8 +108,28 @@ public class PageViewActivity extends Activity {
     }
 
     private void setQueryType(QueryType queryType) {
+        // TODO update spinner
         provider = queryType == QueryType.GET_TYPES_INFO ?
             new TargetTypesResultsProvider() : new PageResultsProvider(new InfoPagedQuery(queryType, 1));
+
+        // convert query to entity type
+        switch (queryType) {
+        case GET_TYPES_INFO:
+            entityType = EntityType.TARGET_TYPE;
+            break;
+        case GET_TARGETS_INFO:
+            entityType = EntityType.TARGET;
+            break;
+        case GET_MISSIONS_INFO:
+            entityType = EntityType.MISSION;
+            break;
+        case GET_INSTRUMENTS_INFO:
+            entityType = EntityType.INSTRUMENT;
+            break;
+        default:
+            Log.w("soap", "Incorrect query type: " + queryType);
+            return;
+        }
 
         // load first page
         firstRun.set(true);
@@ -125,12 +147,34 @@ public class PageViewActivity extends Activity {
     }
 
     public void onGotoButtonClick(View v) {
-        Intent intent = new Intent(this, ObjectViewActivity.class);
+        // do nothing for target type
+        if (entityType == EntityType.TARGET_TYPE) {
+            Log.w("soap", "Tried to go to target type.");
+            return;
+        }
 
         // put corresponding object query to intent
-        intent.putExtra(ObjectViewActivity.EXTRA_QUERY_TYPE, convert(provider.getQueryType()));
+        Intent intent = new Intent(this, ObjectViewActivity.class);
+        intent.putExtra(ObjectViewActivity.EXTRA_QUERY_TYPE, getObjectQuery(entityType));
         intent.putExtra(ObjectViewActivity.EXTRA_OBJECT_ID, (Long) v.getTag());
         startActivity(intent);
+    }
+
+    public void onOpenButtonClick(View v) {
+        // down grade the search
+        switch (entityType) {
+        case TARGET_TYPE:
+            setQueryType(QueryType.GET_TARGETS_INFO);
+            break;
+        case TARGET:
+            setQueryType(QueryType.GET_MISSIONS_INFO);
+            break;
+        case MISSION:
+            setQueryType(QueryType.GET_INSTRUMENTS_INFO);
+            break;
+        default:
+            Log.w("soap", "Unexpected entity type for open button: " + entityType);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -138,16 +182,16 @@ public class PageViewActivity extends Activity {
         Toast.makeText(this, "Filter", Toast.LENGTH_LONG).show();
     }
 
-    private static String convert(QueryType queryType) {
-        switch (queryType) {
-        case GET_TARGETS_INFO:
+    private static String getObjectQuery(EntityType entityType) {
+        switch (entityType) {
+        case TARGET:
             return QueryType.GET_TARGET.name();
-        case GET_MISSIONS_INFO:
+        case MISSION:
             return QueryType.GET_MISSION.name();
-        case GET_INSTRUMENTS_INFO:
+        case INSTRUMENT:
             return QueryType.GET_INSTRUMENT.name();
         default:
-            Log.w("soap", "Unexpected query type for goto button: " + queryType);
+            Log.w("soap", "Unexpected entity type for goto button: " + entityType);
             return QueryType.GET_TARGET.name();
         }
     }
@@ -223,7 +267,7 @@ public class PageViewActivity extends Activity {
         @Override
         public View getView(int i, View view, ViewGroup viewgroup) {
             if (view == null) {
-                view = LayoutInflater.from(PageViewActivity.this).inflate(R.layout.entity_item, null, true);
+                view = LayoutInflater.from(PageViewActivity.this).inflate(R.layout.item_entity, null, true);
             }
             provider.fillView(i, view);
             return view;

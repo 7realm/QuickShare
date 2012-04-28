@@ -1,6 +1,6 @@
 package gov.nasa.pds.data.queries;
 
-public enum RestrictionType {
+public enum EntityType {
     TARGET_TYPE("TargetType"),
     TARGET("Target"),
     MISSION("Mission"),
@@ -8,7 +8,7 @@ public enum RestrictionType {
 
     private String className;
 
-    private RestrictionType(String className) {
+    private EntityType(String className) {
         this.className = className;
     }
 
