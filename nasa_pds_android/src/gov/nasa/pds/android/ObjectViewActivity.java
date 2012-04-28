@@ -35,6 +35,7 @@ public class ObjectViewActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.object_result);
 
         // get query data form intent
         QueryType queryType = QueryType.valueOf(getIntent().getStringExtra(EXTRA_QUERY_TYPE));
@@ -84,7 +85,8 @@ public class ObjectViewActivity extends Activity {
                 // fill reference section
                 String[] data = new String[currentObject.getReferences().size()];
                 for (int i = 0; i < data.length; i++) {
-                    data[i] = currentObject.getReferences().get(i).getDescription();
+                    // TODO chck null description
+                    data[i] = currentObject.getReferences().get(i).getDescription().trim();
                 }
                 findListView(R.id.objectReferenceList).setAdapter(new ArrayAdapter<String>(ObjectViewActivity.this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, data));
@@ -115,7 +117,7 @@ public class ObjectViewActivity extends Activity {
                     setText(R.id.missionDescription, mission.getDescription());
 
                     // fill metadata
-                    findListView(R.id.targetTypesList).setAdapter(new SimpleAdapter(ObjectViewActivity.this,
+                    findListView(R.id.metaDataList).setAdapter(new SimpleAdapter(ObjectViewActivity.this,
                         buildMetaData(mission), android.R.layout.simple_list_item_2,
                         new String[] {"name", "description"}, new int[] {android.R.id.text1, android.R.id.text2}));
 

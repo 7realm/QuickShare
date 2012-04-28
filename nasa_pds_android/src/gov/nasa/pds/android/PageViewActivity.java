@@ -6,8 +6,10 @@ import gov.nasa.pds.data.ResultsProvider;
 import gov.nasa.pds.data.TargetTypesResultsProvider;
 import gov.nasa.pds.data.queries.InfoPagedQuery;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,15 +28,15 @@ public class PageViewActivity extends Activity {
     private ViewFlipper viewFlipper;
     private ResultsProvider provider;
     private boolean firstRun = true;
-    private final PageResultsAdapter adapter = new PageResultsAdapter();;
+    private final PageResultsAdapter adapter = new PageResultsAdapter();
+    private QueryType queryType;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_results);
 
-        // create provider form intent
-        QueryType queryType = QueryType.valueOf(getIntent().getStringExtra(EXTRA_QUERY_TYPE));
+        queryType = QueryType.valueOf(getIntent().getStringExtra(EXTRA_QUERY_TYPE));
         provider = queryType == QueryType.GET_TYPES_INFO ?
             new TargetTypesResultsProvider() : new PageResultsProvider(new InfoPagedQuery(queryType, 0));
 
@@ -78,6 +80,29 @@ public class PageViewActivity extends Activity {
     @SuppressWarnings("unused")
     public void onPreviousButtonClick(View v) {
         goToPrevious();
+    }
+
+    public void onGotoButtonClick(View v) {
+        Intent intent = new Intent(this, ObjectViewActivity.class);
+
+        // put corresponding query to intent
+        intent.putExtra(ObjectViewActivity.EXTRA_QUERY_TYPE, convert(queryType));
+        intent.putExtra(ObjectViewActivity.EXTRA_OBJECT_ID, (Long) v.getTag());
+        startActivity(intent);
+    }
+
+    private static String convert(QueryType queryType) {
+        switch (queryType) {
+        case GET_TARGETS_INFO:
+            return QueryType.GET_TARGET.name();
+        case GET_MISSIONS_INFO:
+            return QueryType.GET_MISSION.name();
+        case GET_INSTRUMENTS_INFO:
+            return QueryType.GET_INSTRUMENT.name();
+        default:
+            Log.w("soap", "Unexpected query type for goto button: " + queryType);
+            return QueryType.GET_TARGET.name();
+        }
     }
 
     private void goToNext() {
