@@ -1,5 +1,6 @@
-package gov.nasa.pds.data;
+package gov.nasa.pds.data.resultproviders;
 
+import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.data.queries.PagedQuery;
 
 public class PageResultsProvider extends ResultsProvider {

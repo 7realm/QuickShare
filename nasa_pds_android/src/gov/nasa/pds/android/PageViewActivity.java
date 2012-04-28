@@ -1,27 +1,38 @@
 package gov.nasa.pds.android;
 
-import gov.nasa.pds.data.PageResultsProvider;
-import gov.nasa.pds.data.QueryType;
-import gov.nasa.pds.data.ResultsProvider;
-import gov.nasa.pds.data.TargetTypesResultsProvider;
-import gov.nasa.pds.data.queries.InfoPagedQuery;
 import gov.nasa.pds.data.queries.EntityType;
+import gov.nasa.pds.data.queries.InfoPagedQuery;
+import gov.nasa.pds.data.queries.SearchByTypePagedQuery;
+import gov.nasa.pds.data.resultproviders.PageResultsProvider;
+import gov.nasa.pds.data.resultproviders.ResultsProvider;
+import gov.nasa.pds.data.resultproviders.TypesResultsProvider;
+import gov.nasa.pds.soap.entities.EntityInfo;
+import gov.nasa.pds.soap.entities.Restriction;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -35,16 +46,15 @@ public class PageViewActivity extends Activity {
     private ViewFlipper viewFlipper;
     private ResultsProvider provider;
     private EntityType entityType;
+    private final Filter filter = new Filter();
     private final AtomicBoolean firstRun = new AtomicBoolean();
     private final PageResultsAdapter adapter = new PageResultsAdapter();
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_results);
-
-        // set query from intent
-        setQueryType(QueryType.GET_TYPES_INFO);
 
         // get view flipper
         viewFlipper = (ViewFlipper) findViewById(R.id.browserFlipper);
@@ -74,30 +84,20 @@ public class PageViewActivity extends Activity {
             }
         });
 
-        // find and setup spinner
-        Spinner spinner = (Spinner) findViewById(R.id.browserSpinner);
-        // set first selected item
-        spinner.setSelection(0);
+        spinner = (Spinner) findViewById(R.id.browserSpinner);
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterview, View view, int pos, long id) {
-                switch (pos) {
-                case 0:
-                    setQueryType(QueryType.GET_TYPES_INFO);
-                    break;
-                case 1:
-                    setQueryType(QueryType.GET_TARGETS_INFO);
-                    break;
-                case 2:
-                    setQueryType(QueryType.GET_MISSIONS_INFO);
-                    break;
-                case 3:
-                    setQueryType(QueryType.GET_INSTRUMENTS_INFO);
-                default:
+                // get entity type by ordinal value
+                EntityType newEntityType = EntityType.valueOf(pos);
+                if (newEntityType == null) {
                     Log.w("soap", "Selected item at unexpected position.");
-                    break;
+                    return;
                 }
+
+                // set new type
+                setEntityType(newEntityType);
             }
 
             @Override
@@ -105,35 +105,37 @@ public class PageViewActivity extends Activity {
                 // do nothing
             }
         });
+
+        // set query from intent
+        setEntityType(EntityType.TARGET_TYPE);
     }
 
-    private void setQueryType(QueryType queryType) {
-        // TODO update spinner
-        provider = queryType == QueryType.GET_TYPES_INFO ?
-            new TargetTypesResultsProvider() : new PageResultsProvider(new InfoPagedQuery(queryType, 1));
-
-        // convert query to entity type
-        switch (queryType) {
-        case GET_TYPES_INFO:
-            entityType = EntityType.TARGET_TYPE;
-            break;
-        case GET_TARGETS_INFO:
-            entityType = EntityType.TARGET;
-            break;
-        case GET_MISSIONS_INFO:
-            entityType = EntityType.MISSION;
-            break;
-        case GET_INSTRUMENTS_INFO:
-            entityType = EntityType.INSTRUMENT;
-            break;
-        default:
-            Log.w("soap", "Incorrect query type: " + queryType);
+    private void setEntityType(EntityType newEntityType) {
+        // do nothing if entity type is not changed
+        if (newEntityType == entityType) {
             return;
         }
 
+        // set entity type
+        entityType = newEntityType;
+
+        // update spinner
+        spinner.setSelection(entityType.ordinal());
+
+        refreshProvider();
+    }
+
+    private void refreshProvider() {
+        // create provider for current filter
+        provider = filter.createProvider(entityType);
+
+        // TODO cancel current task
         // load first page
         firstRun.set(true);
         new DataLoadTast().execute(1);
+
+        // set filter caption
+        setText(R.id.browserFilterCaption, filter.toString());
     }
 
     @SuppressWarnings("unused")
@@ -155,45 +157,93 @@ public class PageViewActivity extends Activity {
 
         // put corresponding object query to intent
         Intent intent = new Intent(this, ObjectViewActivity.class);
-        intent.putExtra(ObjectViewActivity.EXTRA_QUERY_TYPE, getObjectQuery(entityType));
+        intent.putExtra(ObjectViewActivity.EXTRA_QUERY_TYPE, entityType.getObjectQuery());
         intent.putExtra(ObjectViewActivity.EXTRA_OBJECT_ID, (Long) v.getTag());
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        // if we are on top level then finish activity
+        if (entityType == EntityType.TARGET_TYPE) {
+            super.onBackPressed();
+        } else {
+            setEntityType(entityType.upper());
+        }
+    }
+
     public void onOpenButtonClick(View v) {
-        // down grade the search
-        switch (entityType) {
-        case TARGET_TYPE:
-            setQueryType(QueryType.GET_TARGETS_INFO);
-            break;
-        case TARGET:
-            setQueryType(QueryType.GET_MISSIONS_INFO);
-            break;
-        case MISSION:
-            setQueryType(QueryType.GET_INSTRUMENTS_INFO);
-            break;
-        default:
-            Log.w("soap", "Unexpected entity type for open button: " + entityType);
+        // if we on lowest level, do nothing
+        if (entityType == EntityType.INSTRUMENT) {
+            Log.w("soap", "Opening the lowest entity of result activity.");
+        } else {
+            // add restriction
+            filter.addRestriction((EntityInfo) v.getTag(), entityType);
+
+            // go to lower level
+            setEntityType(entityType.lower());
         }
     }
 
     @SuppressWarnings("unused")
     public void onFilterButtonClick(View v) {
-        Toast.makeText(this, "Filter", Toast.LENGTH_LONG).show();
-    }
-
-    private static String getObjectQuery(EntityType entityType) {
-        switch (entityType) {
-        case TARGET:
-            return QueryType.GET_TARGET.name();
-        case MISSION:
-            return QueryType.GET_MISSION.name();
-        case INSTRUMENT:
-            return QueryType.GET_INSTRUMENT.name();
-        default:
-            Log.w("soap", "Unexpected entity type for goto button: " + entityType);
-            return QueryType.GET_TARGET.name();
+        // prepare restriction list labels
+        CharSequence[] items = new String[filter.restrictions.size()];
+        for (int i = 0; i < items.length; i++) {
+            items[i] = filter.restrictions.get(i).toString();
         }
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
+        final TextView dialogText = (TextView) layout.findViewById(R.id.dialogSearchText);
+        dialogText.setText(filter.text);
+        final ListView dialogList = (ListView) layout.findViewById(R.id.dialogList);
+        dialogList.setAdapter(new ArrayAdapter<CharSequence>(this, android.R.layout.simple_list_item_multiple_choice, items));
+        dialogList.setItemsCanFocus(false);
+        dialogList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        for (int i = 0; i < items.length; i++) {
+            dialogList.setItemChecked(i, true);
+        }
+
+        // run the dialog
+        new AlertDialog.Builder(this)
+            .setTitle("Enter text filter: ")
+            .setView(layout)
+            .setPositiveButton("Ok", new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SparseBooleanArray checkedItems = dialogList.getCheckedItemPositions();
+                    // For each element in the status array
+                    int checkedItemsCount = checkedItems.size();
+
+                    // check if text or restrictions are changed
+                    String text = dialogText.getText().toString();
+                    boolean changed = !text.equals(filter.text);
+                    for (int i = 0; i < checkedItemsCount; ++i) {
+                        changed = changed || !checkedItems.valueAt(i);
+                    }
+
+                    // run search if filter is changed
+                    if (changed) {
+                        filter.text = text.trim();
+
+                        List<NamedRestriction> keepedRestrictions = new ArrayList<NamedRestriction>();
+                        for (int i = 0; i < checkedItemsCount; ++i) {
+                            if (checkedItems.valueAt(i)) {
+                                keepedRestrictions.add(filter.restrictions.get(checkedItems.keyAt(i)));
+                            }
+                        }
+
+                        // refresh filter
+                        filter.restrictions.clear();
+                        filter.restrictions.addAll(keepedRestrictions);
+
+                        refreshProvider();
+                    }
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 
     private void goToNext() {
@@ -232,7 +282,15 @@ public class PageViewActivity extends Activity {
     }
 
     private void setPageCaption(int nextPage) {
-        ((TextView) findViewById(R.id.pageCaption)).setText("Page " + nextPage + " of " + provider.getPageCount());
+        if (provider.getPageCount() == 0) {
+            setText(R.id.pageCaption, "No results");
+        } else {
+            setText(R.id.pageCaption, "Page " + nextPage + " of " + provider.getPageCount());
+        }
+    }
+
+    private void setText(int viewId, String text) {
+        ((TextView) findViewById(viewId)).setText(text);
     }
 
     private final class DataLoadTast extends AsyncTask<Integer, Void, Void> {
@@ -286,6 +344,91 @@ public class PageViewActivity extends Activity {
         @Override
         public int getCount() {
             return provider.getCurrentPageSize();
+        }
+    }
+
+    private static class Filter {
+        private String text = "";
+        private final List<NamedRestriction> restrictions = new ArrayList<NamedRestriction>();
+
+        public void addRestriction(EntityInfo entityInfo, EntityType entityType) {
+            restrictions.add(new NamedRestriction(entityInfo, entityType));
+        }
+
+        public void clearNotGreaterPermissions(EntityType entityType) {
+            for (Iterator<NamedRestriction> i = restrictions.iterator(); i.hasNext();) {
+                if (!entityType.isLowerThan(i.next().entityType)) {
+                    i.remove();
+                }
+            }
+        }
+
+        public Restriction getLowestRestriction() {
+            NamedRestriction namedRestriction = null;
+            for (NamedRestriction restriction : restrictions) {
+                if (namedRestriction == null) {
+                    namedRestriction = restriction;
+                    continue;
+                }
+                if (restriction.entityType.isLowerThan(namedRestriction.entityType)) {
+                    namedRestriction = restriction;
+                }
+            }
+
+            return namedRestriction == null ? null : namedRestriction.getRestriction();
+        }
+
+        public ResultsProvider createProvider(EntityType entityType) {
+            clearNotGreaterPermissions(entityType);
+
+            if (text.isEmpty()) {
+                if (entityType == EntityType.TARGET_TYPE) {
+                    return new TypesResultsProvider();
+                }
+
+                return new PageResultsProvider(new InfoPagedQuery(entityType.getObjectsInfoQuery(), getLowestRestriction()));
+            }
+
+            return new PageResultsProvider(new SearchByTypePagedQuery(text, getLowestRestriction()));
+        }
+
+        @Override
+        public String toString() {
+            if (text.isEmpty() && restrictions.isEmpty()) {
+                return "<empty filter>";
+            }
+
+            StringBuilder builder = new StringBuilder();
+            if (!text.isEmpty()) {
+                builder.append("[text = ").append(text).append("]\n");
+            }
+            for (NamedRestriction restriction : restrictions) {
+                builder.append(restriction).append("\n");
+            }
+            return builder.toString().trim();
+        }
+    }
+
+    private static class NamedRestriction {
+        private final EntityType entityType;
+        private final EntityInfo entityInfo;
+
+        public NamedRestriction(EntityInfo entityInfo, EntityType entityType) {
+            this.entityInfo = entityInfo;
+            this.entityType = entityType;
+        }
+
+        public Restriction getRestriction() {
+            Restriction result = new Restriction();
+            result.setRestrictionEntityId(entityInfo.getId());
+            result.setRestrictionEntityClass(entityType.getClassName());
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return new StringBuilder("[").append(entityType.getHumanReadable())
+                .append(" = ").append(entityInfo.getName()).append("]").toString();
         }
     }
 }

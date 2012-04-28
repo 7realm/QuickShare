@@ -17,18 +17,13 @@ import android.util.Log;
  * @version 1.0
  */
 public class InfoPagedQuery extends PagedQuery {
-    private final Restriction restriction;
 
-    public InfoPagedQuery(QueryType queryType, int pageNumber) {
-        super(queryType, pageNumber);
-        restriction = null;
+    public InfoPagedQuery(QueryType queryType) {
+        this(queryType, null);
     }
 
-    public InfoPagedQuery(QueryType queryType, int pageNumber, EntityType restrictionType, long idValue) {
-        super(queryType, pageNumber);
-        restriction = new Restriction();
-        restriction.setRestrictionEntityClass(restrictionType.getClassName());
-        restriction.setRestrictionEntityId(idValue);
+    public InfoPagedQuery(QueryType queryType, Restriction restriction) {
+        super(queryType, restriction);
     }
 
     /**
@@ -41,7 +36,7 @@ public class InfoPagedQuery extends PagedQuery {
         // create entities request based on page and restriction
         GetEntitiesInfoRequest request = new GetEntitiesInfoRequest();
         request.setPage(getPage());
-        request.setRestriction(restriction);
+        request.setRestriction(getRestriction());
 
         // create base envelope
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11).addRequest(request)
@@ -49,9 +44,6 @@ public class InfoPagedQuery extends PagedQuery {
 
         // add mappings based on query type
         switch (getQueryType()) {
-        case GET_TYPES_INFO:
-            // use super implementation for getTypesInfo request
-            return super.getEnvelope();
         case GET_TARGETS_INFO:
             envelope.addMapping("getTargetsInfo", GetEntitiesInfoRequest.class);
             envelope.addMapping("getTargetsInfoResponse", GetEntitiesInfoResponse.class);

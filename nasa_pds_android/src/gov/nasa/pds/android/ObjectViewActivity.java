@@ -38,7 +38,7 @@ public class ObjectViewActivity extends Activity {
         setContentView(R.layout.object_result);
 
         // get query data form intent
-        QueryType queryType = QueryType.valueOf(getIntent().getStringExtra(EXTRA_QUERY_TYPE));
+        QueryType queryType = (QueryType) getIntent().getExtras().get(EXTRA_QUERY_TYPE);
         long id = getIntent().getLongExtra(EXTRA_OBJECT_ID, 0);
         query = new ObjectQuery<Object>(queryType, id);
 

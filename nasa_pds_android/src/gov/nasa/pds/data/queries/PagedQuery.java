@@ -1,22 +1,23 @@
 package gov.nasa.pds.data.queries;
 
 import gov.nasa.pds.data.QueryType;
-import gov.nasa.pds.soap.calls.GetTargetTypesInfoRequest;
-import gov.nasa.pds.soap.calls.GetTargetTypesInfoResponse;
-import gov.nasa.pds.soap.entities.EntityInfo;
 import gov.nasa.pds.soap.entities.Page;
+import gov.nasa.pds.soap.entities.Restriction;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-
-public class PagedQuery extends BaseQuery {
+public abstract class PagedQuery extends BaseQuery {
     private static final int ITEMS_PER_PAGE = 20;
     private final Page page;
+    private final Restriction restriction;
 
-    public PagedQuery(QueryType queryType, int pageNumber) {
+    public PagedQuery(QueryType queryType) {
+        this(queryType, null);
+    }
+
+    public PagedQuery(QueryType queryType, Restriction restriction) {
         super(queryType);
+        this.restriction = restriction;
         this.page = new Page();
-        page.setPageNumber(pageNumber);
+        page.setPageNumber(1);
         page.setItemsPerPage(ITEMS_PER_PAGE);
     }
 
@@ -24,11 +25,7 @@ public class PagedQuery extends BaseQuery {
         return page;
     }
 
-    @Override
-    public SoapSerializationEnvelope getEnvelope() {
-        return new SoapSerializationEnvelope(SoapEnvelope.VER11).addRequest(new GetTargetTypesInfoRequest())
-            .addMapping("getTargetTypesInfo", GetTargetTypesInfoRequest.class)
-            .addMapping("getTargetTypesInfoResponse", GetTargetTypesInfoResponse.class)
-            .addMapping("results", EntityInfo.class);
+    public Restriction getRestriction() {
+        return restriction;
     }
 }

@@ -1,6 +1,7 @@
-package gov.nasa.pds.data;
+package gov.nasa.pds.data.resultproviders;
 
 import gov.nasa.pds.android.R;
+import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.entities.EntityInfo;
 import gov.nasa.pds.soap.entities.PagedResults;
 import android.util.Log;
@@ -36,8 +37,8 @@ public abstract class ResultsProvider {
         TextView captionTextView = (TextView) pageView.findViewById(R.id.entityNameText);
         captionTextView.setText(item.getName());
 
-        // set id tag to open and goto buttons
-        pageView.findViewById(R.id.entityOpenButton).setTag(item.getId());
+        // set tags for open and goto buttons
+        pageView.findViewById(R.id.entityOpenButton).setTag(item);
         pageView.findViewById(R.id.entityGotoButton).setTag(item.getId());
     }
 

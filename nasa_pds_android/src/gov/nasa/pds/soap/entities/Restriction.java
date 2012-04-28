@@ -1,5 +1,7 @@
 package gov.nasa.pds.soap.entities;
 
+import gov.nasa.pds.soap.BaseObject;
+
 /**
  * <p>Java class for restriction complex type.
  *
@@ -20,7 +22,7 @@ package gov.nasa.pds.soap.entities;
  *
  *
  */
-public class Restriction {
+public class Restriction extends BaseObject {
 
     protected String restrictionEntityClass;
     protected long restrictionEntityId;

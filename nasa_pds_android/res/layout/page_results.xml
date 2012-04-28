@@ -27,9 +27,9 @@
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/browserFilterCaption"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="no filter" />
+        android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:layout_width="match_parent"
