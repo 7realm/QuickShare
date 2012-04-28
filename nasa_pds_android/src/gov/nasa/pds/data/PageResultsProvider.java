@@ -12,7 +12,7 @@ public class PageResultsProvider extends ResultsProvider {
     private int total;
 
     public PageResultsProvider(PagedQuery pagedQuery) {
-        super();
+        super(pagedQuery.getQueryType());
         this.pagedQuery = pagedQuery;
         this.itemsPerPage = pagedQuery.getPage().getItemsPerPage();
     }
@@ -72,7 +72,7 @@ public class PageResultsProvider extends ResultsProvider {
 
         // show or hide select button depending on query
         View selectButton = pageView.findViewById(R.id.entitySelectButton);
-        if (pagedQuery.getQueryType() == QueryType.SEARCH_BY_TYPE) {
+        if (queryType == QueryType.SEARCH_BY_TYPE) {
             selectButton.setVisibility(View.GONE);
         } else {
             selectButton.setVisibility(View.VISIBLE);

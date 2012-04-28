@@ -5,6 +5,9 @@ import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.data.ResultsProvider;
 import gov.nasa.pds.data.TargetTypesResultsProvider;
 import gov.nasa.pds.data.queries.InfoPagedQuery;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,8 +19,11 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -27,27 +33,22 @@ public class PageViewActivity extends Activity {
     public static final int REQUEST_SELECT_RESTRICTION = 1001;
     private ViewFlipper viewFlipper;
     private ResultsProvider provider;
-    private boolean firstRun = true;
+    private final AtomicBoolean firstRun = new AtomicBoolean();
     private final PageResultsAdapter adapter = new PageResultsAdapter();
-    private QueryType queryType;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_results);
 
-        queryType = QueryType.valueOf(getIntent().getStringExtra(EXTRA_QUERY_TYPE));
-        provider = queryType == QueryType.GET_TYPES_INFO ?
-            new TargetTypesResultsProvider() : new PageResultsProvider(new InfoPagedQuery(queryType, 0));
-
-        // load first page
-        new DataLoadTast().execute(1);
+        // set query from intent
+        setQueryType(QueryType.GET_TYPES_INFO);
 
         // get view flipper
-        viewFlipper = (ViewFlipper) findViewById(R.id.flipper);
+        viewFlipper = (ViewFlipper) findViewById(R.id.browserFlipper);
 
         // set slider
-        findViewById(R.id.pageResultsLayout).setOnTouchListener(new OnTouchListener() {
+        findViewById(R.id.browserLayout).setOnTouchListener(new OnTouchListener() {
             private float fromPosition;
 
             @Override
@@ -70,6 +71,47 @@ public class PageViewActivity extends Activity {
                 return true;
             }
         });
+
+        // find and setup spinner
+        Spinner spinner = (Spinner) findViewById(R.id.browserSpinner);
+        // set first selected item
+        spinner.setSelection(0);
+        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterview, View view, int pos, long id) {
+                switch (pos) {
+                case 0:
+                    setQueryType(QueryType.GET_TYPES_INFO);
+                    break;
+                case 1:
+                    setQueryType(QueryType.GET_TARGETS_INFO);
+                    break;
+                case 2:
+                    setQueryType(QueryType.GET_MISSIONS_INFO);
+                    break;
+                case 3:
+                    setQueryType(QueryType.GET_INSTRUMENTS_INFO);
+                default:
+                    Log.w("soap", "Selected item at unexpected position.");
+                    break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterview) {
+                // do nothing
+            }
+        });
+    }
+
+    private void setQueryType(QueryType queryType) {
+        provider = queryType == QueryType.GET_TYPES_INFO ?
+            new TargetTypesResultsProvider() : new PageResultsProvider(new InfoPagedQuery(queryType, 1));
+
+        // load first page
+        firstRun.set(true);
+        new DataLoadTast().execute(1);
     }
 
     @SuppressWarnings("unused")
@@ -85,10 +127,15 @@ public class PageViewActivity extends Activity {
     public void onGotoButtonClick(View v) {
         Intent intent = new Intent(this, ObjectViewActivity.class);
 
-        // put corresponding query to intent
-        intent.putExtra(ObjectViewActivity.EXTRA_QUERY_TYPE, convert(queryType));
+        // put corresponding object query to intent
+        intent.putExtra(ObjectViewActivity.EXTRA_QUERY_TYPE, convert(provider.getQueryType()));
         intent.putExtra(ObjectViewActivity.EXTRA_OBJECT_ID, (Long) v.getTag());
         startActivity(intent);
+    }
+
+    @SuppressWarnings("unused")
+    public void onFilterButtonClick(View v) {
+        Toast.makeText(this, "Filter", Toast.LENGTH_LONG).show();
     }
 
     private static String convert(QueryType queryType) {
@@ -155,13 +202,15 @@ public class PageViewActivity extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             // add views on first run
-            if (firstRun) {
+            if (firstRun.get()) {
+                // clear flipper and add new views
+                viewFlipper.removeAllViews();
                 for (int i = 0; i < provider.getPageCount(); i++) {
                     ListView view = new ListView(PageViewActivity.this);
                     view.setAdapter(adapter);
                     viewFlipper.addView(view, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 }
-                firstRun = false;
+                firstRun.set(false);
                 setPageCaption(1);
             }
 

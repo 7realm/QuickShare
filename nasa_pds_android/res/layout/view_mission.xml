@@ -33,7 +33,7 @@
         android:id="@+id/metaDataList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.5" >
+        android:layout_weight="0.8" >
     </ListView>
 
 </LinearLayout>

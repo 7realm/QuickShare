@@ -10,6 +10,10 @@ import gov.nasa.pds.data.queries.PagedQuery;
 public class TargetTypesResultsProvider extends ResultsProvider {
     private int total;
 
+    public TargetTypesResultsProvider() {
+        super(QueryType.GET_TYPES_INFO);
+    }
+
     /**
      *
      *
@@ -49,7 +53,7 @@ public class TargetTypesResultsProvider extends ResultsProvider {
     public void moveToPage(int pageIndex) {
         if (lastResult == null) {
             // get last results from data center
-            lastResult = DataCenter.executePagedQuery(new PagedQuery(QueryType.GET_TYPES_INFO, 0));
+            lastResult = DataCenter.executePagedQuery(new PagedQuery(queryType, 0));
 
             // update total and last page size
             total = (int) lastResult.getTotal();

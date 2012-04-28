@@ -18,7 +18,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 
 public class DataCenter {
-    private static final String URL = "http://192.168.0.100:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
+    private static final String URL = "http://192.168.0.101:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
     public static PagedResults executePagedQuery(PagedQuery query) {
         Log.i("soap", "Executing paged query: " + query.getQueryType());

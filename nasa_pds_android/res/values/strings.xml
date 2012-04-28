@@ -4,4 +4,11 @@
     <string name="hello">Hello World, NasaSearchActivity!</string>
     <string name="app_name">NASA PDS</string>
 
+    <string-array name="entities_type">
+        <item>Target Types</item>
+        <item>Targets</item>
+        <item>Missions</item>
+        <item>Instruments</item>
+    </string-array>
+
 </resources>

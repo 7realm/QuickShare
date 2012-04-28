@@ -9,6 +9,15 @@ import android.widget.TextView;
 
 public abstract class ResultsProvider {
     protected PagedResults lastResult;
+    protected QueryType queryType;
+
+    protected ResultsProvider(QueryType queryType) {
+        this.queryType = queryType;
+    }
+
+    public QueryType getQueryType() {
+        return queryType;
+    }
 
     /**
      *
