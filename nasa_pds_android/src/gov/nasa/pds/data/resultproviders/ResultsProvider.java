@@ -6,14 +6,25 @@ import gov.nasa.pds.soap.entities.EntityInfo;
 import gov.nasa.pds.soap.entities.PagedResults;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 public abstract class ResultsProvider {
     protected PagedResults lastResult;
     protected QueryType queryType;
+    private OnClickListener onGotoButtonListener;
+    private OnClickListener onOpenListener;
 
     protected ResultsProvider(QueryType queryType) {
         this.queryType = queryType;
+    }
+
+    public void setOnGotoButtonListener(OnClickListener onGotoButtonListener) {
+        this.onGotoButtonListener = onGotoButtonListener;
+    }
+
+    public void setOnOpenListener(OnClickListener onOpenListener) {
+        this.onOpenListener = onOpenListener;
     }
 
     public QueryType getQueryType() {
@@ -37,9 +48,25 @@ public abstract class ResultsProvider {
         TextView captionTextView = (TextView) pageView.findViewById(R.id.entityNameText);
         captionTextView.setText(item.getName());
 
-        // set tags for open and goto buttons
-        pageView.findViewById(R.id.entityOpenButton).setTag(item);
-        pageView.findViewById(R.id.entityGotoButton).setTag(item.getId());
+        // set tag and listener for goto button
+        View gotoButton = pageView.findViewById(R.id.entityGotoButton);
+        gotoButton.setTag(item.getId());
+        gotoButton.setOnClickListener(onGotoButtonListener);
+
+        // set tag and listener for whole view
+        pageView.setTag(item);
+        pageView.setOnClickListener(onOpenListener);
+
+        // hide goto button if needed
+        switch (queryType) {
+        case GET_MISSIONS_INFO:
+        case GET_INSTRUMENTS_INFO:
+            gotoButton.setVisibility(View.VISIBLE);
+            break;
+        default:
+            gotoButton.setVisibility(View.INVISIBLE);
+            break;
+        }
     }
 
     /**

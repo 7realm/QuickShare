@@ -6,17 +6,11 @@ import gov.nasa.pds.data.queries.ObjectQuery;
 import gov.nasa.pds.soap.ReferencedEntity;
 import gov.nasa.pds.soap.entities.Instrument;
 import gov.nasa.pds.soap.entities.InstrumentHost;
-import gov.nasa.pds.soap.entities.MetadataObject;
 import gov.nasa.pds.soap.entities.Mission;
-import gov.nasa.pds.soap.entities.Property;
-import gov.nasa.pds.soap.entities.Target;
-import gov.nasa.pds.soap.entities.TargetType;
 import gov.nasa.pds.soap.entities.WsDataFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -26,7 +20,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 public class ObjectViewActivity extends Activity {
@@ -50,32 +44,10 @@ public class ObjectViewActivity extends Activity {
 
         // load data
         new DataLoadTast().execute(query);
-
-        // set object caption based on query type
-        switch (queryType) {
-        case GET_TARGET:
-            setText(R.id.objectCaption, "Target");
-            break;
-        case GET_MISSION:
-            setText(R.id.objectCaption, "Mission");
-            break;
-        case GET_INSTRUMENT:
-            setText(R.id.objectCaption, "Instrument");
-            break;
-        case GET_FILE:
-            setText(R.id.fileCaption, "File");
-            break;
-        default:
-            break;
-        }
     }
 
-    private void setText(int viewId, String text) {
+    private void setText(int viewId, CharSequence text) {
         ((TextView) findViewById(viewId)).setText(text);
-    }
-
-    private ListView findListView(int viewId) {
-        return (ListView) findViewById(viewId);
     }
 
     private final class DataLoadTast extends AsyncTask<ObjectQuery<Object>, Void, Object> {
@@ -86,57 +58,57 @@ public class ObjectViewActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(Object result) {
+        protected void onPostExecute(final Object result) {
             // assign current object
             if (result instanceof ReferencedEntity) {
                 currentObject = (ReferencedEntity) result;
 
-                // fill reference section
+                // set object caption based on query type
+                switch (query.getQueryType()) {
+                case GET_MISSION:
+                    setText(R.id.objectCaption, "Mission: " + currentObject.getName());
+                    break;
+                case GET_INSTRUMENT:
+                    setText(R.id.objectCaption, "Instrument: " + currentObject.getName());
+                    break;
+                default:
+                    setText(R.id.objectCaption, "Unknown object");
+                    break;
+                }
+
+                // build list of references
                 String[] data = new String[currentObject.getReferences().size()];
                 for (int i = 0; i < data.length; i++) {
                     String description = currentObject.getReferences().get(i).getDescription();
                     data[i] = description == null ? "" : description.replaceAll("\\s+", " ").trim();
                 }
-                findListView(R.id.objectReferenceList).setAdapter(new ArrayAdapter<String>(ObjectViewActivity.this,
-                    R.layout.item_reference, R.id.referenceText, data));
 
-                // create object view
-                ViewGroup objectViewContainer = (ViewGroup) findViewById(R.id.objectView);
-                if (currentObject instanceof Target) {
-                    Target target = (Target) currentObject;
+                // create reference tab
+                ((ListView) findViewById(R.id.objectReferenceList)).setAdapter(
+                    new ArrayAdapter<String>(ObjectViewActivity.this, R.layout.item_reference, R.id.referenceText, data));
 
-                    // inflate target view
-                    LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_target, objectViewContainer, true);
-                    setText(R.id.targetName, target.getName());
-
-                    // set list of targets
-                    List<TargetType> types = target.getTypes();
-                    StringBuilder builder = new StringBuilder(types.isEmpty() ? "" : types.get(0).getName());
-                    for (int i = 1; i < types.size(); i++) {
-                        builder.append(", ").append(types.get(i).getName());
-                    }
-                    setText(R.id.targetTypes, builder.toString());
-                } else if (currentObject instanceof Mission) {
+                // get object container
+                final ViewGroup objectContainer = (ViewGroup) findViewById(R.id.objectPropertiesView);
+                objectContainer.removeAllViews();
+                if (currentObject instanceof Mission) {
                     Mission mission = (Mission) currentObject;
 
+                    // TODO null dates
                     // inflate and fill mission view
-                    LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_mission, objectViewContainer, true);
+                    LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_mission, objectContainer);
                     setText(R.id.missionName, mission.getName());
-                    setText(R.id.missionPeriod, "From " + mission.getStartDate() + " to " + mission.getEndDate() + ".");
-                    setText(R.id.missionDescription, mission.getDescription());
-
-                    // fill metadata
-                    findListView(R.id.metaDataList).setAdapter(new SimpleAdapter(ObjectViewActivity.this,
-                        buildMetaData(mission), android.R.layout.simple_list_item_2,
-                        new String[] {"name", "description"}, new int[] {android.R.id.text1, android.R.id.text2}));
+                    setText(R.id.missionStartDate, mission.getStartDate().toString());
+                    setText(R.id.missionEndDate, mission.getEndDate().toString());
+                    setText(R.id.missionDuration,
+                        new Date(mission.getEndDate().getTime() - mission.getStartDate().getTime()).toString());
+                    setText(R.id.objectDescription, mission.getDescription());
                 } else if (currentObject instanceof Instrument) {
                     Instrument instrument = (Instrument) currentObject;
 
                     // inflate and fill instrument view
-                    LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_instrument, objectViewContainer, true);
+                    LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_instrument, objectContainer);
                     setText(R.id.instrumentName, instrument.getName());
                     setText(R.id.instrumentType, instrument.getType());
-                    setText(R.id.instrumentDescription, instrument.getDescription());
 
                     // fill instrument hosts
                     List<InstrumentHost> hosts = instrument.getHosts();
@@ -145,10 +117,17 @@ public class ObjectViewActivity extends Activity {
                         builder.append(hosts.get(i).getName()).append("\n");
                     }
                     setText(R.id.instrumentHost, builder.toString());
-
+                    setText(R.id.objectDescription, instrument.getDescription());
                 } else {
                     Log.w("soap", "Unexpected object type: " + result);
                 }
+
+                // add tabs
+                final TabHost tabHost = (TabHost) findViewById(R.id.objectTabs);
+                tabHost.setup();
+                tabHost.addTab(tabHost.newTabSpec("general").setIndicator("General").setContent(R.id.objectPropertiesView));
+                tabHost.addTab(tabHost.newTabSpec("description").setIndicator("Description").setContent(R.id.objectDescriptionView));
+                tabHost.addTab(tabHost.newTabSpec("references").setIndicator("References").setContent(R.id.objectReferenceList));
             } else if (result instanceof WsDataFile) {
                 WsDataFile dataFile = (WsDataFile) result;
 
@@ -158,37 +137,5 @@ public class ObjectViewActivity extends Activity {
                 Log.w("soap", "Result: " + result + " is not referenced object.");
             }
         }
-
-        private List<Map<String, Object>> buildMetaData(Mission mission) {
-            List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-            doBuild(list, "", mission.getOtherChildren());
-            return list;
-        }
-
-        private void doBuild(List<Map<String, Object>> list, String prefix, List<MetadataObject> metaDataList) {
-            if (metaDataList == null) {
-                return;
-            }
-            for (MetadataObject metadataObject : metaDataList) {
-                String newPrefix = prefix + "." + metadataObject.getName();
-
-                Map<String, Object> item = new HashMap<String, Object>();
-                item.put("name", newPrefix);
-                StringBuilder builder = new StringBuilder();
-                for (Property property : metadataObject.getProperties()) {
-                    builder.append("{").append(property.getName()).append(" = ");
-                    for (String propertyValue : property.getValues()) {
-                        builder.append(propertyValue).append("; ");
-                    }
-                    builder.append("}");
-                }
-                item.put("description", builder.toString());
-                list.add(item);
-
-                // add children
-                doBuild(list, prefix, metadataObject.getChildren());
-            }
-        }
-
     }
 }

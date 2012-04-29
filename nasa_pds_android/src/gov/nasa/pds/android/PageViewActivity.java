@@ -1,5 +1,6 @@
 package gov.nasa.pds.android;
 
+import gov.nasa.pds.android.Filter.NamedRestriction;
 import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.resultproviders.ResultsProvider;
 import gov.nasa.pds.soap.entities.EntityInfo;
@@ -11,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +20,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -53,7 +54,7 @@ public class PageViewActivity extends Activity {
         viewFlipper = (ViewFlipper) findViewById(R.id.browserFlipper);
 
         // set slider
-        findViewById(R.id.browserLayout).setOnTouchListener(new OnTouchListener() {
+        viewFlipper.setOnTouchListener(new OnTouchListener() {
             private float fromPosition;
 
             @Override
@@ -122,6 +123,20 @@ public class PageViewActivity extends Activity {
         // create provider for current filter
         provider = filter.createProvider(entityType);
 
+        // set click handlers
+        provider.setOnGotoButtonListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoEntity((Long) v.getTag());
+            }
+        });
+        provider.setOnOpenListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEntity((EntityInfo) v.getTag());
+            }
+        });
+
         // TODO cancel current task
         // load first page
         firstRun.set(true);
@@ -141,7 +156,7 @@ public class PageViewActivity extends Activity {
         goToPrevious();
     }
 
-    public void onGotoButtonClick(View v) {
+    public void gotoEntity(long id) {
         // do nothing for target type
         if (entityType == EntityType.TARGET_TYPE) {
             Log.w("soap", "Tried to go to target type.");
@@ -151,7 +166,7 @@ public class PageViewActivity extends Activity {
         // put corresponding object query to intent
         Intent intent = new Intent(this, ObjectViewActivity.class);
         intent.putExtra(ObjectViewActivity.EXTRA_QUERY_TYPE, entityType.getObjectQuery());
-        intent.putExtra(ObjectViewActivity.EXTRA_OBJECT_ID, (Long) v.getTag());
+        intent.putExtra(ObjectViewActivity.EXTRA_OBJECT_ID, id);
         startActivity(intent);
     }
 
@@ -165,13 +180,13 @@ public class PageViewActivity extends Activity {
         }
     }
 
-    public void onOpenButtonClick(View v) {
-        // if we on lowest level, do nothing
+    public void openEntity(EntityInfo entityInfo) {
+        // if we on lowest level, open the file
         if (entityType == EntityType.lowest()) {
-            Log.w("soap", "Opening the lowest entity of result activity.");
+            gotoEntity(entityInfo.getId());
         } else {
             // add restriction
-            filter.addRestriction((EntityInfo) v.getTag(), entityType);
+            filter.addRestriction(entityInfo, entityType);
 
             // go to lower level
             setEntityType(entityType.lower());
@@ -186,7 +201,7 @@ public class PageViewActivity extends Activity {
             items[i] = filter.restrictions.get(i).toString();
         }
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        // create dialog view
         View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
         final TextView dialogText = (TextView) layout.findViewById(R.id.dialogSearchText);
         dialogText.setText(filter.getText());
@@ -202,7 +217,7 @@ public class PageViewActivity extends Activity {
         new AlertDialog.Builder(this)
             .setTitle("Enter text filter: ")
             .setView(layout)
-            .setPositiveButton("Ok", new OnClickListener() {
+            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     SparseBooleanArray checkedItems = dialogList.getCheckedItemPositions();
@@ -220,16 +235,17 @@ public class PageViewActivity extends Activity {
                     if (changed) {
                         filter.setText(text);
 
-                        List<Filter.NamedRestriction> keepedRestrictions = new ArrayList<Filter.NamedRestriction>();
+                        List<NamedRestriction> keepedRestrictions = new ArrayList<NamedRestriction>();
+                        List<NamedRestriction> restrictions = filter.restrictions;
                         for (int i = 0; i < checkedItemsCount; ++i) {
                             if (checkedItems.valueAt(i)) {
-                                keepedRestrictions.add(filter.restrictions.get(checkedItems.keyAt(i)));
+                                keepedRestrictions.add(restrictions.get(checkedItems.keyAt(i)));
                             }
                         }
 
                         // refresh filter
-                        filter.restrictions.clear();
-                        filter.restrictions.addAll(keepedRestrictions);
+                        restrictions.clear();
+                        restrictions.addAll(keepedRestrictions);
 
                         refreshProvider();
                     }
@@ -273,9 +289,9 @@ public class PageViewActivity extends Activity {
 
     private void setPageCaption(int nextPage) {
         if (provider.getPageCount() == 0) {
-            setText(R.id.pageCaption, "No results");
+            setText(R.id.browserPageCaption, "No results");
         } else {
-            setText(R.id.pageCaption, "Page " + nextPage + " of " + provider.getPageCount());
+            setText(R.id.browserPageCaption, "Page " + nextPage + " of " + provider.getPageCount());
         }
     }
 

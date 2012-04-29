@@ -4,44 +4,74 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/missionName"
+    <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical" />
+        android:stretchColumns="2" >
 
-    <TextView
-        android:id="@+id/missionPeriod"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical" />
-
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" >
-        <HorizontalScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+        <TableRow
+            android:layout_margin="2dip"
+            android:background="#aaaaaa" >
 
             <TextView
-                android:id="@+id/missionDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical" />
-        </HorizontalScrollView>
-    </ScrollView>
+                android:layout_column="1"
+                android:layout_margin="2dip"
+                android:background="#000000"
+                android:text="Name:" />
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="MetaData:" />
+            <TextView
+                android:id="@+id/missionName"
+                android:layout_margin="2dip"
+                android:background="#000000" />
+        </TableRow>
 
-    <ListView
-        android:id="@+id/metaDataList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        <TableRow
+            android:layout_margin="2dip"
+            android:background="#aaaaaa" >
+
+            <TextView
+                android:layout_column="1"
+                android:layout_margin="2dip"
+                android:background="#000000"
+                android:text="Started at:" />
+
+            <TextView
+                android:id="@+id/missionStartDate"
+                android:layout_margin="2dip"
+                android:background="#000000" />
+        </TableRow>
+
+        <TableRow
+            android:layout_margin="2dip"
+            android:background="#aaaaaa" >
+
+            <TextView
+                android:layout_column="1"
+                android:layout_margin="2dip"
+                android:background="#000000"
+                android:text="Ended at:" />
+
+            <TextView
+                android:id="@+id/missionEndDate"
+                android:layout_margin="2dip"
+                android:background="#000000" />
+        </TableRow>
+        
+         <TableRow
+            android:layout_margin="2dip"
+            android:background="#aaaaaa" >
+
+            <TextView
+                android:layout_column="1"
+                android:layout_margin="2dip"
+                android:background="#000000"
+                android:text="Duration:" />
+
+            <TextView
+                android:id="@+id/missionDuration"
+                android:layout_margin="2dip"
+                android:background="#000000" />
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>

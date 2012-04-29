@@ -15,7 +15,7 @@ import java.util.List;
 
 class Filter {
     private String text = "";
-    final List<Filter.NamedRestriction> restrictions = new ArrayList<Filter.NamedRestriction>();
+    final List<NamedRestriction> restrictions = new ArrayList<NamedRestriction>();
 
     public String getText() {
         return text;
@@ -26,11 +26,11 @@ class Filter {
     }
 
     public void addRestriction(EntityInfo entityInfo, EntityType entityType) {
-        restrictions.add(new Filter.NamedRestriction(entityInfo, entityType));
+        restrictions.add(new NamedRestriction(entityInfo, entityType));
     }
 
     public void clearNotGreaterPermissions(EntityType entityType) {
-        for (Iterator<Filter.NamedRestriction> i = restrictions.iterator(); i.hasNext();) {
+        for (Iterator<NamedRestriction> i = restrictions.iterator(); i.hasNext();) {
             if (!entityType.isLowerThan(i.next().entityType)) {
                 i.remove();
             }
@@ -38,8 +38,8 @@ class Filter {
     }
 
     public Restriction getLowestRestriction() {
-        Filter.NamedRestriction namedRestriction = null;
-        for (Filter.NamedRestriction restriction : restrictions) {
+        NamedRestriction namedRestriction = null;
+        for (NamedRestriction restriction : restrictions) {
             if (namedRestriction == null) {
                 namedRestriction = restriction;
                 continue;
@@ -76,7 +76,7 @@ class Filter {
         if (!text.isEmpty()) {
             builder.append("[text = ").append(text).append("]\n");
         }
-        for (Filter.NamedRestriction restriction : restrictions) {
+        for (NamedRestriction restriction : restrictions) {
             builder.append(restriction).append("\n");
         }
         return builder.toString().trim();
