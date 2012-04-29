@@ -47,7 +47,7 @@ public class PageViewActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.page_results);
+        setContentView(R.layout.activity_browse);
 
         // get view flipper
         viewFlipper = (ViewFlipper) findViewById(R.id.browserFlipper);

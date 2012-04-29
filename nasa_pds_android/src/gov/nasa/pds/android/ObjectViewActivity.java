@@ -46,7 +46,7 @@ public class ObjectViewActivity extends Activity {
         query = new ObjectQuery<Object>(queryType, id);
 
         // set content view based on object type
-        setContentView(queryType == QueryType.GET_FILE ? R.layout.file_result : R.layout.object_result);
+        setContentView(queryType == QueryType.GET_FILE ? R.layout.activity_file : R.layout.activity_object);
 
         // load data
         new DataLoadTast().execute(query);
