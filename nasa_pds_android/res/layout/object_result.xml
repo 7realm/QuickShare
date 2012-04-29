@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
+
+    <!-- HEADER -->
 
     <RelativeLayout
         android:id="@+id/objectCaptionView"
@@ -26,6 +29,8 @@
             android:text="Add to compare" />
     </RelativeLayout>
 
+    <!-- FOOTER -->
+
     <ListView
         android:id="@+id/objectReferenceList"
         android:layout_width="match_parent"
@@ -33,11 +38,20 @@
         android:layout_alignParentBottom="true" >
     </ListView>
 
+    <TextView
+        android:id="@+id/objectReferencesCaption"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/objectReferenceList"
+        android:text="References: " />
+
+    <!-- MAIN PART -->
+
     <FrameLayout
         android:id="@+id/objectView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/objectReferenceList"
+        android:layout_above="@id/objectReferencesCaption"
         android:layout_below="@id/objectCaptionView" >
     </FrameLayout>
 

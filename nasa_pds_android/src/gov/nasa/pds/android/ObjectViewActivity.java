@@ -85,11 +85,11 @@ public class ObjectViewActivity extends Activity {
                 // fill reference section
                 String[] data = new String[currentObject.getReferences().size()];
                 for (int i = 0; i < data.length; i++) {
-                    // TODO chck null description
-                    data[i] = currentObject.getReferences().get(i).getDescription().trim();
+                    String description = currentObject.getReferences().get(i).getDescription();
+                    data[i] = description == null ? "" : description.replaceAll("\\s+", " ").trim();
                 }
                 findListView(R.id.objectReferenceList).setAdapter(new ArrayAdapter<String>(ObjectViewActivity.this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, data));
+                    R.layout.item_reference, R.id.referenceText, data));
 
                 // create object view
                 ViewGroup objectViewContainer = (ViewGroup) findViewById(R.id.objectView);
@@ -101,12 +101,11 @@ public class ObjectViewActivity extends Activity {
                     setText(R.id.targetName, target.getName());
 
                     // set list of targets
-                    data = new String[target.getTypes().size()];
-                    for (int i = 0; i < data.length; i++) {
-                        data[i] = target.getTypes().get(i).getName();
+                    StringBuilder builder = new StringBuilder(target.getTypes().isEmpty() ? "" : target.getTypes().get(0).getName());
+                    for (int i = 1; i < data.length; i++) {
+                        builder.append(", ").append(target.getTypes().get(i).getName());
                     }
-                    findListView(R.id.targetTypesList).setAdapter(new ArrayAdapter<String>(ObjectViewActivity.this,
-                        android.R.layout.simple_list_item_1, android.R.id.text1, data));
+                    setText(R.id.targetTypes, builder.toString());
                 } else if (currentObject instanceof Mission) {
                     Mission mission = (Mission) currentObject;
 

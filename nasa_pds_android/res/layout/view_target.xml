@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:stretchColumns="2" >
 
-    <TextView
-        android:id="@+id/targetName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical" />
+    <TableRow
+        android:layout_margin="2dip"
+        android:background="#aaaaaa" >
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="Target Type(s):" />
+        <TextView
+            android:layout_column="1"
+            android:layout_margin="2dip"
+            android:background="#000000"
+            android:text="Name:" />
 
-    <ListView
-        android:id="@+id/targetTypesList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
+        <TextView
+            android:id="@+id/targetName"
+            android:layout_margin="2dip"
+            android:background="#000000" />
+    </TableRow>
 
-</LinearLayout>
+    <TableRow
+        android:layout_margin="2dip"
+        android:background="#aaaaaa" >
+
+        <TextView
+            android:layout_column="1"
+            android:layout_margin="2dip"
+            android:background="#000000"
+            android:text="Target Type(s):" />
+
+        <TextView
+            android:id="@+id/targetTypes"
+            android:layout_margin="2dip"
+            android:background="#000000" />
+    </TableRow>
+
+</TableLayout>
