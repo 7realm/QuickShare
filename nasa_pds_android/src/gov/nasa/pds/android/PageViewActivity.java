@@ -1,16 +1,10 @@
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.data.EntityType;
-import gov.nasa.pds.data.queries.InfoPagedQuery;
-import gov.nasa.pds.data.queries.SearchByTypePagedQuery;
-import gov.nasa.pds.data.resultproviders.PageResultsProvider;
 import gov.nasa.pds.data.resultproviders.ResultsProvider;
-import gov.nasa.pds.data.resultproviders.TypesResultsProvider;
 import gov.nasa.pds.soap.entities.EntityInfo;
-import gov.nasa.pds.soap.entities.Restriction;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -37,7 +31,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 public class PageViewActivity extends Activity {
@@ -196,7 +189,7 @@ public class PageViewActivity extends Activity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
         final TextView dialogText = (TextView) layout.findViewById(R.id.dialogSearchText);
-        dialogText.setText(filter.text);
+        dialogText.setText(filter.getText());
         final ListView dialogList = (ListView) layout.findViewById(R.id.dialogList);
         dialogList.setAdapter(new ArrayAdapter<CharSequence>(this, android.R.layout.simple_list_item_multiple_choice, items));
         dialogList.setItemsCanFocus(false);
@@ -217,17 +210,17 @@ public class PageViewActivity extends Activity {
                     int checkedItemsCount = checkedItems.size();
 
                     // check if text or restrictions are changed
-                    String text = dialogText.getText().toString();
-                    boolean changed = !text.equals(filter.text);
+                    String text = dialogText.getText().toString().trim();
+                    boolean changed = !text.equals(filter.getText());
                     for (int i = 0; i < checkedItemsCount; ++i) {
                         changed = changed || !checkedItems.valueAt(i);
                     }
 
                     // run search if filter is changed
                     if (changed) {
-                        filter.text = text.trim();
+                        filter.setText(text);
 
-                        List<NamedRestriction> keepedRestrictions = new ArrayList<NamedRestriction>();
+                        List<Filter.NamedRestriction> keepedRestrictions = new ArrayList<Filter.NamedRestriction>();
                         for (int i = 0; i < checkedItemsCount; ++i) {
                             if (checkedItems.valueAt(i)) {
                                 keepedRestrictions.add(filter.restrictions.get(checkedItems.keyAt(i)));
@@ -247,8 +240,6 @@ public class PageViewActivity extends Activity {
     }
 
     private void goToNext() {
-        Toast.makeText(this, "Go Next", Toast.LENGTH_SHORT).show();
-
         // get number of next page
         int nextPage = provider.getCurrentPage() + 1;
         if (nextPage == provider.getPageCount() + 1) {
@@ -265,7 +256,6 @@ public class PageViewActivity extends Activity {
     }
 
     private void goToPrevious() {
-        Toast.makeText(this, "Go Previous", Toast.LENGTH_SHORT).show();
         // get number of previous page
         int previousPage = provider.getCurrentPage() - 1;
         if (previousPage == 0) {
@@ -344,91 +334,6 @@ public class PageViewActivity extends Activity {
         @Override
         public int getCount() {
             return provider.getCurrentPageSize();
-        }
-    }
-
-    private static class Filter {
-        private String text = "";
-        private final List<NamedRestriction> restrictions = new ArrayList<NamedRestriction>();
-
-        public void addRestriction(EntityInfo entityInfo, EntityType entityType) {
-            restrictions.add(new NamedRestriction(entityInfo, entityType));
-        }
-
-        public void clearNotGreaterPermissions(EntityType entityType) {
-            for (Iterator<NamedRestriction> i = restrictions.iterator(); i.hasNext();) {
-                if (!entityType.isLowerThan(i.next().entityType)) {
-                    i.remove();
-                }
-            }
-        }
-
-        public Restriction getLowestRestriction() {
-            NamedRestriction namedRestriction = null;
-            for (NamedRestriction restriction : restrictions) {
-                if (namedRestriction == null) {
-                    namedRestriction = restriction;
-                    continue;
-                }
-                if (restriction.entityType.isLowerThan(namedRestriction.entityType)) {
-                    namedRestriction = restriction;
-                }
-            }
-
-            return namedRestriction == null ? null : namedRestriction.getRestriction();
-        }
-
-        public ResultsProvider createProvider(EntityType entityType) {
-            clearNotGreaterPermissions(entityType);
-
-            if (text.isEmpty()) {
-                if (entityType == EntityType.TARGET_TYPE) {
-                    return new TypesResultsProvider();
-                }
-
-                return new PageResultsProvider(new InfoPagedQuery(entityType.getObjectsInfoQuery(), getLowestRestriction()));
-            }
-
-            return new PageResultsProvider(new SearchByTypePagedQuery(text, getLowestRestriction()));
-        }
-
-        @Override
-        public String toString() {
-            if (text.isEmpty() && restrictions.isEmpty()) {
-                return "<empty filter>";
-            }
-
-            StringBuilder builder = new StringBuilder();
-            if (!text.isEmpty()) {
-                builder.append("[text = ").append(text).append("]\n");
-            }
-            for (NamedRestriction restriction : restrictions) {
-                builder.append(restriction).append("\n");
-            }
-            return builder.toString().trim();
-        }
-    }
-
-    private static class NamedRestriction {
-        private final EntityType entityType;
-        private final EntityInfo entityInfo;
-
-        public NamedRestriction(EntityInfo entityInfo, EntityType entityType) {
-            this.entityInfo = entityInfo;
-            this.entityType = entityType;
-        }
-
-        public Restriction getRestriction() {
-            Restriction result = new Restriction();
-            result.setRestrictionEntityId(entityInfo.getId());
-            result.setRestrictionEntityClass(entityType.getClassName());
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return new StringBuilder("[").append(entityType.getHumanReadable())
-                .append(" = ").append(entityInfo.getName()).append("]").toString();
         }
     }
 }

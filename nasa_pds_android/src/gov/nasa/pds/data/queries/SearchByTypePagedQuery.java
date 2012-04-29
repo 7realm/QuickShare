@@ -11,14 +11,16 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 
 public class SearchByTypePagedQuery extends PagedQuery {
     private final String text;
+    private final String entityType;
 
-    public SearchByTypePagedQuery(String text) {
-        this(text, null);
+    public SearchByTypePagedQuery(String text, String entityType) {
+        this(text, entityType, null);
     }
 
-    public SearchByTypePagedQuery(String text, Restriction restriction) {
+    public SearchByTypePagedQuery(String text, String entityType, Restriction restriction) {
         super(QueryType.SEARCH_BY_TYPE, restriction);
         this.text = text;
+        this.entityType = entityType;
     }
 
     @Override
@@ -27,6 +29,7 @@ public class SearchByTypePagedQuery extends PagedQuery {
         request.setSearchText(text);
         request.setPage(getPage());
         request.setRestriction(getRestriction());
+        request.setEntityType(entityType);
 
         return new SoapSerializationEnvelope(SoapEnvelope.VER11).addRequest(request)
             .addMapping("searchEntitiesByType", SearchEntitiesByTypeRequest.class)
