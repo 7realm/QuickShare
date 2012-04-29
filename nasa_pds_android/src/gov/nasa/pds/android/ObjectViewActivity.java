@@ -4,10 +4,13 @@ import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.data.queries.ObjectQuery;
 import gov.nasa.pds.soap.ReferencedEntity;
+import gov.nasa.pds.soap.entities.Instrument;
+import gov.nasa.pds.soap.entities.InstrumentHost;
 import gov.nasa.pds.soap.entities.MetadataObject;
 import gov.nasa.pds.soap.entities.Mission;
 import gov.nasa.pds.soap.entities.Property;
 import gov.nasa.pds.soap.entities.Target;
+import gov.nasa.pds.soap.entities.TargetType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,9 +104,10 @@ public class ObjectViewActivity extends Activity {
                     setText(R.id.targetName, target.getName());
 
                     // set list of targets
-                    StringBuilder builder = new StringBuilder(target.getTypes().isEmpty() ? "" : target.getTypes().get(0).getName());
-                    for (int i = 1; i < data.length; i++) {
-                        builder.append(", ").append(target.getTypes().get(i).getName());
+                    List<TargetType> types = target.getTypes();
+                    StringBuilder builder = new StringBuilder(types.isEmpty() ? "" : types.get(0).getName());
+                    for (int i = 1; i < types.size(); i++) {
+                        builder.append(", ").append(types.get(i).getName());
                     }
                     setText(R.id.targetTypes, builder.toString());
                 } else if (currentObject instanceof Mission) {
@@ -119,6 +123,22 @@ public class ObjectViewActivity extends Activity {
                     findListView(R.id.metaDataList).setAdapter(new SimpleAdapter(ObjectViewActivity.this,
                         buildMetaData(mission), android.R.layout.simple_list_item_2,
                         new String[] {"name", "description"}, new int[] {android.R.id.text1, android.R.id.text2}));
+                } else if (currentObject instanceof Instrument) {
+                    Instrument instrument = (Instrument) currentObject;
+
+                    // inflate and fill instrument view
+                    LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_instrument, objectViewContainer, true);
+                    setText(R.id.instrumentName, instrument.getName());
+                    setText(R.id.instrumentType, instrument.getType());
+                    setText(R.id.instrumentDescription, instrument.getDescription());
+
+                    // fill instrument hosts
+                    List<InstrumentHost> hosts = instrument.getHosts();
+                    StringBuilder builder = new StringBuilder(hosts.isEmpty() ? "" : hosts.get(0).getName());
+                    for (int i = 1; i < hosts.size(); i++) {
+                        builder.append(hosts.get(i).getName()).append("\n");
+                    }
+                    setText(R.id.instrumentHost, builder.toString());
 
                 } else {
                     Log.w("soap", "Unexpected object type: " + result);

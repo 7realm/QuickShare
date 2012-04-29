@@ -1,5 +1,6 @@
 package gov.nasa.pds.soap.calls;
 
+import gov.nasa.pds.soap.BaseObject;
 import gov.nasa.pds.soap.entities.Instrument;
 
 /**
@@ -23,7 +24,7 @@ import gov.nasa.pds.soap.entities.Instrument;
  *
  *
  */
-public class GetInstrumentResponse {
+public class GetInstrumentResponse extends BaseObject {
     protected Instrument _return;
 
     /**
