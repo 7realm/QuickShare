@@ -59,7 +59,7 @@ public enum EntityType {
         case INSTRUMENT:
             return QueryType.GET_INSTRUMENT;
         case FILE:
-            return QueryType.GET_DOCUMENTS_INFO;
+            return QueryType.GET_FILE;
         case TARGET_TYPE:
         default:
             return null;
@@ -75,7 +75,7 @@ public enum EntityType {
         case INSTRUMENT:
             return QueryType.GET_INSTRUMENTS_INFO;
         case FILE:
-            return QueryType.GET_FILE;
+            return QueryType.GET_DOCUMENTS_INFO;
         case TARGET_TYPE:
         default:
             return QueryType.GET_TYPES_INFO;

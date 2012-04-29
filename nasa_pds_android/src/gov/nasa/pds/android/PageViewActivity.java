@@ -1,6 +1,6 @@
 package gov.nasa.pds.android;
 
-import gov.nasa.pds.data.queries.EntityType;
+import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.queries.InfoPagedQuery;
 import gov.nasa.pds.data.queries.SearchByTypePagedQuery;
 import gov.nasa.pds.data.resultproviders.PageResultsProvider;
@@ -106,7 +106,7 @@ public class PageViewActivity extends Activity {
             }
         });
 
-        // set query from intent
+        // set query for base type
         setEntityType(EntityType.TARGET_TYPE);
     }
 
@@ -174,7 +174,7 @@ public class PageViewActivity extends Activity {
 
     public void onOpenButtonClick(View v) {
         // if we on lowest level, do nothing
-        if (entityType == EntityType.INSTRUMENT) {
+        if (entityType == EntityType.lowest()) {
             Log.w("soap", "Opening the lowest entity of result activity.");
         } else {
             // add restriction

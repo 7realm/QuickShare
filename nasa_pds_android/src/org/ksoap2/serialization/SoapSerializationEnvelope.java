@@ -89,7 +89,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             while (parser.getEventType() == XmlPullParser.START_TAG) {
                 String rootAttr = parser.getAttributeValue(enc, ROOT_LABEL);
 
-                Object object = readObject(parser, null, parser.getNamespace(), parser.getName(), PropertyInfo.OBJECT_TYPE);
+                Object object = readObject(parser, parser.getNamespace(), parser.getName(), PropertyInfo.OBJECT_TYPE);
                 if ("1".equals(rootAttr) || bodyIn == null) {
                     bodyIn = object;
                 }
@@ -119,7 +119,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             if (foundIndex != -1 && propertyInfo != null) {
 
                 if (propertyInfo.type.equals(List.class)) {
-                    Object value = readObject(parser, obj, parsedNamespace, parsedName, propertyInfo.elementType);
+                    Object value = readObject(parser, parsedNamespace, parsedName, propertyInfo.elementType);
                     List<Object> list = (List<Object>) obj.getProperty(foundIndex);
                     if (list == null) {
                         list = new ArrayList<Object>();
@@ -127,7 +127,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
                     }
                     list.add(value);
                 } else {
-                    Object value = readObject(parser, obj, parsedNamespace, parsedName, propertyInfo);
+                    Object value = readObject(parser, parsedNamespace, parsedName, propertyInfo);
                     obj.setProperty(foundIndex, value);
                 }
             } else {
@@ -142,7 +142,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
      * Precondition: On the start tag of the object or property, so href can be read.
      */
 
-    public Object readObject(XmlPullParser parser, Object owner, String namespace, String name,
+    public Object readObject(XmlPullParser parser, String namespace, String name,
         PropertyInfo expected) throws IOException, XmlPullParserException {
         String parsedName = parser.getName();
 

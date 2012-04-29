@@ -56,6 +56,10 @@ public class InfoPagedQuery extends PagedQuery {
             envelope.addMapping("getInstrumentsInfo", GetEntitiesInfoRequest.class);
             envelope.addMapping("getInstrumentsInfoResponse", GetEntitiesInfoResponse.class);
             break;
+        case GET_DOCUMENTS_INFO:
+            envelope.addMapping("getDocumentsInfo", GetEntitiesInfoRequest.class);
+            envelope.addMapping("getDocumentsInfoResponse", GetEntitiesInfoResponse.class);
+            break;
         default:
             Log.w("soap", "Not expected entities info request: " + getQueryType());
             break;
