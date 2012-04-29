@@ -1,12 +1,11 @@
-package gov.nasa.pds.data.queries;
-
-import gov.nasa.pds.data.QueryType;
+package gov.nasa.pds.data;
 
 public enum EntityType {
     TARGET_TYPE("TargetType"),
     TARGET("Target"),
     MISSION("Mission"),
-    INSTRUMENT("Instrument");
+    INSTRUMENT("Instrument"),
+    FILE("File");
 
     private String className;
 
@@ -22,6 +21,10 @@ public enum EntityType {
         }
 
         return null;
+    }
+
+    public static EntityType lowest() {
+        return values()[values().length - 1];
     }
 
     public String getClassName() {
@@ -55,6 +58,9 @@ public enum EntityType {
             return QueryType.GET_MISSION;
         case INSTRUMENT:
             return QueryType.GET_INSTRUMENT;
+        case FILE:
+            return QueryType.GET_DOCUMENTS_INFO;
+        case TARGET_TYPE:
         default:
             return null;
         }
@@ -68,6 +74,8 @@ public enum EntityType {
             return QueryType.GET_MISSIONS_INFO;
         case INSTRUMENT:
             return QueryType.GET_INSTRUMENTS_INFO;
+        case FILE:
+            return QueryType.GET_FILE;
         case TARGET_TYPE:
         default:
             return QueryType.GET_TYPES_INFO;
