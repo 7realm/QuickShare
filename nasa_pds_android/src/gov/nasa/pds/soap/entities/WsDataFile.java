@@ -1,5 +1,7 @@
 package gov.nasa.pds.soap.entities;
 
+import gov.nasa.pds.soap.BaseObject;
+
 /**
  * <p>
  * Java class for wsDataFile complex type.
@@ -25,7 +27,7 @@ package gov.nasa.pds.soap.entities;
  *
  *
  */
-public class WsDataFile {
+public class WsDataFile extends BaseObject {
 
     protected String content;
     // TODO protected DataHandler dataHandler;

@@ -11,6 +11,7 @@ import gov.nasa.pds.soap.entities.Mission;
 import gov.nasa.pds.soap.entities.Property;
 import gov.nasa.pds.soap.entities.Target;
 import gov.nasa.pds.soap.entities.TargetType;
+import gov.nasa.pds.soap.entities.WsDataFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,12 +39,14 @@ public class ObjectViewActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.object_result);
 
         // get query data form intent
         QueryType queryType = (QueryType) getIntent().getExtras().get(EXTRA_QUERY_TYPE);
         long id = getIntent().getLongExtra(EXTRA_OBJECT_ID, 0);
         query = new ObjectQuery<Object>(queryType, id);
+
+        // set content view based on object type
+        setContentView(queryType == QueryType.GET_FILE ? R.layout.file_result : R.layout.object_result);
 
         // load data
         new DataLoadTast().execute(query);
@@ -58,6 +61,9 @@ public class ObjectViewActivity extends Activity {
             break;
         case GET_INSTRUMENT:
             setText(R.id.objectCaption, "Instrument");
+            break;
+        case GET_FILE:
+            setText(R.id.fileCaption, "File");
             break;
         default:
             break;
@@ -143,6 +149,11 @@ public class ObjectViewActivity extends Activity {
                 } else {
                     Log.w("soap", "Unexpected object type: " + result);
                 }
+            } else if (result instanceof WsDataFile) {
+                WsDataFile dataFile = (WsDataFile) result;
+
+                setText(R.id.fileCaption, dataFile.getName());
+                setText(R.id.fileContent, dataFile.getContent());
             } else {
                 Log.w("soap", "Result: " + result + " is not referenced object.");
             }
