@@ -13,6 +13,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,6 +77,15 @@ public class ObjectViewActivity extends Activity {
             Compare.addMission(mission);
             setText(R.id.objectCompareButton, "Compare");
         }
+    }
+
+    public void onReferenceButtonClick(View v) {
+        CharSequence searchText = ((TextView) ((View) v.getParent()).findViewById(R.id.referenceText)).getText();
+
+        // run google with this query
+        Uri uri = Uri.parse("http://www.google.com/#q=" + searchText);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 
     private void setText(int viewId, CharSequence text) {
