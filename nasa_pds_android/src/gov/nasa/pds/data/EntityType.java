@@ -5,7 +5,7 @@ public enum EntityType {
     TARGET("Target"),
     MISSION("Mission"),
     INSTRUMENT("Instrument"),
-    FILE("File");
+    FILE("DataFile");
 
     private String className;
 
@@ -32,10 +32,15 @@ public enum EntityType {
     }
 
     public String getHumanReadable() {
-        if (this == TARGET_TYPE) {
+        switch (this) {
+        case TARGET_TYPE:
             return "target type";
+        case FILE:
+            return "file";
+        default:
+            return className.toLowerCase();
         }
-        return className.toLowerCase();
+
     }
 
     public boolean isLowerThan(EntityType other) {

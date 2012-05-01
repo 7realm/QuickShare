@@ -9,7 +9,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.KvmSerializable;
@@ -22,8 +21,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 
 public class DataCenter {
-    private static DateFormat DATE_LONG = new SimpleDateFormat("HH:mm M dd yyyy");
-    private static DateFormat DATE_PERIOD = new SimpleDateFormat("yyyy 'years' D 'days' HH 'hours' mm 'minutes.'");
+    private static final int DAYS_PER_YEAR = 365;
+    private static final int HOURS_PER_DAY = 24;
+    private static final int MINUTES_PER_HOUR = 60;
+    private static final int MILLISECONDS_PER_MINUTE = 60 * 1000;
+    private static DateFormat DATE_LONG = new SimpleDateFormat("MMMMM dd yyyy 'at' HH:mm");
 
     private static final String URL = "http://192.168.0.101:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
@@ -31,10 +33,29 @@ public class DataCenter {
         return date == null ? "" : DATE_LONG.format(date);
     }
 
-    public static String formatPeriod(Date date) {
-        // TODO
-        DATE_PERIOD.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return date == null ? "" : DATE_PERIOD.format(date);
+    @SuppressWarnings("deprecation")
+    public static String formatPeriod(Date startDate, Date endDate) {
+        // handle null values
+        if (endDate == null) {
+            endDate = new Date();
+        } else if (startDate == null) {
+            startDate = endDate;
+        }
+
+        // calculate duration
+        long duration = endDate.getTime() - startDate.getTime();
+
+        // get time periods
+        long minutes = duration / MILLISECONDS_PER_MINUTE;
+        long hours = minutes / MINUTES_PER_HOUR;
+        long days = hours / HOURS_PER_DAY;
+        long years = days / DAYS_PER_YEAR;
+
+        // correct days because of Feb 29
+        days -= endDate.getYear() / 4 - startDate.getYear() / 4;
+
+        return String.format("%d years %d days %02d hours %02d mins",
+            years, days % DAYS_PER_YEAR, hours % HOURS_PER_DAY, minutes % MINUTES_PER_HOUR);
     }
 
     public static PagedResults executePagedQuery(PagedQuery query) {

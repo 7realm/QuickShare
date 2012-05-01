@@ -13,7 +13,6 @@ import gov.nasa.pds.soap.entities.Mission;
 import gov.nasa.pds.soap.entities.PagedResults;
 import gov.nasa.pds.soap.entities.Restriction;
 
-import java.util.Date;
 import java.util.Set;
 
 import android.app.Activity;
@@ -81,10 +80,7 @@ public class CompareActivity extends Activity {
             addCell(nameRow, color, mission.getName());
             addCell(startDateRow, color, DataCenter.formatLong(mission.getStartDate()));
             addCell(endDateRow, color, DataCenter.formatLong(mission.getEndDate()));
-
-            // calculate period
-            Date period = new Date(mission.getEndDate().getTime() - mission.getStartDate().getTime());
-            addCell(durationRow, color, DataCenter.formatPeriod(period));
+            addCell(durationRow, color, DataCenter.formatPeriod(mission.getStartDate(), mission.getEndDate()));
 
             // add goto and remove buttons with proper tag
             View buttonsView = LayoutInflater.from(this).inflate(R.layout.view_compare_buttons, null);

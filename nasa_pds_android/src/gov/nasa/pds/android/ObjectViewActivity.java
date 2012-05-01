@@ -9,7 +9,6 @@ import gov.nasa.pds.soap.entities.InstrumentHost;
 import gov.nasa.pds.soap.entities.Mission;
 import gov.nasa.pds.soap.entities.WsDataFile;
 
-import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -131,10 +130,9 @@ public class ObjectViewActivity extends Activity {
                     // inflate and fill mission view
                     LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_mission, objectContainer);
                     setText(R.id.missionName, mission.getName());
-                    setText(R.id.missionStartDate, mission.getStartDate().toString());
-                    setText(R.id.missionEndDate, mission.getEndDate().toString());
-                    setText(R.id.missionDuration,
-                        new Date(mission.getEndDate().getTime() - mission.getStartDate().getTime()).toString());
+                    setText(R.id.missionStartDate, DataCenter.formatLong(mission.getStartDate()));
+                    setText(R.id.missionEndDate, DataCenter.formatLong(mission.getEndDate()));
+                    setText(R.id.missionDuration, DataCenter.formatPeriod(mission.getStartDate(), mission.getEndDate()));
                     setText(R.id.objectDescription, mission.getDescription());
                 } else if (currentObject instanceof Instrument) {
                     Instrument instrument = (Instrument) currentObject;
