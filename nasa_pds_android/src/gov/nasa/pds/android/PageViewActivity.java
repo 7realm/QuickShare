@@ -34,7 +34,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 public class PageViewActivity extends Activity {
-    public static final String EXTRA_QUERY_TYPE = "query_type";
+    public static final String EXTRA_ENTITY_TYPE = "query_type";
     public static final int REQUEST_SELECT_RESTRICTION = 1001;
     private ViewFlipper viewFlipper;
     private ResultsProvider provider;
@@ -100,7 +100,8 @@ public class PageViewActivity extends Activity {
         });
 
         // set query for base type
-        setEntityType(EntityType.TARGET_TYPE);
+        EntityType entityType = (EntityType) getIntent().getSerializableExtra(EXTRA_ENTITY_TYPE);
+        setEntityType(entityType == null ? EntityType.TARGET_TYPE : entityType);
     }
 
     private void setEntityType(EntityType newEntityType) {

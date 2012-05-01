@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:onClick="onTouchScreenClick" >
+
+    <RelativeLayout
+        android:id="@+id/homeBase"
+        android:layout_width="match_parent"
+        android:layout_height="17dip"
+        android:layout_alignParentBottom="true" >
+    </RelativeLayout>
+
+    <ImageView
+        style="@style/homeIconStyle"
+        android:layout_above="@id/homeBase"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="32dip"
+        android:onClick="onTargetsButtonClick"
+        android:src="@drawable/home_targets" />
+
+    <ImageView
+        style="@style/homeIconStyle"
+        android:layout_above="@id/homeBase"
+        android:layout_centerHorizontal="true"
+        android:onClick="onMissionsButtonClick"
+        android:src="@drawable/home_missions" />
+
+    <ImageView
+        style="@style/homeIconStyle"
+        android:layout_above="@id/homeBase"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="32dip"
+        android:onClick="onInstrumentsButtonClick"
+        android:src="@drawable/home_instruments" />
+
+</RelativeLayout>
