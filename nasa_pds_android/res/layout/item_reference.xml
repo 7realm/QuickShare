@@ -3,14 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <Button
+    <ImageView
         android:id="@+id/referenceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:onClick="onReferenceButtonClick"
-        android:text="..." />
+        android:src="@drawable/search_google" />
 
     <TextView
         android:id="@+id/referenceText"

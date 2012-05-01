@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public abstract class ResultsProvider extends BaseAdapter {
@@ -59,6 +60,27 @@ public abstract class ResultsProvider extends BaseAdapter {
         // set tag and listener for whole view
         pageView.setTag(item);
         pageView.setOnClickListener(onOpenListener);
+
+        // set object icon
+        ImageView objectIcon = (ImageView) pageView.findViewById(R.id.entityObjectIcon);
+        switch (queryType) {
+        case GET_TYPES_INFO:
+            objectIcon.setImageResource(R.drawable.object_target_type);
+            break;
+        case GET_TARGETS_INFO:
+            objectIcon.setImageResource(R.drawable.object_target);
+            break;
+        case GET_MISSIONS_INFO:
+            objectIcon.setImageResource(R.drawable.object_mission);
+            break;
+        case GET_INSTRUMENTS_INFO:
+            objectIcon.setImageResource(R.drawable.object_instrument);
+            break;
+        case GET_DOCUMENTS_INFO:
+        default:
+            objectIcon.setImageResource(R.drawable.object_file);
+            break;
+        }
 
         // hide goto button if needed
         switch (queryType) {

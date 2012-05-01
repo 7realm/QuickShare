@@ -38,23 +38,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
 
-        <Button
+        <ImageView
             android:id="@+id/browserPreviousButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:onClick="onPreviousButtonClick"
-            android:text="prev" />
+            android:src="@drawable/prev_page" />
 
-        <Button
+        <ImageView
             android:id="@+id/browserNextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:onClick="onNextButtonClick"
-            android:text="next" />
+            android:src="@drawable/next_page" />
 
         <TextView
             android:id="@+id/browserPageCaption"
