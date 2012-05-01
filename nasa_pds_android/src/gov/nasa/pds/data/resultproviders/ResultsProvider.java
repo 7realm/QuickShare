@@ -5,11 +5,14 @@ import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.entities.EntityInfo;
 import gov.nasa.pds.soap.entities.PagedResults;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public abstract class ResultsProvider {
+public abstract class ResultsProvider extends BaseAdapter {
     protected PagedResults lastResult;
     protected QueryType queryType;
     private OnClickListener onGotoButtonListener;
@@ -75,6 +78,7 @@ public abstract class ResultsProvider {
      * @param itemIndex
      * @return
      */
+    @Override
     public EntityInfo getItem(int itemIndex) {
         if (lastResult == null) {
             return null;
@@ -100,5 +104,24 @@ public abstract class ResultsProvider {
     public abstract int getCurrentPage();
 
     public abstract int getCurrentPageSize();
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewgroup) {
+        if (view == null) {
+            view = LayoutInflater.from(viewgroup.getContext()).inflate(R.layout.item_entity, null, true);
+        }
+        fillView(i, view);
+        return view;
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public int getCount() {
+        return getCurrentPageSize();
+    }
 
 }

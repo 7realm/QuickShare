@@ -22,13 +22,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,7 +40,6 @@ public class PageViewActivity extends Activity {
     private EntityType entityType;
     private final Filter filter = new Filter();
     private final AtomicBoolean firstRun = new AtomicBoolean();
-    private final PageResultsAdapter adapter = new PageResultsAdapter();
     private Spinner spinner;
 
     @Override
@@ -315,7 +312,7 @@ public class PageViewActivity extends Activity {
                 viewFlipper.removeAllViews();
                 for (int i = 0; i < provider.getPageCount(); i++) {
                     ListView view = new ListView(PageViewActivity.this);
-                    view.setAdapter(adapter);
+                    view.setAdapter(provider);
                     viewFlipper.addView(view, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 }
                 firstRun.set(false);
@@ -323,33 +320,7 @@ public class PageViewActivity extends Activity {
             }
 
             // notify list about content change
-            adapter.notifyDataSetInvalidated();
-        }
-    }
-
-    private final class PageResultsAdapter extends BaseAdapter {
-        @Override
-        public View getView(int i, View view, ViewGroup viewgroup) {
-            if (view == null) {
-                view = LayoutInflater.from(PageViewActivity.this).inflate(R.layout.item_entity, null, true);
-            }
-            provider.fillView(i, view);
-            return view;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return provider.getItem(i);
-        }
-
-        @Override
-        public int getCount() {
-            return provider.getCurrentPageSize();
+            provider.notifyDataSetInvalidated();
         }
     }
 }
