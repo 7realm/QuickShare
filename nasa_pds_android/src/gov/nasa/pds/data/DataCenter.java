@@ -5,7 +5,11 @@ import gov.nasa.pds.data.queries.PagedQuery;
 import gov.nasa.pds.soap.entities.PagedResults;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.KvmSerializable;
@@ -18,7 +22,20 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 
 public class DataCenter {
+    private static DateFormat DATE_LONG = new SimpleDateFormat("HH:mm M dd yyyy");
+    private static DateFormat DATE_PERIOD = new SimpleDateFormat("yyyy 'years' D 'days' HH 'hours' mm 'minutes.'");
+
     private static final String URL = "http://192.168.0.101:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
+
+    public static String formatLong(Date date) {
+        return date == null ? "" : DATE_LONG.format(date);
+    }
+
+    public static String formatPeriod(Date date) {
+        // TODO
+        DATE_PERIOD.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return date == null ? "" : DATE_PERIOD.format(date);
+    }
 
     public static PagedResults executePagedQuery(PagedQuery query) {
         Log.i("soap", "Executing paged query: " + query.getQueryType());

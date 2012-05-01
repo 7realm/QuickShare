@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/compareContentView"
+    android:layout_width="810dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name:" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:id="@+id/compareNameRow"
+            android:layout_margin="2dip"
+            android:background="#aaaaaa" >
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Started on:" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:id="@+id/compareStartDateRow"
+            android:layout_margin="2dip"
+            android:background="#aaaaaa" >
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Finished on:" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:id="@+id/compareEndDateRow"
+            android:layout_margin="2dip"
+            android:background="#aaaaaa" >
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:text="Duration:" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:id="@+id/compareDurationRow"
+            android:layout_margin="2dip"
+            android:background="#aaaaaa" >
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/compareCommonInstrumentsCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Common instruments:"
+        android:visibility="gone" />
+
+    <TableLayout
+        android:id="@+id/compareCommonInstrumentsTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </TableLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Unique instruments:" />
+
+    <LinearLayout
+        android:id="@+id/compareUniqueInstrumentsTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:id="@+id/compareButtonsRow"
+            android:layout_margin="2dip"
+            android:background="#aaaaaa" >
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

@@ -13,15 +13,19 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ObjectViewActivity extends Activity {
     public static final String EXTRA_QUERY_TYPE = "query_type";
@@ -42,8 +46,35 @@ public class ObjectViewActivity extends Activity {
         // set content view based on object type
         setContentView(queryType == QueryType.GET_FILE ? R.layout.activity_file : R.layout.activity_object);
 
+        // set text and visibility of add to compare button
+        Button addToCompare = (Button) findViewById(R.id.objectCompareButton);
+        addToCompare.setVisibility(queryType == QueryType.GET_MISSION ? View.VISIBLE : View.INVISIBLE);
+        addToCompare.setText(Compare.exists(id) ? "Compare" : "Add to compare");
+
         // load data
         new DataLoadTast().execute(query);
+    }
+
+    public void onCompareButtonClick(View v) {
+        // get mission from tag attribute
+        Mission mission = (Mission) v.getTag();
+        if (mission == null) {
+            return;
+        }
+
+        // if compare already exists, then do compare
+        if (Compare.exists(mission.getId())) {
+            // check compare size
+            if (Compare.ITEMS.size() < 2) {
+                Toast.makeText(this, "Please select several items to compare.", Toast.LENGTH_SHORT).show();
+            } else {
+                startActivity(new Intent(this, CompareActivity.class));
+            }
+        } else {
+            // add mission to compare and change label
+            Compare.addMission(mission);
+            setText(R.id.objectCompareButton, "Compare");
+        }
     }
 
     private void setText(int viewId, CharSequence text) {
@@ -59,6 +90,9 @@ public class ObjectViewActivity extends Activity {
 
         @Override
         protected void onPostExecute(final Object result) {
+            // set tag
+            findViewById(R.id.objectCompareButton).setTag(result);
+
             // assign current object
             if (result instanceof ReferencedEntity) {
                 currentObject = (ReferencedEntity) result;

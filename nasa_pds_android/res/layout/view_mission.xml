@@ -1,77 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:stretchColumns="2" >
 
-    <TableLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="2" >
+    <TableRow
+        android:layout_margin="2dip"
+        android:background="#aaaaaa" >
 
-        <TableRow
+        <TextView
+            android:layout_column="1"
             android:layout_margin="2dip"
-            android:background="#aaaaaa" >
+            android:background="#000000"
+            android:text="Name:" />
 
-            <TextView
-                android:layout_column="1"
-                android:layout_margin="2dip"
-                android:background="#000000"
-                android:text="Name:" />
-
-            <TextView
-                android:id="@+id/missionName"
-                android:layout_margin="2dip"
-                android:background="#000000" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/missionName"
             android:layout_margin="2dip"
-            android:background="#aaaaaa" >
+            android:background="#000000" />
+    </TableRow>
 
-            <TextView
-                android:layout_column="1"
-                android:layout_margin="2dip"
-                android:background="#000000"
-                android:text="Started at:" />
+    <TableRow
+        android:layout_margin="2dip"
+        android:background="#aaaaaa" >
 
-            <TextView
-                android:id="@+id/missionStartDate"
-                android:layout_margin="2dip"
-                android:background="#000000" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:layout_column="1"
             android:layout_margin="2dip"
-            android:background="#aaaaaa" >
+            android:background="#000000"
+            android:text="Started at:" />
 
-            <TextView
-                android:layout_column="1"
-                android:layout_margin="2dip"
-                android:background="#000000"
-                android:text="Ended at:" />
-
-            <TextView
-                android:id="@+id/missionEndDate"
-                android:layout_margin="2dip"
-                android:background="#000000" />
-        </TableRow>
-        
-         <TableRow
+        <TextView
+            android:id="@+id/missionStartDate"
             android:layout_margin="2dip"
-            android:background="#aaaaaa" >
+            android:background="#000000" />
+    </TableRow>
 
-            <TextView
-                android:layout_column="1"
-                android:layout_margin="2dip"
-                android:background="#000000"
-                android:text="Duration:" />
+    <TableRow
+        android:layout_margin="2dip"
+        android:background="#aaaaaa" >
 
-            <TextView
-                android:id="@+id/missionDuration"
-                android:layout_margin="2dip"
-                android:background="#000000" />
-        </TableRow>
-    </TableLayout>
+        <TextView
+            android:layout_column="1"
+            android:layout_margin="2dip"
+            android:background="#000000"
+            android:text="Ended at:" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/missionEndDate"
+            android:layout_margin="2dip"
+            android:background="#000000" />
+    </TableRow>
+
+    <TableRow
+        android:layout_margin="2dip"
+        android:background="#aaaaaa" >
+
+        <TextView
+            android:layout_column="1"
+            android:layout_margin="2dip"
+            android:background="#000000"
+            android:text="Duration:" />
+
+        <TextView
+            android:id="@+id/missionDuration"
+            android:layout_margin="2dip"
+            android:background="#000000" />
+    </TableRow>
+
+</TableLayout>
