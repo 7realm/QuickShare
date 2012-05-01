@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -44,6 +45,7 @@ public class PageViewActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse);
 
@@ -305,6 +307,11 @@ public class PageViewActivity extends Activity {
         }
 
         @Override
+        protected void onPreExecute() {
+            setProgressBarIndeterminateVisibility(true);
+        }
+
+        @Override
         protected void onPostExecute(Void result) {
             // add views on first run
             if (firstRun.get()) {
@@ -321,6 +328,8 @@ public class PageViewActivity extends Activity {
 
             // notify list about content change
             provider.notifyDataSetInvalidated();
+
+            setProgressBarIndeterminateVisibility(false);
         }
     }
 }

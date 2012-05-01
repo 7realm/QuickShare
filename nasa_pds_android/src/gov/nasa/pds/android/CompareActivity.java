@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -38,6 +39,7 @@ public class CompareActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compare);
 
@@ -180,11 +182,18 @@ public class CompareActivity extends Activity {
         }
 
         @Override
+        protected void onPreExecute() {
+            setProgressBarIndeterminateVisibility(true);
+        }
+
+        @Override
         protected void onPostExecute(Void result) {
             Set<String> commonInstruments = Compare.findCommonInstruments();
 
             // fill activity, pass common instruments
             fillActivity(commonInstruments);
+
+            setProgressBarIndeterminateVisibility(false);
         }
     }
 

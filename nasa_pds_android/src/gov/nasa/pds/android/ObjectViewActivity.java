@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -35,6 +36,7 @@ public class ObjectViewActivity extends Activity {
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
         // get query data form intent
@@ -85,6 +87,11 @@ public class ObjectViewActivity extends Activity {
         @Override
         protected Object doInBackground(ObjectQuery<Object>... queries) {
             return DataCenter.executeObjectQuery(queries[0]);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            setProgressBarIndeterminateVisibility(true);
         }
 
         @Override
@@ -168,6 +175,8 @@ public class ObjectViewActivity extends Activity {
             } else {
                 Log.w("soap", "Result: " + result + " is not referenced object.");
             }
+
+            setProgressBarIndeterminateVisibility(false);
         }
     }
 }
