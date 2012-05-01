@@ -27,6 +27,11 @@ public class HomeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // restore URL from preferences
+        String url = getApplicationContext().getSharedPreferences("general", MODE_PRIVATE)
+            .getString("host", DataCenter.getUrl());
+        DataCenter.setUrl(url);
     }
 
     @Override
@@ -85,6 +90,10 @@ public class HomeActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 DataCenter.setUrl(editText.getText().toString());
+
+                                // save URL
+                                getApplicationContext().getSharedPreferences("general", MODE_PRIVATE)
+                                    .edit().putString("host", DataCenter.getUrl()).commit();
 
                                 // test connection with new URL
                                 new TestConnectionTask().execute();
