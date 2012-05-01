@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
@@ -27,7 +30,9 @@ public class DataCenter {
     private static final int MILLISECONDS_PER_MINUTE = 60 * 1000;
     private static DateFormat DATE_LONG = new SimpleDateFormat("MMMMM dd yyyy 'at' HH:mm");
 
-    private static final String URL = "http://192.168.0.101:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
+    private static final String URL_PATTERN = "http://%s:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
+
+    private static String url = "192.168.0.100";
 
     public static String formatLong(Date date) {
         return date == null ? "" : DATE_LONG.format(date);
@@ -83,7 +88,7 @@ public class DataCenter {
     }
 
     private static Object executeMethod(SoapSerializationEnvelope envelope) {
-        Transport httpTransport = new HttpTransportSE(URL);
+        Transport httpTransport = new HttpTransportSE(String.format(URL_PATTERN, url));
         httpTransport.debug = true;
 
         try {
@@ -132,5 +137,25 @@ public class DataCenter {
                 }
             }
         }
+    }
+
+    public static boolean testConnection() {
+        try {
+            // execute simple request
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpGet httpget = new HttpGet(String.format(URL_PATTERN, url));
+            httpclient.execute(httpget);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public static String getUrl() {
+        return url;
+    }
+
+    public static void setUrl(String url) {
+        DataCenter.url = url;
     }
 }
