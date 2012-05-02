@@ -9,6 +9,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -31,6 +33,9 @@ public class DataCenter {
     private static final int MINUTES_PER_HOUR = 60;
     private static final int MILLISECONDS_PER_MINUTE = 60 * 1000;
     private static DateFormat DATE_LONG = new SimpleDateFormat("MMMMM dd yyyy 'at' HH:mm");
+
+    private static final Pattern INDENTS = Pattern.compile("^(\\s*)\\S(?:.*\\S)?(\\s*)$", Pattern.MULTILINE);
+    private static final Pattern MAX_LENGTH = Pattern.compile("^.*$", Pattern.MULTILINE);
 
     private static final String URL_PATTERN = "http://%s:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
@@ -63,6 +68,44 @@ public class DataCenter {
 
         return String.format("%d years %d days %02d hours %02d mins",
             years, days % DAYS_PER_YEAR, hours % HOURS_PER_DAY, minutes % MINUTES_PER_HOUR);
+    }
+
+    public static String processDescription(String text) {
+        // find max line length
+        int maxLength = 0;
+        Matcher maxLengthMatcher = MAX_LENGTH.matcher(text);
+        while (maxLengthMatcher.find()) {
+            maxLength = Math.max(maxLength, maxLengthMatcher.end() - maxLengthMatcher.start());
+        }
+
+        // find minimum start and end indents
+        int startIndent = Integer.MAX_VALUE;
+        int endIndent = Integer.MAX_VALUE;
+        Matcher matcher = INDENTS.matcher(text);
+        while (matcher.find()) {
+            int length = matcher.end() - matcher.start();
+            int curStartIndent = matcher.group(1).length();
+            int curEndIndent = matcher.group(2).length();
+            if (curStartIndent == 0 && startIndent + length < maxLength) {
+                curStartIndent = startIndent;
+            }
+
+            if (curEndIndent == 0 && endIndent + length < maxLength) {
+                curEndIndent = endIndent;
+            }
+
+            startIndent = Math.min(startIndent, curStartIndent);
+            endIndent = Math.min(endIndent, curEndIndent);
+        }
+
+        // remove start and end indents
+        if (startIndent > 0 && startIndent < maxLength) {
+            text = text.replaceAll("(?m)^\\s{" + startIndent + "}", "");
+        }
+        if (endIndent > 0 && endIndent < maxLength) {
+            text = text.replaceAll("(?m)\\s{" + endIndent + "}$", "");
+        }
+        return text;
     }
 
     public static PagedResults executePagedQuery(PagedQuery query) {

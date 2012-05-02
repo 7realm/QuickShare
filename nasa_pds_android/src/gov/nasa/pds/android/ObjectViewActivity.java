@@ -152,7 +152,7 @@ public class ObjectViewActivity extends Activity {
                     setText(R.id.missionStartDate, DataCenter.formatLong(mission.getStartDate()));
                     setText(R.id.missionEndDate, DataCenter.formatLong(mission.getEndDate()));
                     setText(R.id.missionDuration, DataCenter.formatPeriod(mission.getStartDate(), mission.getEndDate()));
-                    setText(R.id.objectDescription, mission.getDescription());
+                    setText(R.id.objectDescription, DataCenter.processDescription(mission.getDescription()));
                 } else if (currentObject instanceof Instrument) {
                     Instrument instrument = (Instrument) currentObject;
 
@@ -168,7 +168,7 @@ public class ObjectViewActivity extends Activity {
                         builder.append(hosts.get(i).getName()).append("\n");
                     }
                     setText(R.id.instrumentHost, builder.toString());
-                    setText(R.id.objectDescription, instrument.getDescription());
+                    setText(R.id.objectDescription, DataCenter.processDescription(instrument.getDescription()));
                 } else {
                     Log.w("soap", "Unexpected object type: " + result);
                 }
