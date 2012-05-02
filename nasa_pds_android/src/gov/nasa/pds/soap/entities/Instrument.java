@@ -1,5 +1,7 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.soap.entities;
-
 
 import gov.nasa.pds.soap.ReferencedEntity;
 

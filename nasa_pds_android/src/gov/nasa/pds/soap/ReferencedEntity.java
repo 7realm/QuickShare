@@ -1,9 +1,12 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.soap;
+
+import gov.nasa.pds.soap.entities.Reference;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import gov.nasa.pds.soap.entities.Reference;
 
 public abstract class ReferencedEntity extends NamedEntity {
 

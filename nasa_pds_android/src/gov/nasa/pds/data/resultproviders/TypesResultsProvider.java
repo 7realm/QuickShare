@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.data.resultproviders;
 
 import gov.nasa.pds.data.DataCenter;

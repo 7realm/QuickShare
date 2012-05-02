@@ -1,5 +1,5 @@
 /*
- * Created by 7realm at 01.05.2012 21:06:56. All rights reserved.
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
  */
 package gov.nasa.pds.android;
 
