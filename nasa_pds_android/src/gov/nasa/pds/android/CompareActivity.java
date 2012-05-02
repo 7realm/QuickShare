@@ -33,6 +33,8 @@ import android.widget.TextView;
  */
 public class CompareActivity extends Activity {
 
+    private static final int CELL_PADDING = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -44,7 +46,8 @@ public class CompareActivity extends Activity {
     }
 
     private int getColumnWidth() {
-        int windowWidth = getWindow().getDecorView().getWidth() - 1;
+        View contentView = findViewById(R.id.compareContentView);
+        int windowWidth = contentView.getWidth() - contentView.getPaddingLeft() - contentView.getPaddingRight();
         return Compare.ITEMS.size() == 1 ? windowWidth : windowWidth / 2;
     }
 
@@ -81,10 +84,11 @@ public class CompareActivity extends Activity {
             // add goto and remove buttons with proper tag
             View nameView = LayoutInflater.from(this).inflate(R.layout.view_compare_name, null);
             nameView.setBackgroundColor(color);
+            nameView.setPadding(CELL_PADDING, CELL_PADDING, CELL_PADDING, CELL_PADDING);
             ((TextView) nameView.findViewById(R.id.compareNameCaption)).setText(mission.getName());
             nameView.findViewById(R.id.compareDeleteButton).setTag(mission.getId());
             nameView.findViewById(R.id.compareGotoButton).setTag(mission.getId());
-            nameRow.addView(nameView, getColumnWidth(), LayoutParams.WRAP_CONTENT);
+            nameRow.addView(nameView, getColumnWidth(), LayoutParams.MATCH_PARENT);
 
             // calculate max number of instruments for unique table rows
             maxInstruments = Math.max(item.getInstruments().size(), maxInstruments);
@@ -118,7 +122,7 @@ public class CompareActivity extends Activity {
                 }
                 addCell(newRow, color, instrument.getName());
             }
-            uniqueTable.addView(newRow, getColumnWidth(), LayoutParams.MATCH_PARENT);
+            uniqueTable.addView(newRow, getColumnWidth(), LayoutParams.WRAP_CONTENT);
         }
     }
 
@@ -148,11 +152,12 @@ public class CompareActivity extends Activity {
         }
     }
 
-    private void addCell(LinearLayout row, int color, CharSequence text) {
+    private void addCell(LinearLayout row, int color, String text) {
         TextView textView = new TextView(this);
-        textView.setText(text);
+        textView.setPadding(CELL_PADDING, CELL_PADDING, CELL_PADDING, CELL_PADDING);
+        textView.setText(text.trim());
         textView.setBackgroundColor(color);
-        row.addView(textView, getColumnWidth(), LayoutParams.WRAP_CONTENT);
+        row.addView(textView, getColumnWidth(), LayoutParams.MATCH_PARENT);
     }
 
     private int getColor(int index) {

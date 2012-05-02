@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/compareContentView"
-    android:layout_width="810dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="5dip" >
 
     <TextView
         android:layout_width="match_parent"
@@ -14,11 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TableRow
-            android:id="@+id/compareNameRow"
-            android:layout_margin="2dip"
-            android:background="#aaaaaa" >
-        </TableRow>
+        <TableRow android:id="@+id/compareNameRow" />
     </TableLayout>
 
     <TextView
@@ -30,11 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TableRow
-            android:id="@+id/compareStartDateRow"
-            android:layout_margin="2dip"
-            android:background="#aaaaaa" >
-        </TableRow>
+        <TableRow android:id="@+id/compareStartDateRow" />
     </TableLayout>
 
     <TextView
@@ -46,28 +39,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TableRow
-            android:id="@+id/compareEndDateRow"
-            android:layout_margin="2dip"
-            android:background="#aaaaaa" >
-        </TableRow>
+        <TableRow android:id="@+id/compareEndDateRow" />
     </TableLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="#000000"
         android:text="Duration:" />
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TableRow
-            android:id="@+id/compareDurationRow"
-            android:layout_margin="2dip"
-            android:background="#aaaaaa" >
-        </TableRow>
+        <TableRow android:id="@+id/compareDurationRow" />
     </TableLayout>
 
     <TextView

@@ -9,10 +9,6 @@
     </style>
 
     <style name="theme_line_style">
-        <item name="android:background">@color/theme_line</item>
-    </style>
-
-    <style name="theme_line">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/theme_line_height</item>
         <item name="android:background">@color/theme_line</item>

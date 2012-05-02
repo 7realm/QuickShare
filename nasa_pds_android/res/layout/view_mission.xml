@@ -2,70 +2,51 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:padding="5dip"
     android:stretchColumns="2" >
 
-    <TableRow
-        android:layout_margin="2dip"
-        android:background="#aaaaaa" >
+    <TableRow android:background="@color/table_first" >
 
         <TextView
             android:layout_column="1"
-            android:layout_margin="2dip"
-            android:background="#000000"
             android:text="Name:" />
 
-        <TextView
-            android:id="@+id/missionName"
-            android:layout_margin="2dip"
-            android:background="#000000" />
+        <TextView android:id="@+id/missionName" />
     </TableRow>
 
-    <TableRow
-        android:layout_margin="2dip"
-        android:background="#aaaaaa" >
+    <FrameLayout style="@style/theme_line_style" />
+
+    <TableRow android:background="@color/table_second" >
 
         <TextView
             android:layout_column="1"
-            android:layout_margin="2dip"
-            android:background="#000000"
             android:text="Started at:" />
 
-        <TextView
-            android:id="@+id/missionStartDate"
-            android:layout_margin="2dip"
-            android:background="#000000" />
+        <TextView android:id="@+id/missionStartDate" />
     </TableRow>
 
-    <TableRow
-        android:layout_margin="2dip"
-        android:background="#aaaaaa" >
+    <FrameLayout style="@style/theme_line_style" />
+
+    <TableRow android:background="@color/table_first" >
 
         <TextView
             android:layout_column="1"
-            android:layout_margin="2dip"
-            android:background="#000000"
             android:text="Ended at:" />
 
-        <TextView
-            android:id="@+id/missionEndDate"
-            android:layout_margin="2dip"
-            android:background="#000000" />
+        <TextView android:id="@+id/missionEndDate" />
     </TableRow>
 
-    <TableRow
-        android:layout_margin="2dip"
-        android:background="#aaaaaa" >
+    <FrameLayout style="@style/theme_line_style" />
+
+    <TableRow android:background="@color/table_second" >
 
         <TextView
             android:layout_column="1"
-            android:layout_margin="2dip"
-            android:background="#000000"
             android:text="Duration:" />
 
-        <TextView
-            android:id="@+id/missionDuration"
-            android:layout_margin="2dip"
-            android:background="#000000" />
+        <TextView android:id="@+id/missionDuration" />
     </TableRow>
+
+    <FrameLayout style="@style/theme_line_style" />
 
 </TableLayout>

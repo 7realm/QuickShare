@@ -61,11 +61,12 @@
                 android:layout_toRightOf="@id/browserCheckBox"
                 android:hint="Enter text here to search" />
         </RelativeLayout>
-
-        <FrameLayout
-            style="@style/theme_line"
-            android:layout_below="@id/browserSearchGroup" />
     </RelativeLayout>
+
+    <FrameLayout
+          android:id="@+id/browserSeparatorTop"
+        style="@style/theme_line_style"
+        android:layout_below="@id/browserFilterGroup" />
 
     <RelativeLayout
         android:id="@+id/browserPageNavigationGroup"
@@ -105,16 +106,16 @@
     </RelativeLayout>
 
     <FrameLayout
-        android:id="@+id/browserSeparator"
-        style="@style/theme_line"
+        android:id="@+id/browserSeparatorBottom"
+        style="@style/theme_line_style"
         android:layout_above="@id/browserPageNavigationGroup" />
 
     <ViewFlipper
         android:id="@+id/browserFlipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/browserSeparator"
-        android:layout_below="@id/browserFilterGroup" >
+        android:layout_above="@id/browserSeparatorBottom"
+        android:layout_below="@id/browserSeparatorTop" >
     </ViewFlipper>
 
 </RelativeLayout>

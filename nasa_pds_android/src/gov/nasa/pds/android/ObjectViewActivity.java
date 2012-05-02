@@ -148,7 +148,6 @@ public class ObjectViewActivity extends Activity {
                 if (currentObject instanceof Mission) {
                     Mission mission = (Mission) currentObject;
 
-                    // TODO null dates
                     // inflate and fill mission view
                     LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_mission, objectContainer);
                     setText(R.id.missionName, mission.getName());

@@ -35,8 +35,8 @@ public class HomeActivity extends Activity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
         // test connection
         new TestConnectionTask().execute();
