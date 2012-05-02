@@ -14,7 +14,6 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -156,8 +155,8 @@ public class CompareActivity extends Activity {
         row.addView(textView, getColumnWidth(), LayoutParams.WRAP_CONTENT);
     }
 
-    private static int getColor(int index) {
-        return index % 2 == 0 ? Color.GRAY : Color.LTGRAY;
+    private int getColor(int index) {
+        return getResources().getColor(index % 2 == 0 ? R.color.table_first : R.color.table_second);
     }
 
     private final class DataLoadTast extends AsyncTask<Void, Void, Void> {

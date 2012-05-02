@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/browserSpinner"
             android:layout_centerHorizontal="true"
+            android:alignmentMode="alignMargins"
             android:columnCount="2" >
         </GridLayout>
 
@@ -60,13 +61,18 @@
                 android:layout_toRightOf="@id/browserCheckBox"
                 android:hint="Enter text here to search" />
         </RelativeLayout>
+
+        <FrameLayout
+            style="@style/theme_line"
+            android:layout_below="@id/browserSearchGroup" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/browserPageNavigationGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="2dip" >
 
         <ImageView
             android:id="@+id/browserPreviousButton"
@@ -74,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_margin="3dip"
             android:onClick="onPreviousButtonClick"
             android:src="@drawable/prev_page" />
 
@@ -83,6 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_margin="3dip"
             android:onClick="onNextButtonClick"
             android:src="@drawable/next_page" />
 
@@ -96,11 +104,16 @@
             android:gravity="center" />
     </RelativeLayout>
 
+    <FrameLayout
+        android:id="@+id/browserSeparator"
+        style="@style/theme_line"
+        android:layout_above="@id/browserPageNavigationGroup" />
+
     <ViewFlipper
         android:id="@+id/browserFlipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/browserPageNavigationGroup"
+        android:layout_above="@id/browserSeparator"
         android:layout_below="@id/browserFilterGroup" >
     </ViewFlipper>
 

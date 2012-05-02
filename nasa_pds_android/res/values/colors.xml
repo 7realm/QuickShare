@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="theme_main">#FF000000</color>
+    <color name="theme_sub">#FFE35900</color>
+    <color name="table_first">#ff808080</color>
+    <color name="table_second">#bbffffff</color>
+    <color name="table_line">#0488c9</color>
+    <color name="rounded_border">#888888</color>
+    <color name="theme_line">#000</color>
+</resources>

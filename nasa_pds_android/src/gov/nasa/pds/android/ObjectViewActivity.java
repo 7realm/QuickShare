@@ -109,7 +109,10 @@ public class ObjectViewActivity extends Activity {
         @Override
         protected void onPostExecute(final Object result) {
             // set tag
-            findViewById(R.id.objectCompareButton).setTag(result);
+            View compareButton = findViewById(R.id.objectCompareButton);
+            if (compareButton != null) {
+                compareButton.setTag(result);
+            }
 
             // assign current object
             if (result instanceof ReferencedEntity) {

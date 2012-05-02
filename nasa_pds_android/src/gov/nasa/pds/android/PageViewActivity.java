@@ -179,7 +179,7 @@ public class PageViewActivity extends Activity {
 
             // create and fill restriction view
             View restrictionView = LayoutInflater.from(this).inflate(R.layout.view_restriction, null);
-            restrictionGroup.addView(restrictionView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            restrictionGroup.addView(restrictionView);
 
             // set object icon
             ImageView objectIcon = (ImageView) restrictionView.findViewById(R.id.restrictionObjectIcon);
