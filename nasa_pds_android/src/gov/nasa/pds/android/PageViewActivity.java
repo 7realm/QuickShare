@@ -116,7 +116,7 @@ public class PageViewActivity extends Activity {
                 }
 
                 // enable or disable search group views
-                findViewById(R.id.browserSearchText).setEnabled(isChecked);
+                searchTextView.setEnabled(isChecked);
                 findViewById(R.id.browserSearchButton).setEnabled(isChecked);
 
             }
@@ -220,7 +220,7 @@ public class PageViewActivity extends Activity {
     @SuppressWarnings("unused")
     public void onSearchButtonClick(View v) {
         // check if text is changed
-        String text = ((TextView) findViewById(R.id.browserSearchText)).getText().toString().trim();
+        String text = searchTextView.getText().toString().trim();
         if (!filter.getText().equals(text)) {
             filter.setText(text);
 
