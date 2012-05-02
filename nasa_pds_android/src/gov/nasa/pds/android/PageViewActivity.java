@@ -324,6 +324,10 @@ public class PageViewActivity extends Activity {
             setText(R.id.browserPageCaption, captionText);
             break;
         }
+
+        // hide navigation buttons if we have one page of results
+        findViewById(R.id.browserNextButton).setVisibility(provider.getPageCount() > 1 ? View.VISIBLE : View.INVISIBLE);
+        findViewById(R.id.browserPreviousButton).setVisibility(provider.getPageCount() > 1 ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void setText(int viewId, String text) {
