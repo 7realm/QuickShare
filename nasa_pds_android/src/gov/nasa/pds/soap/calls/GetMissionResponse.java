@@ -25,7 +25,8 @@ import gov.nasa.pds.soap.entities.Mission;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class GetMissionResponse extends BaseObject {
     protected Mission _return;

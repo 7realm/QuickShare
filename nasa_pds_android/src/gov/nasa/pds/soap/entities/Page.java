@@ -25,7 +25,8 @@ import gov.nasa.pds.soap.BaseObject;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class Page extends BaseObject {
 

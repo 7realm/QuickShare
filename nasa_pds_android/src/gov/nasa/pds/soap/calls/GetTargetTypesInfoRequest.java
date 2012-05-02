@@ -25,7 +25,8 @@ import gov.nasa.pds.soap.entities.Page;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class GetTargetTypesInfoRequest extends BaseObject {
 

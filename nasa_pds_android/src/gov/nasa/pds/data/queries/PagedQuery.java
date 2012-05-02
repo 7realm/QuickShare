@@ -9,6 +9,12 @@ import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.entities.Page;
 import gov.nasa.pds.soap.entities.Restriction;
 
+/**
+ * Base query that return results organized to pages.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public abstract class PagedQuery extends BaseQuery {
     private final Page page;
     private final Restriction restriction;

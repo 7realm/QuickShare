@@ -14,6 +14,12 @@ import java.util.List;
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
 
+/**
+ * Base serializable object for all entities and requests.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public abstract class BaseObject implements KvmSerializable {
     private Field[] fields;
 

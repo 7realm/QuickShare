@@ -8,6 +8,12 @@ import gov.nasa.pds.soap.entities.Reference;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Base class that contains references.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public abstract class ReferencedEntity extends NamedEntity {
 
     protected List<Reference> references;

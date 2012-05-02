@@ -3,6 +3,12 @@
  */
 package gov.nasa.pds.data;
 
+/**
+ * Entity type, that is used in application.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public enum EntityType {
     TARGET_TYPE("TargetType"),
     TARGET("Target"),

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
  * Java class for pagedResults complex type.
  *
  * <p>
@@ -28,7 +27,8 @@ import java.util.List;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class PagedResults extends BaseObject {
     protected final List<Object> results = new ArrayList<Object>();;

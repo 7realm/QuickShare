@@ -9,8 +9,9 @@ import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.data.queries.TypesPagedQuery;
 
 /**
+ * Data adapter that will fill results from getTargetTypesInfo request to list.
  *
- * @author TCSDESIGNER, TCSDEVELOPER
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class TypesResultsProvider extends ResultsProvider {

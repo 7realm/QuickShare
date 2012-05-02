@@ -29,9 +29,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 /**
+ * Activity that will display comparison results.
  *
- *
- * @author TCSDESIGNER, TCSDEVELOPER
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class CompareActivity extends Activity {

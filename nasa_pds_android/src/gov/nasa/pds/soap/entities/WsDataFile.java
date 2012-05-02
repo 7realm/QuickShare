@@ -6,9 +6,7 @@ package gov.nasa.pds.soap.entities;
 import gov.nasa.pds.soap.BaseObject;
 
 /**
- * <p>
  * Java class for wsDataFile complex type.
- *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
  *
@@ -28,7 +26,8 @@ import gov.nasa.pds.soap.BaseObject;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class WsDataFile extends BaseObject {
 
@@ -58,25 +57,25 @@ public class WsDataFile extends BaseObject {
         this.content = value;
     }
 
-//  TODO  /**
-//     * Gets the value of the dataHandler property.
-//     *
-//     * @return possible object is {@link DataHandler }
-//     *
-//     */
-//    public DataHandler getDataHandler() {
-//        return dataHandler;
-//    }
-//
-//    /**
-//     * Sets the value of the dataHandler property.
-//     *
-//     * @param value allowed object is {@link DataHandler }
-//     *
-//     */
-//    public void setDataHandler(DataHandler value) {
-//        this.dataHandler = value;
-//    }
+    // TODO /**
+    // * Gets the value of the dataHandler property.
+    // *
+    // * @return possible object is {@link DataHandler }
+    // *
+    // */
+    // public DataHandler getDataHandler() {
+    // return dataHandler;
+    // }
+    //
+    // /**
+    // * Sets the value of the dataHandler property.
+    // *
+    // * @param value allowed object is {@link DataHandler }
+    // *
+    // */
+    // public void setDataHandler(DataHandler value) {
+    // this.dataHandler = value;
+    // }
 
     /**
      * Gets the value of the filename property.

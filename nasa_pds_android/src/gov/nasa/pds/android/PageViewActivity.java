@@ -37,6 +37,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+/**
+ * Activity that will browse objects.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class PageViewActivity extends Activity {
     public static final String EXTRA_ENTITY_TYPE = "query_type";
     public static final int REQUEST_SELECT_RESTRICTION = 1001;

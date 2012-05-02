@@ -5,6 +5,12 @@ package gov.nasa.pds.data;
 
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
+/**
+ * Interface for different SOAP queries.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public interface Query {
     QueryType getQueryType();
 

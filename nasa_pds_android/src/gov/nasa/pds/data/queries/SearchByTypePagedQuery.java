@@ -13,6 +13,12 @@ import gov.nasa.pds.soap.entities.Restriction;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
+/**
+ * Query that will execute searchEntitiesByType request.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class SearchByTypePagedQuery extends PagedQuery {
     private final String text;
     private final EntityType entityType;

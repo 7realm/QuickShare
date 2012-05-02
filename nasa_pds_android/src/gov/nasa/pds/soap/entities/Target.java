@@ -3,14 +3,12 @@
  */
 package gov.nasa.pds.soap.entities;
 
-
 import gov.nasa.pds.soap.ReferencedEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
  * Java class for target complex type.
  *
  * <p>
@@ -29,7 +27,8 @@ import java.util.List;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class Target extends ReferencedEntity {
     protected List<TargetType> types;

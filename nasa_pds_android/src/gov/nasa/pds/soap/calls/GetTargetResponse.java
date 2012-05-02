@@ -24,6 +24,9 @@ import gov.nasa.pds.soap.entities.Target;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class GetTargetResponse extends BaseObject {
     protected Target _return;

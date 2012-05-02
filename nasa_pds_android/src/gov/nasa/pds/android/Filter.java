@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Class that contains information about filter.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 class Filter {
     private String text = "";
     final List<NamedRestriction> restrictions = new ArrayList<NamedRestriction>();

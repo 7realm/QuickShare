@@ -6,6 +6,12 @@ package gov.nasa.pds.data.queries;
 import gov.nasa.pds.data.Query;
 import gov.nasa.pds.data.QueryType;
 
+/**
+ * Base query class, it contains query type.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public abstract class BaseQuery implements Query {
     protected final QueryType queryType;
 

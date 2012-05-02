@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * This class represent data that will be compared.
  *
- *
- * @author TCSDESIGNER, TCSDEVELOPER
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 class Compare {

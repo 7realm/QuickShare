@@ -16,6 +16,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import android.util.Log;
 
 /**
+ * Query that will retrieve list of objects using XXXInfo requests.
  *
  * @author TCSASSEMBLER
  * @version 1.0

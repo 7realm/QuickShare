@@ -17,6 +17,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Base data adapter that will fill results from paged query to list.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public abstract class ResultsProvider extends BaseAdapter {
     protected PagedResults lastResult;
     protected QueryType queryType;

@@ -12,6 +12,12 @@ import gov.nasa.pds.soap.entities.EntityInfo;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
+/**
+ * Query that will return all Target Types.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class TypesPagedQuery extends PagedQuery {
 
     public TypesPagedQuery() {

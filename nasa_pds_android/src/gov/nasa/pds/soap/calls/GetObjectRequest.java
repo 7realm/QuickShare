@@ -23,6 +23,9 @@ import gov.nasa.pds.soap.BaseObject;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class GetObjectRequest extends BaseObject {
 

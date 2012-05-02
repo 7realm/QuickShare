@@ -15,6 +15,12 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 
 import android.util.Log;
 
+/**
+ * Query that will retrieve information on particular entity.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class ObjectQuery<T> extends BaseQuery {
     private final long id;
 

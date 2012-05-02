@@ -17,9 +17,9 @@ import android.view.View;
 import android.widget.EditText;
 
 /**
+ * Home activity of application, it is displayed first.
  *
- *
- * @author TCSDESIGNER, TCSDEVELOPER
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class HomeActivity extends Activity {

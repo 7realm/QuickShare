@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
  * Java class for property complex type.
  *
  * <p>
@@ -27,7 +26,8 @@ import java.util.List;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class Property extends NamedEntity {
 

@@ -31,6 +31,12 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Activity that will view specific objects.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class ObjectViewActivity extends Activity {
     public static final String EXTRA_QUERY_TYPE = "query_type";
     public static final String EXTRA_OBJECT_ID = "object_id";

@@ -7,8 +7,13 @@ import gov.nasa.pds.soap.BaseObject;
 import gov.nasa.pds.soap.entities.Page;
 import gov.nasa.pds.soap.entities.Restriction;
 
+/**
+ * Base class for SOAP request to get list of entities.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class GetEntitiesInfoRequest extends BaseObject {
-
     protected Page page;
     protected Restriction restriction;
 

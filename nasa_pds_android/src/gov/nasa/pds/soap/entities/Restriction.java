@@ -6,9 +6,10 @@ package gov.nasa.pds.soap.entities;
 import gov.nasa.pds.soap.BaseObject;
 
 /**
- * <p>Java class for restriction complex type.
+ * Java class for restriction complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="restriction">
@@ -23,7 +24,8 @@ import gov.nasa.pds.soap.BaseObject;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class Restriction extends BaseObject {
 
@@ -33,9 +35,7 @@ public class Restriction extends BaseObject {
     /**
      * Gets the value of the restrictionEntityClass property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getRestrictionEntityClass() {
@@ -45,9 +45,7 @@ public class Restriction extends BaseObject {
     /**
      * Sets the value of the restrictionEntityClass property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
+     * @param value allowed object is {@link String }
      *
      */
     public void setRestrictionEntityClass(String value) {

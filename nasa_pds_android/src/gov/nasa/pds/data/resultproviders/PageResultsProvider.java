@@ -7,6 +7,12 @@ import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.queries.PagedQuery;
 
+/**
+ * Data adapter that will fill results from paged query to list.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class PageResultsProvider extends ResultsProvider {
     private final PagedQuery pagedQuery;
     private final int itemsPerPage;

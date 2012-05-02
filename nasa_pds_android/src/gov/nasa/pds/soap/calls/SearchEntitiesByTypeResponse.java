@@ -25,7 +25,8 @@ import gov.nasa.pds.soap.entities.PagedResults;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class SearchEntitiesByTypeResponse extends BaseObject {
 

@@ -3,6 +3,12 @@
  */
 package gov.nasa.pds.data;
 
+/**
+ * SOAP query type.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public enum QueryType {
     SEARCH_BY_TYPE,
 

@@ -6,7 +6,6 @@ package gov.nasa.pds.soap.entities;
 import gov.nasa.pds.soap.NamedEntity;
 
 /**
- * <p>
  * Java class for targetType complex type.
  *
  * <p>
@@ -23,7 +22,8 @@ import gov.nasa.pds.soap.NamedEntity;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class TargetType extends NamedEntity {
     // empty, same class as NamedEntity

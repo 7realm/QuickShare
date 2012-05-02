@@ -28,6 +28,12 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Log;
 
+/**
+ * Data provider class, that will execute all queries.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class DataCenter {
     public static final int ITEMS_PER_PAGE = 20;
 

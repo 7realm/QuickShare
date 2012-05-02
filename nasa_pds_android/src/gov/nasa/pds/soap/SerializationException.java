@@ -3,6 +3,12 @@
  */
 package gov.nasa.pds.soap;
 
+/**
+ * Exception that will be thrown on serialization.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class SerializationException extends RuntimeException {
     private static final long serialVersionUID = 600881428710444284L;
 

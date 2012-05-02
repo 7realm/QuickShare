@@ -6,7 +6,6 @@ package gov.nasa.pds.soap.entities;
 import gov.nasa.pds.soap.IdentifiableEntity;
 
 /**
- * <p>
  * Java class for reference complex type.
  *
  * <p>
@@ -25,7 +24,8 @@ import gov.nasa.pds.soap.IdentifiableEntity;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class Reference extends IdentifiableEntity {
 

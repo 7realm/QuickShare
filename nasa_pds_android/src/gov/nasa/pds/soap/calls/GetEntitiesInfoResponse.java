@@ -7,23 +7,10 @@ import gov.nasa.pds.soap.BaseObject;
 import gov.nasa.pds.soap.entities.PagedResults;
 
 /**
- * <p>
- * Java class for TODO complex type.
+ * Base class for SOAP response that get list of entities.
  *
- * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="getTargetsInfoResponse">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="return" type="{http://pds.nasa.gov/}pagedResults" minOccurs="0"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class GetEntitiesInfoResponse extends BaseObject {
     protected PagedResults _return;
