@@ -24,20 +24,41 @@ import java.util.List;
  */
 class Filter {
     private String text = "";
-    final List<NamedRestriction> restrictions = new ArrayList<NamedRestriction>();
+    private final List<NamedRestriction> restrictions = new ArrayList<NamedRestriction>();
 
+    /**
+     * Get search text.
+     *
+     * @return search text, can be empty
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * Set filter text.
+     *
+     * @param text search text, can be empty
+     */
     public void setText(String text) {
         this.text = text;
     }
 
+    /**
+     * Add restriction to filter.
+     *
+     * @param entityInfo the restricted entity data
+     * @param entityType the restricted entity type
+     */
     public void addRestriction(EntityInfo entityInfo, EntityType entityType) {
         restrictions.add(new NamedRestriction(entityInfo, entityType));
     }
 
+    /**
+     * Clear all permission for entities that are not greater then given one.
+     *
+     * @param entityType the lowest possible entity
+     */
     public void clearNotGreaterPermissions(EntityType entityType) {
         for (Iterator<NamedRestriction> i = restrictions.iterator(); i.hasNext();) {
             if (!entityType.isLowerThan(i.next().entityType)) {
@@ -46,6 +67,11 @@ class Filter {
         }
     }
 
+    /**
+     * Gets lowest(strongest) permission.
+     *
+     * @return the lowest permission
+     */
     public Restriction getLowestRestriction() {
         NamedRestriction namedRestriction = null;
         for (NamedRestriction restriction : restrictions) {
@@ -61,12 +87,21 @@ class Filter {
         return namedRestriction == null ? null : namedRestriction.getRestriction();
     }
 
+    /**
+     * Remove last(lowest) permission.
+     */
     public void removeLowestRestriction() {
         if (restrictions.size() > 0) {
             restrictions.remove(restrictions.size() - 1);
         }
     }
 
+    /**
+     * Creates results provider based on filter data.
+     *
+     * @param entityType the result entity type
+     * @return the created results provider
+     */
     public ResultsProvider createProvider(EntityType entityType) {
         clearNotGreaterPermissions(entityType);
 
@@ -81,31 +116,41 @@ class Filter {
         return new PageResultsProvider(new SearchByTypePagedQuery(text, entityType, getLowestRestriction()));
     }
 
-    @Override
-    public String toString() {
-        if (text.isEmpty() && restrictions.isEmpty()) {
-            return "<empty filter>";
-        }
-
-        StringBuilder builder = new StringBuilder();
-        if (!text.isEmpty()) {
-            builder.append("[text = ").append(text).append("]\n");
-        }
-        for (NamedRestriction restriction : restrictions) {
-            builder.append(restriction).append("\n");
-        }
-        return builder.toString().trim();
+    /**
+     * Get list of all restrictions.
+     *
+     * @return the list of restrictions
+     */
+    public List<NamedRestriction> getRestrictions() {
+        return restrictions;
     }
 
+    /**
+     * Restriction that contains not only class and id, but also name.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     static class NamedRestriction {
         private final EntityType entityType;
         private final EntityInfo entityInfo;
 
+        /**
+         * Constructor for NamedRestriction type.
+         *
+         * @param entityInfo the entity id and value
+         * @param entityType the entity type
+         */
         public NamedRestriction(EntityInfo entityInfo, EntityType entityType) {
             this.entityInfo = entityInfo;
             this.entityType = entityType;
         }
 
+        /**
+         * Get {@link Restriction} entity for SOAP requests.
+         *
+         * @return the created restricion entity
+         */
         public Restriction getRestriction() {
             Restriction result = new Restriction();
             result.setRestrictionEntityId(entityInfo.getId());
@@ -113,22 +158,22 @@ class Filter {
             return result;
         }
 
+        /**
+         * Get entity type.
+         *
+         * @return the entity type
+         */
         public EntityType getEntityType() {
             return entityType;
         }
 
+        /**
+         * Get restriction entity name.
+         *
+         * @return the restriction entity name
+         */
         public String getValue() {
             return entityInfo.getName();
         }
-
-        @Override
-        public String toString() {
-            return new StringBuilder("[").append(entityType.getHumanReadable())
-                .append(" = ").append(entityInfo.getName()).append("]").toString();
-        }
-    }
-
-    public List<NamedRestriction> getRestrictions() {
-        return restrictions;
     }
 }

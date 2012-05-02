@@ -20,21 +20,31 @@ public class PageResultsProvider extends ResultsProvider {
     private int lastPageSize;
     private int total;
 
+    /**
+     * Constructor for PageResultsProvider type.
+     *
+     * @param pagedQuery the query that will provide page data
+     */
     public PageResultsProvider(PagedQuery pagedQuery) {
         super(pagedQuery.getQueryType());
         this.pagedQuery = pagedQuery;
         this.itemsPerPage = pagedQuery.getPage().getItemsPerPage();
     }
 
+    /**
+     * The query result entity type.
+     *
+     * @return query result entity type
+     */
     @Override
     public EntityType getEntityType() {
         return pagedQuery.getEntityType();
     }
 
     /**
+     * The page count.
      *
-     *
-     * @return
+     * @return the page count
      */
     @Override
     public int getPageCount() {
@@ -42,9 +52,9 @@ public class PageResultsProvider extends ResultsProvider {
     }
 
     /**
+     * The current page.
      *
-     *
-     * @return
+     * @return the current page
      */
     @Override
     public int getCurrentPage() {
@@ -52,9 +62,9 @@ public class PageResultsProvider extends ResultsProvider {
     }
 
     /**
+     * The size of current page.
      *
-     *
-     * @return
+     * @return the current page size
      */
     @Override
     public int getCurrentPageSize() {
@@ -63,9 +73,9 @@ public class PageResultsProvider extends ResultsProvider {
     }
 
     /**
+     * Move to page with given number.
      *
-     *
-     * @param pageIndex
+     * @param pageIndex the index of new page
      */
     @Override
     public void moveToPage(int pageIndex) {

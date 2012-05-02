@@ -20,15 +20,28 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
  */
 public class TypesPagedQuery extends PagedQuery {
 
+    /**
+     * Default constructor for TypesPagedQuery type.
+     */
     public TypesPagedQuery() {
         super(QueryType.GET_TYPES_INFO);
     }
 
+    /**
+     * The result entity type of this query.
+     *
+     * @return the result entity type
+     */
     @Override
     public EntityType getEntityType() {
         return EntityType.TARGET_TYPE;
     }
 
+    /**
+     * Creates SOAP envelope for this query.
+     *
+     * @return created envelope
+     */
     @Override
     public SoapSerializationEnvelope getEnvelope() {
         return new SoapSerializationEnvelope(SoapEnvelope.VER11).addRequest(new GetTargetTypesInfoRequest())

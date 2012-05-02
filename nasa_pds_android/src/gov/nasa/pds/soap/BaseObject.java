@@ -23,6 +23,9 @@ import org.ksoap2.serialization.PropertyInfo;
 public abstract class BaseObject implements KvmSerializable {
     private Field[] fields;
 
+    /**
+     * Constructor for BaseObject type.
+     */
     public BaseObject() {
         super();
 
@@ -47,6 +50,12 @@ public abstract class BaseObject implements KvmSerializable {
         }
     }
 
+    /**
+     * Gets property value.
+     *
+     * @param i the index of property
+     * @return the property value
+     */
     @Override
     public Object getProperty(int i) {
         try {
@@ -56,11 +65,23 @@ public abstract class BaseObject implements KvmSerializable {
         }
     }
 
+    /**
+     * Gets count of properties.
+     *
+     * @return the count of properties
+     */
     @Override
     public int getPropertyCount() {
         return fields.length;
     }
 
+    /**
+     * Gets information about the property.
+     *
+     * @param i the property index
+     * @param hashtable the common data
+     * @return the property information
+     */
     @Override
     @SuppressWarnings("rawtypes")
     public PropertyInfo getPropertyInfo(int i, Hashtable hashtable) {
@@ -77,7 +98,13 @@ public abstract class BaseObject implements KvmSerializable {
         return propertyinfo;
     }
 
-    @SuppressWarnings("static-method")
+    /**
+     * Gets name of elements.
+     *
+     * @param fieldName the list property name
+     * @return the name of list elements
+     */
+    @SuppressWarnings({"static-method", "unused"})
     protected String getElementName(String fieldName) {
         return "items";
     }
@@ -87,6 +114,12 @@ public abstract class BaseObject implements KvmSerializable {
         return fieldName.startsWith("_") ? fieldName.substring(1) : fieldName;
     }
 
+    /**
+     * Sets property value.
+     *
+     * @param i the property index
+     * @param obj the property value
+     */
     @Override
     public void setProperty(int i, Object obj) {
         try {

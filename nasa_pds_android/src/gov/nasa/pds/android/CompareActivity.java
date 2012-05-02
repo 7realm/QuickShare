@@ -35,9 +35,13 @@ import android.widget.TextView;
  * @version 1.0
  */
 public class CompareActivity extends Activity {
-
     private static final int CELL_PADDING = 2;
 
+    /**
+     * Life-cycle handler for activity creation.
+     *
+     * @param savedInstanceState the saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -74,7 +78,6 @@ public class CompareActivity extends Activity {
         uniqueTable.removeAllViews();
 
         int index = 0;
-        int maxInstruments = 0;
         for (CompareItem item : Compare.ITEMS) {
             int color = getColor(index++);
             Mission mission = item.getMission();
@@ -92,9 +95,6 @@ public class CompareActivity extends Activity {
             nameView.findViewById(R.id.compareDeleteButton).setTag(mission.getId());
             nameView.findViewById(R.id.compareGotoButton).setTag(mission.getId());
             nameRow.addView(nameView, getColumnWidth(), LayoutParams.MATCH_PARENT);
-
-            // calculate max number of instruments for unique table rows
-            maxInstruments = Math.max(item.getInstruments().size(), maxInstruments);
         }
 
         // fill common instruments for all missions
@@ -109,9 +109,6 @@ public class CompareActivity extends Activity {
                 commonTable.addView(newRow);
             }
         }
-
-        // TODO remove size of common instruments
-        maxInstruments = maxInstruments - commonInstruments.size();
 
         // create table of instruments
         index = 0;
@@ -129,6 +126,11 @@ public class CompareActivity extends Activity {
         }
     }
 
+    /**
+     * Goto button handler.
+     *
+     * @param v clicked view
+     */
     public void onGotoButtonClick(View v) {
         long id = (Long) v.getTag();
 
@@ -139,6 +141,11 @@ public class CompareActivity extends Activity {
         startActivity(intent);
     }
 
+    /**
+     * Delete button handler.
+     *
+     * @param v clicked view
+     */
     public void onDeleteButtonClick(View v) {
         long id = (Long) v.getTag();
 
@@ -167,6 +174,12 @@ public class CompareActivity extends Activity {
         return getResources().getColor(index % 2 == 0 ? R.color.table_first : R.color.table_second);
     }
 
+    /**
+     * Data load task that will load data required for comparision.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     private final class DataLoadTast extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... arg0) {
@@ -204,5 +217,4 @@ public class CompareActivity extends Activity {
             setProgressBarIndeterminateVisibility(false);
         }
     }
-
 }

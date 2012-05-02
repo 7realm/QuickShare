@@ -24,15 +24,31 @@ import android.util.Log;
 public class ObjectQuery<T> extends BaseQuery {
     private final long id;
 
+    /**
+     * Constructor for ObjectQuery type.
+     *
+     * @param queryType the type of query
+     * @param id the result object id
+     */
     public ObjectQuery(QueryType queryType, long id) {
         super(queryType);
         this.id = id;
     }
 
+    /**
+     * The object id.
+     *
+     * @return the object id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Creates SOAP envelope for this query.
+     *
+     * @return created envelope
+     */
     @Override
     public SoapSerializationEnvelope getEnvelope() {
         GetObjectRequest request = new GetObjectRequest();

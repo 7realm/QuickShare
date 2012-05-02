@@ -23,6 +23,13 @@ import android.widget.EditText;
  * @version 1.0
  */
 public class HomeActivity extends Activity {
+    private int retryCount = 0;
+
+    /**
+     * Life-cycle handler for activity creation.
+     *
+     * @param savedInstanceState the saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,29 +41,56 @@ public class HomeActivity extends Activity {
         DataCenter.setUrl(url);
     }
 
+    /**
+     * Life-cycle handler for activity first displayed on screen.
+     */
     @Override
     protected void onStart() {
         super.onStart();
 
-        // test connection
-        new TestConnectionTask().execute();
+        // if not connected after 3 retires
+        retryCount++;
+        if (retryCount < 3) {
+            // test connection
+            new TestConnectionTask().execute();
+        }
     }
 
+    /**
+     * User touched the screen.
+     *
+     * @param v touched view
+     */
     @SuppressWarnings("unused")
     public void onTouchScreenClick(View v) {
         startBrowsingFor(EntityType.TARGET_TYPE);
     }
 
+    /**
+     * User touched targets button.
+     *
+     * @param v touched view
+     */
     @SuppressWarnings("unused")
     public void onTargetsButtonClick(View v) {
         startBrowsingFor(EntityType.TARGET);
     }
 
+    /**
+     * User clicked missions button.
+     *
+     * @param v clicked view
+     */
     @SuppressWarnings("unused")
     public void onMissionsButtonClick(View v) {
         startBrowsingFor(EntityType.MISSION);
     }
 
+    /**
+     * User clicked instruments button.
+     *
+     * @param v clicked view
+     */
     @SuppressWarnings("unused")
     public void onInstrumentsButtonClick(View v) {
         startBrowsingFor(EntityType.INSTRUMENT);
@@ -68,6 +102,12 @@ public class HomeActivity extends Activity {
         startActivity(intent);
     }
 
+    /**
+     * Task that will test the connection.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     private class TestConnectionTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
@@ -85,7 +125,13 @@ public class HomeActivity extends Activity {
                 final EditText editText = new EditText(HomeActivity.this);
                 editText.setText(DataCenter.getUrl());
                 new AlertDialog.Builder(HomeActivity.this).setTitle("Enter host url:").setView(editText)
-                    .setNegativeButton("Cancel", null).setPositiveButton("OK",
+                    .setNegativeButton("Cancel", new OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            retryCount = Integer.MAX_VALUE;
+                        }
+                    }).setPositiveButton("OK",
                         new OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

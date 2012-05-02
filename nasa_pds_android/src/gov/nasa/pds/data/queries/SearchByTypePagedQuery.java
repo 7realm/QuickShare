@@ -23,16 +23,34 @@ public class SearchByTypePagedQuery extends PagedQuery {
     private final String text;
     private final EntityType entityType;
 
+    /**
+     * Constructor for SearchByTypePagedQuery type.
+     *
+     * @param text the search text
+     * @param entityType the result entity type
+     */
     public SearchByTypePagedQuery(String text, EntityType entityType) {
         this(text, entityType, null);
     }
 
+    /**
+     * Constructor for SearchByTypePagedQuery type.
+     *
+     * @param text the search text
+     * @param entityType the result entity type
+     * @param restriction the search restriction
+     */
     public SearchByTypePagedQuery(String text, EntityType entityType, Restriction restriction) {
         super(QueryType.SEARCH_BY_TYPE, restriction);
         this.text = text;
         this.entityType = entityType;
     }
 
+    /**
+     * Creates SOAP envelope for this query.
+     *
+     * @return created envelope
+     */
     @Override
     public SoapSerializationEnvelope getEnvelope() {
         SearchEntitiesByTypeRequest request = new SearchEntitiesByTypeRequest();
@@ -47,6 +65,11 @@ public class SearchByTypePagedQuery extends PagedQuery {
             .addMapping("results", EntityInfo.class);
     }
 
+    /**
+     * Get result entity type
+     *
+     * @return the result entity type
+     */
     @Override
     public EntityType getEntityType() {
         return entityType;

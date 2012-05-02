@@ -19,14 +19,25 @@ import java.util.Set;
  * @version 1.0
  */
 class Compare {
+    /** List of current items to be compared. */
     public static List<CompareItem> ITEMS = new ArrayList<CompareItem>();
 
+    /**
+     * Add mission to compare.
+     *
+     * @param mission mission to compare
+     */
     public static void addMission(Mission mission) {
         if (mission != null && !exists(mission.getId())) {
             ITEMS.add(new CompareItem(mission));
         }
     }
 
+    /**
+     * Remove mission from compare by id.
+     *
+     * @param id the id of mission to remove
+     */
     public static void removeMission(long id) {
         for (Iterator<CompareItem> i = ITEMS.iterator(); i.hasNext();) {
             if (i.next().mission.getId() == id) {
@@ -35,6 +46,12 @@ class Compare {
         }
     }
 
+    /**
+     * Check if mission with give id exists in compare list.
+     *
+     * @param id the id of mission to check
+     * @return true if mission exists, false otherwise
+     */
     public static boolean exists(long id) {
         for (CompareItem item : ITEMS) {
             if (item.getMission().getId() == id) {
@@ -45,6 +62,11 @@ class Compare {
         return false;
     }
 
+    /**
+     * Finds common instruments for all missions in compare list.
+     *
+     * @return the set of common instruments names
+     */
     public static Set<String> findCommonInstruments() {
         // calculate common instruments
         Set<String> commonInstruments = new HashSet<String>();
@@ -80,6 +102,12 @@ class Compare {
         return commonInstruments;
     }
 
+    /**
+     * The compare item data.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     static class CompareItem {
         private final Mission mission;
         private final List<EntityInfo> instruments = new ArrayList<EntityInfo>();
@@ -88,10 +116,20 @@ class Compare {
             this.mission = mission;
         }
 
+        /**
+         * Get stored mission.
+         *
+         * @return the mission stored in this item
+         */
         public Mission getMission() {
             return mission;
         }
 
+        /**
+         * The list of instruments, stored in this item.
+         *
+         * @return the list of instruments
+         */
         public List<EntityInfo> getInstruments() {
             return instruments;
         }

@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,8 +18,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.KvmSerializable;
-import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.ksoap2.transport.Transport;
@@ -35,6 +32,7 @@ import android.util.Log;
  * @version 1.0
  */
 public class DataCenter {
+    /** How many items are displayed per one page. */
     public static final int ITEMS_PER_PAGE = 20;
 
     private static final int DAYS_PER_YEAR = 365;
@@ -50,10 +48,23 @@ public class DataCenter {
 
     private static String url = "192.168.0.101";
 
+    /**
+     * Format date to long format.
+     *
+     * @param date the date to format
+     * @return the formatted date
+     */
     public static String formatLong(Date date) {
         return date == null ? "" : DATE_LONG.format(date);
     }
 
+    /**
+     * Formats period to correct string.
+     *
+     * @param startDate the period start date
+     * @param endDate the period end date
+     * @return the formatted period string
+     */
     @SuppressWarnings("deprecation")
     public static String formatPeriod(Date startDate, Date endDate) {
         // handle null values
@@ -75,10 +86,15 @@ public class DataCenter {
         // correct days because of Feb 29
         days -= endDate.getYear() / 4 - startDate.getYear() / 4;
 
-        return String.format("%d years %d days %02d hours %02d mins",
-            years, days % DAYS_PER_YEAR, hours % HOURS_PER_DAY, minutes % MINUTES_PER_HOUR);
+        return String.format("%d years %d days %02d hours", years, days % DAYS_PER_YEAR, hours % HOURS_PER_DAY);
     }
 
+    /**
+     * Process description by removing common indentation from start and end.
+     *
+     * @param text the description text
+     * @return the processed text
+     */
     public static String processDescription(String text) {
         // find max line length
         int maxLength = 0;
@@ -117,6 +133,12 @@ public class DataCenter {
         return text;
     }
 
+    /**
+     * Executes paged query.
+     *
+     * @param query the query to execute
+     * @return the page results
+     */
     public static PagedResults executePagedQuery(PagedQuery query) {
         Log.i("soap", "Executing paged query: " + query.getQueryType());
 
@@ -129,16 +151,17 @@ public class DataCenter {
         return result;
     }
 
+    /**
+     * Executes object query.
+     *
+     * @param query the object query
+     * @return the result from query
+     */
     @SuppressWarnings("unchecked")
     public static <T> T executeObjectQuery(ObjectQuery<T> query) {
         Log.i("soap", "Executing object query: " + query.getQueryType());
 
         return (T) executeMethod(query.getEnvelope());
-    }
-
-    @SuppressWarnings("unused")
-    public static boolean isCached(Query query) {
-        return false;
     }
 
     private static Object executeMethod(SoapSerializationEnvelope envelope) {
@@ -153,15 +176,7 @@ public class DataCenter {
             Log.d("soap", "Request DUMP: " + httpTransport.requestDump);
             Log.d("soap", "Response DUMP: " + httpTransport.responseDump);
 
-            Object result = envelope.getResponse();
-
-            // dump result
-            Log.i("soap", "Result: " + result);
-            if (result instanceof KvmSerializable) {
-                dumpProperties((KvmSerializable) result, "");
-            }
-
-            return result;
+            return envelope.getResponse();
         } catch (SoapFault soapFault) {
             Log.e("soap", "Soap fault : " + soapFault.faultstring);
         } catch (IOException e) {
@@ -175,24 +190,29 @@ public class DataCenter {
 
     }
 
-    private static void dumpProperties(KvmSerializable object, String indent) {
-        for (int i = 0; i < object.getPropertyCount(); i++) {
-            PropertyInfo info = object.getPropertyInfo(i, null);
-            Object value = object.getProperty(i);
-            Log.i("soap", indent + info.getName() + " = " + value);
-            if (value instanceof KvmSerializable) {
-                dumpProperties((KvmSerializable) value, indent + "\t");
-            } else if (value instanceof List) {
-                List<?> list = (List<?>) value;
-                for (Object item : list) {
-                    if (item instanceof KvmSerializable) {
-                        dumpProperties((KvmSerializable) item, indent + " ");
-                    }
-                }
-            }
-        }
+    /**
+     * Gets server url.
+     *
+     * @return the server url or host
+     */
+    public static String getUrl() {
+        return url;
     }
 
+    /**
+     * Sets server url.
+     *
+     * @param url the server url
+     */
+    public static void setUrl(String url) {
+        DataCenter.url = url;
+    }
+
+    /**
+     * Check if connection is correct.
+     *
+     * @return true if connection is possible
+     */
     public static boolean testConnection() {
         try {
             // execute simple request
@@ -203,13 +223,5 @@ public class DataCenter {
         } catch (IOException e) {
             return false;
         }
-    }
-
-    public static String getUrl() {
-        return url;
-    }
-
-    public static void setUrl(String url) {
-        DataCenter.url = url;
     }
 }

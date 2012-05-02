@@ -44,8 +44,8 @@ import android.widget.ViewFlipper;
  * @version 1.0
  */
 public class PageViewActivity extends Activity {
+    /** Intent extra for query type. */
     public static final String EXTRA_ENTITY_TYPE = "query_type";
-    public static final int REQUEST_SELECT_RESTRICTION = 1001;
     private ViewFlipper viewFlipper;
     private ResultsProvider provider;
     private EntityType entityType;
@@ -55,6 +55,11 @@ public class PageViewActivity extends Activity {
     private TextView searchTextView;
     private CheckBox checkBox;
 
+    /**
+     * Life-cycle handler for activity creation.
+     *
+     * @param savedInstanceState the saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -169,7 +174,6 @@ public class PageViewActivity extends Activity {
             }
         });
 
-        // TODO cancel current task
         // load first page
         firstRun.set(true);
         new DataLoadTast().execute(1);
@@ -218,6 +222,11 @@ public class PageViewActivity extends Activity {
         }
     }
 
+    /**
+     * When user deletes restriction.
+     *
+     * @param v the clicked view
+     */
     @SuppressWarnings("unused")
     public void onRestrictionDeleteButtonClick(View v) {
         // remove lowest restriction
@@ -226,6 +235,11 @@ public class PageViewActivity extends Activity {
         refreshProvider();
     }
 
+    /**
+     * When user press search button.
+     *
+     * @param v the clicked view
+     */
     @SuppressWarnings("unused")
     public void onSearchButtonClick(View v) {
         // check if text is changed
@@ -237,16 +251,31 @@ public class PageViewActivity extends Activity {
         }
     }
 
+    /**
+     * When user tries to navigate to next view.
+     *
+     * @param v the clicked view
+     */
     @SuppressWarnings("unused")
     public void onNextButtonClick(View v) {
         goToNext();
     }
 
+    /**
+     * When user tries to navigate to previous view.
+     *
+     * @param v the clicked view
+     */
     @SuppressWarnings("unused")
     public void onPreviousButtonClick(View v) {
         goToPrevious();
     }
 
+    /**
+     * Invokes activity that will display information about entity with given id.
+     *
+     * @param id the id of entity to display
+     */
     public void gotoEntity(long id) {
         // do nothing for target type
         if (entityType == EntityType.TARGET_TYPE) {
@@ -261,6 +290,9 @@ public class PageViewActivity extends Activity {
         startActivity(intent);
     }
 
+    /**
+     * When back button is pressed.
+     */
     @Override
     public void onBackPressed() {
         // if we are on top level then finish activity
@@ -274,6 +306,11 @@ public class PageViewActivity extends Activity {
         }
     }
 
+    /**
+     * Navigates inside clicked entity.
+     *
+     * @param entityInfo the entity, where we should navigate
+     */
     public void openEntity(EntityInfo entityInfo) {
         // if we on lowest level, open the file
         if (entityType == EntityType.lowest()) {
@@ -343,6 +380,12 @@ public class PageViewActivity extends Activity {
         ((TextView) findViewById(viewId)).setText(text);
     }
 
+    /**
+     * Task that will load data for all entities.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     private final class DataLoadTast extends AsyncTask<Integer, Void, Void> {
 
         @Override

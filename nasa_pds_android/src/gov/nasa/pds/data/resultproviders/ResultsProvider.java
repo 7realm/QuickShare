@@ -29,27 +29,47 @@ public abstract class ResultsProvider extends BaseAdapter {
     private OnClickListener onGotoButtonListener;
     private OnClickListener onOpenListener;
 
+    /**
+     * Constructor for ResultsProvider type.
+     *
+     * @param queryType the query type
+     */
     protected ResultsProvider(QueryType queryType) {
         this.queryType = queryType;
     }
 
+    /**
+     * Set handler for goto events.
+     *
+     * @param onGotoButtonListener the handler for goto click
+     */
     public void setOnGotoButtonListener(OnClickListener onGotoButtonListener) {
         this.onGotoButtonListener = onGotoButtonListener;
     }
 
+    /**
+     * Set handler for open events
+     *
+     * @param onOpenListener the open event handler
+     */
     public void setOnOpenListener(OnClickListener onOpenListener) {
         this.onOpenListener = onOpenListener;
     }
 
+    /**
+     * The query type.
+     *
+     * @return the query type
+     */
     public QueryType getQueryType() {
         return queryType;
     }
 
     /**
+     * Fills list item view.
      *
-     *
-     * @param itemIndex
-     * @param pageView
+     * @param itemIndex the item index
+     * @param pageView the list item parent view
      */
     public void fillView(int itemIndex, View pageView) {
         // for safety skip empty items
@@ -105,10 +125,10 @@ public abstract class ResultsProvider extends BaseAdapter {
     }
 
     /**
+     * Gets item on page.
      *
-     *
-     * @param itemIndex
-     * @return
+     * @param itemIndex the index of item to get
+     * @return the item value
      */
     @Override
     public EntityInfo getItem(int itemIndex) {
@@ -131,18 +151,51 @@ public abstract class ResultsProvider extends BaseAdapter {
      */
     public abstract void moveToPage(int pageIndex);
 
+    /**
+     * Gets page count.
+     *
+     * @return the page count
+     */
     public abstract int getPageCount();
 
+    /**
+     * Gets current page number.
+     *
+     * @return the current page number
+     */
     public abstract int getCurrentPage();
 
+    /**
+     * Gets current page size.
+     *
+     * @return the current page size
+     */
     public abstract int getCurrentPageSize();
 
+    /**
+     * Gets result entity type.
+     *
+     * @return the result entity type
+     */
     public abstract EntityType getEntityType();
 
+    /**
+     * Gets total count of results.
+     *
+     * @return the total count
+     */
     public long getTotal() {
         return lastResult == null ? 0 : lastResult.getTotal();
     }
 
+    /**
+     * List adapter callback for item view creation.
+     *
+     * @param i the item index
+     * @param view the converted view that can be reused
+     * @param viewgroup the parent view
+     * @return the created and fileld view
+     */
     @Override
     public View getView(int i, View view, ViewGroup viewgroup) {
         if (view == null) {
@@ -152,11 +205,22 @@ public abstract class ResultsProvider extends BaseAdapter {
         return view;
     }
 
+    /**
+     * Gets item id.
+     *
+     * @param i the item id
+     * @return the item id
+     */
     @Override
     public long getItemId(int i) {
         return i;
     }
 
+    /**
+     * Gets count of items on current page.
+     *
+     * @return count of items on current page
+     */
     @Override
     public int getCount() {
         return getCurrentPageSize();

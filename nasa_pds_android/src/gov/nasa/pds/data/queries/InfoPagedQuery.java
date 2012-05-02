@@ -23,14 +23,30 @@ import android.util.Log;
  */
 public class InfoPagedQuery extends PagedQuery {
 
+    /**
+     * Constructor for InfoPagedQuery type.
+     *
+     * @param queryType query type
+     */
     public InfoPagedQuery(QueryType queryType) {
         this(queryType, null);
     }
 
+    /**
+     * Constructor for InfoPagedQuery type.
+     *
+     * @param queryType query type
+     * @param restriction query restriction
+     */
     public InfoPagedQuery(QueryType queryType, Restriction restriction) {
         super(queryType, restriction);
     }
 
+    /**
+     * Get result entity type
+     *
+     * @return the result entity type
+     */
     @Override
     public EntityType getEntityType() {
         switch (getQueryType()) {

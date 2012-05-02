@@ -38,11 +38,18 @@ import android.widget.Toast;
  * @version 1.0
  */
 public class ObjectViewActivity extends Activity {
+    /** Intent extra name for query type. */
     public static final String EXTRA_QUERY_TYPE = "query_type";
+    /** Intent extra name for object id. */
     public static final String EXTRA_OBJECT_ID = "object_id";
     private ObjectQuery<Object> query;
     private ReferencedEntity currentObject;
 
+    /**
+     * Life-cycle handler for activity creation.
+     *
+     * @param savedInstanceState the saved instance state
+     */
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +75,11 @@ public class ObjectViewActivity extends Activity {
         new DataLoadTast().execute(query);
     }
 
+    /**
+     * Compare button clicked.
+     *
+     * @param v the clicked view
+     */
     public void onCompareButtonClick(View v) {
         // get mission from tag attribute
         Mission mission = (Mission) v.getTag();
@@ -90,6 +102,11 @@ public class ObjectViewActivity extends Activity {
         }
     }
 
+    /**
+     * The reference button clicked.
+     *
+     * @param v the clicked view
+     */
     public void onReferenceButtonClick(View v) {
         CharSequence searchText = ((TextView) ((View) v.getParent()).findViewById(R.id.referenceText)).getText();
 
@@ -103,6 +120,12 @@ public class ObjectViewActivity extends Activity {
         ((TextView) findViewById(viewId)).setText(text);
     }
 
+    /**
+     * Task that will load data for given entity.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     private final class DataLoadTast extends AsyncTask<ObjectQuery<Object>, Void, Object> {
 
         @Override

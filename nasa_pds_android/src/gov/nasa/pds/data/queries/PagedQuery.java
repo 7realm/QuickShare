@@ -19,10 +19,21 @@ public abstract class PagedQuery extends BaseQuery {
     private final Page page;
     private final Restriction restriction;
 
+    /**
+     * Constructor for PagedQuery type.
+     *
+     * @param queryType the query type
+     */
     public PagedQuery(QueryType queryType) {
         this(queryType, null);
     }
 
+    /**
+     * Constructor for PagedQuery type.
+     *
+     * @param queryType the query type
+     * @param restriction the search restriction
+     */
     public PagedQuery(QueryType queryType, Restriction restriction) {
         super(queryType);
         this.restriction = restriction;
@@ -31,13 +42,28 @@ public abstract class PagedQuery extends BaseQuery {
         page.setItemsPerPage(DataCenter.ITEMS_PER_PAGE);
     }
 
+    /**
+     * Get page value.
+     *
+     * @return the page value
+     */
     public Page getPage() {
         return page;
     }
 
+    /**
+     * Get search restriction.
+     *
+     * @return the search restriction
+     */
     public Restriction getRestriction() {
         return restriction;
     }
 
+    /**
+     * Get result entity type
+     *
+     * @return the result entity type
+     */
     public abstract EntityType getEntityType();
 }

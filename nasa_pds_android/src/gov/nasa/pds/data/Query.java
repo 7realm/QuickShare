@@ -12,6 +12,11 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
  * @version 1.0
  */
 public interface Query {
+    /**
+     * Type of current query.
+     *
+     * @return the type of current query
+     */
     QueryType getQueryType();
 
     /**

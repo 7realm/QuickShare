@@ -15,10 +15,20 @@ import gov.nasa.pds.data.QueryType;
 public abstract class BaseQuery implements Query {
     protected final QueryType queryType;
 
+    /**
+     * Constructor for BaseQuery type.
+     *
+     * @param queryType type of query
+     */
     public BaseQuery(QueryType queryType) {
         this.queryType = queryType;
     }
 
+    /**
+     * Type of current query.
+     *
+     * @return the type of current query
+     */
     @Override
     public QueryType getQueryType() {
         return queryType;

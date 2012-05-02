@@ -17,19 +17,27 @@ import gov.nasa.pds.data.queries.TypesPagedQuery;
 public class TypesResultsProvider extends ResultsProvider {
     private int total;
 
+    /**
+     * Constructor for TypesResultsProvider type.
+     */
     public TypesResultsProvider() {
         super(QueryType.GET_TYPES_INFO);
     }
 
+    /**
+     * Gets entity type.
+     *
+     * @return the result entity type
+     */
     @Override
     public EntityType getEntityType() {
         return EntityType.TARGET_TYPE;
     }
 
     /**
+     * Gets page count.
      *
-     *
-     * @return
+     * @return the page count
      */
     @Override
     public int getPageCount() {
@@ -37,9 +45,9 @@ public class TypesResultsProvider extends ResultsProvider {
     }
 
     /**
+     * Gets current page number.
      *
-     *
-     * @return
+     * @return the current page number
      */
     @Override
     public int getCurrentPage() {
@@ -47,9 +55,9 @@ public class TypesResultsProvider extends ResultsProvider {
     }
 
     /**
+     * Gets current page size.
      *
-     *
-     * @return
+     * @return the current page size
      */
     @Override
     public int getCurrentPageSize() {
@@ -57,9 +65,9 @@ public class TypesResultsProvider extends ResultsProvider {
     }
 
     /**
+     * Moves to specified page. This implmentaion supprts only one page.
      *
-     *
-     * @param pageIndex
+     * @param pageIndex the index of target page
      */
     @Override
     public void moveToPage(int pageIndex) {
