@@ -1,5 +1,6 @@
 package gov.nasa.pds.data.queries;
 
+import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.entities.Page;
 import gov.nasa.pds.soap.entities.Restriction;
@@ -28,4 +29,6 @@ public abstract class PagedQuery extends BaseQuery {
     public Restriction getRestriction() {
         return restriction;
     }
+
+    public abstract EntityType getEntityType();
 }

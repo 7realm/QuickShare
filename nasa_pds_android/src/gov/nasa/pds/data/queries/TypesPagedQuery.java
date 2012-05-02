@@ -1,5 +1,6 @@
 package gov.nasa.pds.data.queries;
 
+import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.calls.GetTargetTypesInfoRequest;
 import gov.nasa.pds.soap.calls.GetTargetTypesInfoResponse;
@@ -12,6 +13,11 @@ public class TypesPagedQuery extends PagedQuery {
 
     public TypesPagedQuery() {
         super(QueryType.GET_TYPES_INFO);
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.TARGET_TYPE;
     }
 
     @Override

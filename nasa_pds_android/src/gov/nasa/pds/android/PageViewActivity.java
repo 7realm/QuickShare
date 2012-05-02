@@ -5,29 +5,28 @@ import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.resultproviders.ResultsProvider;
 import gov.nasa.pds.soap.entities.EntityInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,6 +41,8 @@ public class PageViewActivity extends Activity {
     private final Filter filter = new Filter();
     private final AtomicBoolean firstRun = new AtomicBoolean();
     private Spinner spinner;
+    private TextView searchTextView;
+    private CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +50,8 @@ public class PageViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse);
 
-        // get view flipper
+        // set view flipper
         viewFlipper = (ViewFlipper) findViewById(R.id.browserFlipper);
-
-        // set slider
         viewFlipper.setOnTouchListener(new OnTouchListener() {
             private float fromPosition;
 
@@ -77,6 +76,7 @@ public class PageViewActivity extends Activity {
             }
         });
 
+        // set drop down
         spinner = (Spinner) findViewById(R.id.browserSpinner);
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -99,7 +99,28 @@ public class PageViewActivity extends Activity {
             }
         });
 
-        // set query for base type
+        // set search check box
+        searchTextView = (TextView) findViewById(R.id.browserSearchText);
+        checkBox = (CheckBox) findViewById(R.id.browserCheckBox);
+        checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String text = searchTextView.getText().toString().trim();
+
+                // do not refresh provider only if search text is empty
+                if (!text.isEmpty()) {
+                    filter.setText(isChecked ? text : "");
+                    refreshProvider();
+                }
+
+                // enable or disable search group views
+                findViewById(R.id.browserSearchText).setEnabled(isChecked);
+                findViewById(R.id.browserSearchButton).setEnabled(isChecked);
+
+            }
+        });
+
+        // set query for base type from intent
         EntityType entityType = (EntityType) getIntent().getSerializableExtra(EXTRA_ENTITY_TYPE);
         setEntityType(entityType == null ? EntityType.TARGET_TYPE : entityType);
     }
@@ -142,8 +163,67 @@ public class PageViewActivity extends Activity {
         firstRun.set(true);
         new DataLoadTast().execute(1);
 
-        // set filter caption
-        setText(R.id.browserFilterCaption, filter.toString());
+        // set filter text section
+        boolean hasFilterText = !filter.getText().isEmpty();
+        checkBox.setChecked(hasFilterText);
+        searchTextView.setEnabled(hasFilterText);
+        findViewById(R.id.browserSearchButton).setEnabled(hasFilterText);
+
+        // set restriction group
+        ViewGroup restrictionGroup = (ViewGroup) findViewById(R.id.browserRestrictionGroup);
+        restrictionGroup.removeAllViews();
+        for (Iterator<NamedRestriction> i = filter.getRestrictions().iterator(); i.hasNext();) {
+            NamedRestriction restriction = i.next();
+
+            // create and fill restriction view
+            View restrictionView = LayoutInflater.from(this).inflate(R.layout.view_restriction, null);
+            restrictionGroup.addView(restrictionView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+            // set object icon
+            ImageView objectIcon = (ImageView) restrictionView.findViewById(R.id.restrictionObjectIcon);
+            switch (restriction.getEntityType()) {
+            case TARGET:
+                objectIcon.setImageResource(R.drawable.object_target);
+                break;
+            case MISSION:
+                objectIcon.setImageResource(R.drawable.object_mission);
+                break;
+            case INSTRUMENT:
+                objectIcon.setImageResource(R.drawable.object_instrument);
+                break;
+            case TARGET_TYPE:
+            default:
+                objectIcon.setImageResource(R.drawable.object_target_type);
+                break;
+            }
+
+            // set object text
+            ((TextView) restrictionView.findViewById(R.id.restrictionCaption)).setText(restriction.getValue());
+
+            // add delete button for lowest restriction
+            if (!i.hasNext()) {
+                restrictionView.findViewById(R.id.restrictionDeleteButton).setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onRestrictionDeleteButtonClick(View v) {
+        // remove lowest restriction
+        filter.removeLowestRestriction();
+
+        refreshProvider();
+    }
+
+    @SuppressWarnings("unused")
+    public void onSearchButtonClick(View v) {
+        // check if text is changed
+        String text = ((TextView) findViewById(R.id.browserSearchText)).getText().toString().trim();
+        if (!filter.getText().equals(text)) {
+            filter.setText(text);
+
+            refreshProvider();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -176,6 +256,9 @@ public class PageViewActivity extends Activity {
         if (entityType == EntityType.TARGET_TYPE) {
             super.onBackPressed();
         } else {
+            // remove text filter if hierarchy change
+            filter.setText("");
+
             setEntityType(entityType.upper());
         }
     }
@@ -188,71 +271,12 @@ public class PageViewActivity extends Activity {
             // add restriction
             filter.addRestriction(entityInfo, entityType);
 
+            // remove text filter if hierarchy change
+            filter.setText("");
+
             // go to lower level
             setEntityType(entityType.lower());
         }
-    }
-
-    @SuppressWarnings("unused")
-    public void onFilterButtonClick(View v) {
-        // prepare restriction list labels
-        CharSequence[] items = new String[filter.restrictions.size()];
-        for (int i = 0; i < items.length; i++) {
-            items[i] = filter.restrictions.get(i).toString();
-        }
-
-        // create dialog view
-        View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
-        final TextView dialogText = (TextView) layout.findViewById(R.id.dialogSearchText);
-        dialogText.setText(filter.getText());
-        final ListView dialogList = (ListView) layout.findViewById(R.id.dialogList);
-        dialogList.setAdapter(new ArrayAdapter<CharSequence>(this, android.R.layout.simple_list_item_multiple_choice, items));
-        dialogList.setItemsCanFocus(false);
-        dialogList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        for (int i = 0; i < items.length; i++) {
-            dialogList.setItemChecked(i, true);
-        }
-
-        // run the dialog
-        new AlertDialog.Builder(this)
-            .setTitle("Enter text filter: ")
-            .setView(layout)
-            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    SparseBooleanArray checkedItems = dialogList.getCheckedItemPositions();
-                    // For each element in the status array
-                    int checkedItemsCount = checkedItems.size();
-
-                    // check if text or restrictions are changed
-                    String text = dialogText.getText().toString().trim();
-                    boolean changed = !text.equals(filter.getText());
-                    for (int i = 0; i < checkedItemsCount; ++i) {
-                        changed = changed || !checkedItems.valueAt(i);
-                    }
-
-                    // run search if filter is changed
-                    if (changed) {
-                        filter.setText(text);
-
-                        List<NamedRestriction> keepedRestrictions = new ArrayList<NamedRestriction>();
-                        List<NamedRestriction> restrictions = filter.restrictions;
-                        for (int i = 0; i < checkedItemsCount; ++i) {
-                            if (checkedItems.valueAt(i)) {
-                                keepedRestrictions.add(restrictions.get(checkedItems.keyAt(i)));
-                            }
-                        }
-
-                        // refresh filter
-                        restrictions.clear();
-                        restrictions.addAll(keepedRestrictions);
-
-                        refreshProvider();
-                    }
-                }
-            })
-            .setNegativeButton("Cancel", null)
-            .show();
     }
 
     private void goToNext() {

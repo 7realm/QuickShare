@@ -1,6 +1,7 @@
 package gov.nasa.pds.data.resultproviders;
 
 import gov.nasa.pds.data.DataCenter;
+import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.data.queries.TypesPagedQuery;
 
@@ -14,6 +15,11 @@ public class TypesResultsProvider extends ResultsProvider {
 
     public TypesResultsProvider() {
         super(QueryType.GET_TYPES_INFO);
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.TARGET_TYPE;
     }
 
     /**

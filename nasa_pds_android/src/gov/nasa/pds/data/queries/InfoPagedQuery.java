@@ -1,5 +1,6 @@
 package gov.nasa.pds.data.queries;
 
+import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.calls.GetEntitiesInfoRequest;
 import gov.nasa.pds.soap.calls.GetEntitiesInfoResponse;
@@ -24,6 +25,23 @@ public class InfoPagedQuery extends PagedQuery {
 
     public InfoPagedQuery(QueryType queryType, Restriction restriction) {
         super(queryType, restriction);
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        switch (getQueryType()) {
+        case GET_TYPES_INFO:
+            return EntityType.TARGET_TYPE;
+        case GET_TARGETS_INFO:
+            return EntityType.TARGET;
+        case GET_MISSIONS_INFO:
+            return EntityType.MISSION;
+        case GET_INSTRUMENTS_INFO:
+            return EntityType.INSTRUMENT;
+        case GET_DOCUMENTS_INFO:
+        default:
+            return EntityType.FILE;
+        }
     }
 
     /**

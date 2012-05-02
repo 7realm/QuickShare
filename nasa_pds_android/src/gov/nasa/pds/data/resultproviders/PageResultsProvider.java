@@ -1,6 +1,7 @@
 package gov.nasa.pds.data.resultproviders;
 
 import gov.nasa.pds.data.DataCenter;
+import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.queries.PagedQuery;
 
 public class PageResultsProvider extends ResultsProvider {
@@ -14,6 +15,11 @@ public class PageResultsProvider extends ResultsProvider {
         super(pagedQuery.getQueryType());
         this.pagedQuery = pagedQuery;
         this.itemsPerPage = pagedQuery.getPage().getItemsPerPage();
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return pagedQuery.getEntityType();
     }
 
     /**

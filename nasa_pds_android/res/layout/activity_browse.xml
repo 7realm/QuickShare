@@ -13,24 +13,54 @@
             android:id="@+id/browserSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:entries="@array/entities_type" />
 
-        <Button
+        <GridLayout
+            android:id="@+id/browserRestrictionGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:onClick="onFilterButtonClick"
-            android:text="Filter" />
-    </RelativeLayout>
+            android:layout_below="@id/browserSpinner"
+            android:layout_centerHorizontal="true"
+            android:columnCount="2" >
+        </GridLayout>
 
-    <TextView
-        android:id="@+id/browserFilterCaption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/browserFilterGroup" />
+        <RelativeLayout
+            android:id="@+id/browserSearchGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/browserRestrictionGroup" >
+
+            <CheckBox
+                android:id="@+id/browserCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:checked="false" />
+
+            <ImageView
+                android:id="@+id/browserSearchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:onClick="onSearchButtonClick"
+                android:src="@drawable/search_text" />
+
+            <EditText
+                android:id="@+id/browserSearchText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_toLeftOf="@id/browserSearchButton"
+                android:layout_toRightOf="@id/browserCheckBox"
+                android:hint="Enter text here to search" />
+        </RelativeLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/browserPageNavigationGroup"
@@ -71,7 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/browserPageNavigationGroup"
-        android:layout_below="@id/browserFilterCaption" >
+        android:layout_below="@id/browserFilterGroup" >
     </ViewFlipper>
 
 </RelativeLayout>

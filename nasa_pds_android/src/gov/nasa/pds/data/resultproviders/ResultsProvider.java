@@ -1,6 +1,7 @@
 package gov.nasa.pds.data.resultproviders;
 
 import gov.nasa.pds.android.R;
+import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.entities.EntityInfo;
 import gov.nasa.pds.soap.entities.PagedResults;
@@ -63,20 +64,20 @@ public abstract class ResultsProvider extends BaseAdapter {
 
         // set object icon
         ImageView objectIcon = (ImageView) pageView.findViewById(R.id.entityObjectIcon);
-        switch (queryType) {
-        case GET_TYPES_INFO:
+        switch (getEntityType()) {
+        case TARGET_TYPE:
             objectIcon.setImageResource(R.drawable.object_target_type);
             break;
-        case GET_TARGETS_INFO:
+        case TARGET:
             objectIcon.setImageResource(R.drawable.object_target);
             break;
-        case GET_MISSIONS_INFO:
+        case MISSION:
             objectIcon.setImageResource(R.drawable.object_mission);
             break;
-        case GET_INSTRUMENTS_INFO:
+        case INSTRUMENT:
             objectIcon.setImageResource(R.drawable.object_instrument);
             break;
-        case GET_DOCUMENTS_INFO:
+        case FILE:
         default:
             objectIcon.setImageResource(R.drawable.object_file);
             break;
@@ -126,6 +127,8 @@ public abstract class ResultsProvider extends BaseAdapter {
     public abstract int getCurrentPage();
 
     public abstract int getCurrentPageSize();
+
+    public abstract EntityType getEntityType();
 
     @Override
     public View getView(int i, View view, ViewGroup viewgroup) {

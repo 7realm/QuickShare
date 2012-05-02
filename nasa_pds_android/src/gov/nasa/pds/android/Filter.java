@@ -52,6 +52,12 @@ class Filter {
         return namedRestriction == null ? null : namedRestriction.getRestriction();
     }
 
+    public void removeLowestRestriction() {
+        if (restrictions.size() > 0) {
+            restrictions.remove(restrictions.size() - 1);
+        }
+    }
+
     public ResultsProvider createProvider(EntityType entityType) {
         clearNotGreaterPermissions(entityType);
 
@@ -63,7 +69,7 @@ class Filter {
             return new PageResultsProvider(new InfoPagedQuery(entityType.getObjectsInfoQuery(), getLowestRestriction()));
         }
 
-        return new PageResultsProvider(new SearchByTypePagedQuery(text, entityType.getClassName(), getLowestRestriction()));
+        return new PageResultsProvider(new SearchByTypePagedQuery(text, entityType, getLowestRestriction()));
     }
 
     @Override
@@ -98,10 +104,22 @@ class Filter {
             return result;
         }
 
+        public EntityType getEntityType() {
+            return entityType;
+        }
+
+        public String getValue() {
+            return entityInfo.getName();
+        }
+
         @Override
         public String toString() {
             return new StringBuilder("[").append(entityType.getHumanReadable())
                 .append(" = ").append(entityInfo.getName()).append("]").toString();
         }
+    }
+
+    public List<NamedRestriction> getRestrictions() {
+        return restrictions;
     }
 }
