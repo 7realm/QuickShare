@@ -6,8 +6,7 @@ package gov.nasa.pds.soap.calls;
 import gov.nasa.pds.soap.BaseObject;
 
 /**
- * <p>
- * Java class for TODO complex type.
+ * Java class for SOAP request for object.
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
