@@ -50,8 +50,10 @@ public class ObjectViewActivity extends Activity {
 
         // set text and visibility of add to compare button
         Button addToCompare = (Button) findViewById(R.id.objectCompareButton);
-        addToCompare.setVisibility(queryType == QueryType.GET_MISSION ? View.VISIBLE : View.INVISIBLE);
-        addToCompare.setText(Compare.exists(id) ? "Compare" : "Add to compare");
+        if (addToCompare != null) {
+            addToCompare.setVisibility(queryType == QueryType.GET_MISSION ? View.VISIBLE : View.INVISIBLE);
+            addToCompare.setText(Compare.exists(id) ? "Compare" : "Add to compare");
+        }
 
         // load data
         new DataLoadTast().execute(query);

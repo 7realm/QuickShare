@@ -1,10 +1,12 @@
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.android.Filter.NamedRestriction;
+import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.resultproviders.ResultsProvider;
 import gov.nasa.pds.soap.entities.EntityInfo;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -291,8 +293,6 @@ public class PageViewActivity extends Activity {
 
         // slide the view
         viewFlipper.showNext();
-
-        setPageCaption(nextPage);
     }
 
     private void goToPrevious() {
@@ -307,15 +307,22 @@ public class PageViewActivity extends Activity {
 
         // slide the view
         viewFlipper.showPrevious();
-
-        setPageCaption(previousPage);
     }
 
     private void setPageCaption(int nextPage) {
-        if (provider.getPageCount() == 0) {
+        switch (provider.getPageCount()) {
+        case 0:
             setText(R.id.browserPageCaption, "No results");
-        } else {
-            setText(R.id.browserPageCaption, "Page " + nextPage + " of " + provider.getPageCount());
+            break;
+        case 1:
+            setText(R.id.browserPageCaption, "Showing " + provider.getTotal() + " result(s)");
+            break;
+        default:
+            long fromIndex = (nextPage - 1) * DataCenter.ITEMS_PER_PAGE + 1;
+            long toIndex = fromIndex + provider.getCurrentPageSize() - 1;
+            String captionText = MessageFormat.format("Showing {0}-{1} of {2} result(s)", fromIndex, toIndex, provider.getTotal());
+            setText(R.id.browserPageCaption, captionText);
+            break;
         }
     }
 
@@ -349,6 +356,8 @@ public class PageViewActivity extends Activity {
                 }
                 firstRun.set(false);
                 setPageCaption(1);
+            } else {
+                setPageCaption(provider.getCurrentPage());
             }
 
             // notify list about content change

@@ -130,6 +130,10 @@ public abstract class ResultsProvider extends BaseAdapter {
 
     public abstract EntityType getEntityType();
 
+    public long getTotal() {
+        return lastResult == null ? 0 : lastResult.getTotal();
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewgroup) {
         if (view == null) {

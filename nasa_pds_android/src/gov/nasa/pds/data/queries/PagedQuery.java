@@ -1,12 +1,12 @@
 package gov.nasa.pds.data.queries;
 
+import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.entities.Page;
 import gov.nasa.pds.soap.entities.Restriction;
 
 public abstract class PagedQuery extends BaseQuery {
-    private static final int ITEMS_PER_PAGE = 20;
     private final Page page;
     private final Restriction restriction;
 
@@ -19,7 +19,7 @@ public abstract class PagedQuery extends BaseQuery {
         this.restriction = restriction;
         this.page = new Page();
         page.setPageNumber(1);
-        page.setItemsPerPage(ITEMS_PER_PAGE);
+        page.setItemsPerPage(DataCenter.ITEMS_PER_PAGE);
     }
 
     public Page getPage() {

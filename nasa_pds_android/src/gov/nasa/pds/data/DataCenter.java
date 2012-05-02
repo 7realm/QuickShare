@@ -24,6 +24,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 
 public class DataCenter {
+    public static final int ITEMS_PER_PAGE = 20;
+
     private static final int DAYS_PER_YEAR = 365;
     private static final int HOURS_PER_DAY = 24;
     private static final int MINUTES_PER_HOUR = 60;
