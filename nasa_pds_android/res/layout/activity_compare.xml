@@ -95,15 +95,4 @@
         android:orientation="horizontal" >
     </LinearLayout>
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TableRow
-            android:id="@+id/compareButtonsRow"
-            android:layout_margin="2dip"
-            android:background="#aaaaaa" >
-        </TableRow>
-    </TableLayout>
-
 </LinearLayout>

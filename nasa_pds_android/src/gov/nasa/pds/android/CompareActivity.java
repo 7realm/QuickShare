@@ -1,6 +1,3 @@
-/*
- * Created by 7realm at 30.04.2012 9:24:18. All rights reserved.
- */
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.android.Compare.CompareItem;
@@ -48,7 +45,8 @@ public class CompareActivity extends Activity {
     }
 
     private int getColumnWidth() {
-        return getWindow().getDecorView().getWidth() / 2;
+        int windowWidth = getWindow().getDecorView().getWidth() - 1;
+        return Compare.ITEMS.size() == 1 ? windowWidth : windowWidth / 2;
     }
 
     private void fillActivity(Set<String> commonInstruments) {
@@ -56,7 +54,6 @@ public class CompareActivity extends Activity {
         TableRow startDateRow = (TableRow) findViewById(R.id.compareStartDateRow);
         TableRow endDateRow = (TableRow) findViewById(R.id.compareEndDateRow);
         TableRow durationRow = (TableRow) findViewById(R.id.compareDurationRow);
-        TableRow buttonsRow = (TableRow) findViewById(R.id.compareButtonsRow);
 
         TableLayout commonTable = (TableLayout) findViewById(R.id.compareCommonInstrumentsTable);
         LinearLayout uniqueTable = (LinearLayout) findViewById(R.id.compareUniqueInstrumentsTable);
@@ -66,7 +63,6 @@ public class CompareActivity extends Activity {
         startDateRow.removeAllViews();
         endDateRow.removeAllViews();
         durationRow.removeAllViews();
-        buttonsRow.removeAllViews();
 
         // clear tables
         commonTable.removeAllViews();
@@ -79,17 +75,17 @@ public class CompareActivity extends Activity {
             Mission mission = item.getMission();
 
             // add simple properties
-            addCell(nameRow, color, mission.getName());
             addCell(startDateRow, color, DataCenter.formatLong(mission.getStartDate()));
             addCell(endDateRow, color, DataCenter.formatLong(mission.getEndDate()));
             addCell(durationRow, color, DataCenter.formatPeriod(mission.getStartDate(), mission.getEndDate()));
 
             // add goto and remove buttons with proper tag
-            View buttonsView = LayoutInflater.from(this).inflate(R.layout.view_compare_buttons, null);
-            buttonsView.setBackgroundColor(color);
-            buttonsRow.addView(buttonsView, getColumnWidth(), LayoutParams.WRAP_CONTENT);
-            buttonsView.findViewById(R.id.compareDeleteButton).setTag(mission.getId());
-            buttonsView.findViewById(R.id.compareGotoButton).setTag(mission.getId());
+            View nameView = LayoutInflater.from(this).inflate(R.layout.view_compare_name, null);
+            nameView.setBackgroundColor(color);
+            ((TextView) nameView.findViewById(R.id.compareNameCaption)).setText(mission.getName());
+            nameView.findViewById(R.id.compareDeleteButton).setTag(mission.getId());
+            nameView.findViewById(R.id.compareGotoButton).setTag(mission.getId());
+            nameRow.addView(nameView, getColumnWidth(), LayoutParams.WRAP_CONTENT);
 
             // calculate max number of instruments for unique table rows
             maxInstruments = Math.max(item.getInstruments().size(), maxInstruments);
@@ -143,9 +139,14 @@ public class CompareActivity extends Activity {
         // remove mission from compare
         Compare.removeMission(id);
 
-        // refill activity
-        Set<String> commonInstruments = Compare.findCommonInstruments();
-        fillActivity(commonInstruments);
+        if (Compare.ITEMS.size() == 0) {
+            // nothing to compare, finish activity
+            finish();
+        } else {
+            // refill activity
+            Set<String> commonInstruments = Compare.findCommonInstruments();
+            fillActivity(commonInstruments);
+        }
     }
 
     private void addCell(LinearLayout row, int color, CharSequence text) {
