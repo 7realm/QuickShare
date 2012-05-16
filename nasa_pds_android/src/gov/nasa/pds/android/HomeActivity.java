@@ -36,9 +36,9 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
 
         // restore URL from preferences
-        String url = getApplicationContext().getSharedPreferences("general", MODE_PRIVATE)
-            .getString("host", DataCenter.getUrl());
-        DataCenter.setUrl(url);
+//        String url = getApplicationContext().getSharedPreferences("general", MODE_PRIVATE)
+//            .getString("host", DataCenter.getUrl());
+//        DataCenter.setUrl(url);
     }
 
     /**

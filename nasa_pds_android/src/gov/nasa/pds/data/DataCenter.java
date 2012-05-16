@@ -46,7 +46,7 @@ public class DataCenter {
 
     private static final String URL_PATTERN = "http://%s:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
-    private static String url = "192.168.0.101";
+    private static String url = "ec2-107-21-159-87.compute-1.amazonaws.com";
 
     /**
      * Format date to long format.
@@ -221,6 +221,7 @@ public class DataCenter {
             httpclient.execute(httpget);
             return true;
         } catch (IOException e) {
+            Log.e("soap", "Failed to test connection.", e);
             return false;
         }
     }

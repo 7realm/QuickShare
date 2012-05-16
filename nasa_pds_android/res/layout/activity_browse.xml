@@ -17,15 +17,30 @@
             android:layout_centerHorizontal="true"
             android:entries="@array/entities_type" />
 
-        <GridLayout
+        <LinearLayout
             android:id="@+id/browserRestrictionGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/browserSpinner"
             android:layout_centerHorizontal="true"
-            android:alignmentMode="alignMargins"
-            android:columnCount="2" >
-        </GridLayout>
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/browserRestrictionGroup0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/browserRestrictionGroup1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/browserSearchGroup"
@@ -64,7 +79,7 @@
     </RelativeLayout>
 
     <FrameLayout
-          android:id="@+id/browserSeparatorTop"
+        android:id="@+id/browserSeparatorTop"
         style="@style/theme_line_style"
         android:layout_below="@id/browserFilterGroup" />
 

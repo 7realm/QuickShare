@@ -185,14 +185,22 @@ public class PageViewActivity extends Activity {
         findViewById(R.id.browserSearchButton).setEnabled(hasFilterText);
 
         // set restriction group
-        ViewGroup restrictionGroup = (ViewGroup) findViewById(R.id.browserRestrictionGroup);
-        restrictionGroup.removeAllViews();
+        ViewGroup restrictionGroup0 = (ViewGroup) findViewById(R.id.browserRestrictionGroup0);
+        ViewGroup restrictionGroup1 = (ViewGroup) findViewById(R.id.browserRestrictionGroup1);
+        restrictionGroup0.removeAllViews();
+        restrictionGroup1.removeAllViews();
+        int index = 0;
         for (Iterator<NamedRestriction> i = filter.getRestrictions().iterator(); i.hasNext();) {
             NamedRestriction restriction = i.next();
 
             // create and fill restriction view
             View restrictionView = LayoutInflater.from(this).inflate(R.layout.view_restriction, null);
-            restrictionGroup.addView(restrictionView);
+            if (index < 2) {
+                restrictionGroup0.addView(restrictionView);
+            } else {
+                restrictionGroup1.addView(restrictionView);
+            }
+            index++;
 
             // set object icon
             ImageView objectIcon = (ImageView) restrictionView.findViewById(R.id.restrictionObjectIcon);
