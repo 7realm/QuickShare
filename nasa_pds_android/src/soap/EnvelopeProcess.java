@@ -39,12 +39,12 @@ public class EnvelopeProcess {
         // prepare POST method
         HttpPost request = new HttpPost(URL);
         request.setHeader("User-Agent", "mobile");
-        if (envelope.version != SoapSerializationEnvelope.VER12) {
+        if (envelope.version != SoapEnvelope.VER12) {
             request.setHeader("SOAPAction", "\"\"");
         }
 
         // set Content-Type
-        if (envelope.version == SoapSerializationEnvelope.VER12) {
+        if (envelope.version == SoapEnvelope.VER12) {
             request.setHeader("Content-Type", CONTENT_TYPE_SOAP_XML_CHARSET_UTF_8);
         } else {
             request.setHeader("Content-Type", CONTENT_TYPE_XML_CHARSET_UTF_8);
@@ -59,7 +59,6 @@ public class EnvelopeProcess {
             System.out.println(header.getName() + ": " + header.getValue());
         }
 
-        // TODO
         Header contentTypeHeader = response.getHeaders("Content-Type")[0];
         byte[] boundary = getBoundary(contentTypeHeader.getValue());
         System.out.println("Boundary: " + new String(boundary));
@@ -76,14 +75,14 @@ public class EnvelopeProcess {
             parseResponse(envelope, new ByteArrayInputStream(output.toByteArray()));
             nextPart = multipartStream.readBoundary();
         }
-        
+
         while (nextPart) {
             String header = multipartStream.readHeaders();
             int start = header.indexOf("Content-ID: <");
             int end = header.indexOf(">");
             String contentId = header.substring(start + "Content-ID: <".length(), end);
             System.out.println("Content ID : " + contentId);
-            
+
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             System.out.println("Content length: " + multipartStream.readBodyData(output));
             DataHandler dataHandler = MarshalAttachment.ATTACHMENTS.get("cid:" + contentId);

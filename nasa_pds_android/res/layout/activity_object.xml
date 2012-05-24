@@ -10,6 +10,7 @@
         android:layout_height="wrap_content" >
 
         <Button
+            android:background="@drawable/shape_compare_button"
             android:id="@+id/objectCompareButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
