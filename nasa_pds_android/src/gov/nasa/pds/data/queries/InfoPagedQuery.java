@@ -18,7 +18,7 @@ import android.util.Log;
 /**
  * Query that will retrieve list of objects using XXXInfo requests.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public class InfoPagedQuery extends PagedQuery {

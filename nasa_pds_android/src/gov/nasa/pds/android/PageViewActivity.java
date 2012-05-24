@@ -40,7 +40,7 @@ import android.widget.ViewFlipper;
 /**
  * Activity that will browse objects.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public class PageViewActivity extends Activity {
@@ -391,7 +391,7 @@ public class PageViewActivity extends Activity {
     /**
      * Task that will load data for all entities.
      *
-     * @author TCSASSEMBLER
+     * @author 7realm
      * @version 1.0
      */
     private final class DataLoadTast extends AsyncTask<Integer, Void, Void> {

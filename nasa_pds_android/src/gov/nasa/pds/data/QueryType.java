@@ -6,7 +6,7 @@ package gov.nasa.pds.data;
 /**
  * SOAP query type.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public enum QueryType {

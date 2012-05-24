@@ -25,7 +25,7 @@ import gov.nasa.pds.soap.entities.WsDataFile;
  * &lt;/complexType>
  * </pre>
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public class GetDataFileResponse extends BaseObject {

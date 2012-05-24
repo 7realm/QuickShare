@@ -29,7 +29,7 @@ import gov.nasa.pds.soap.entities.Restriction;
  * &lt;/complexType>
  * </pre>
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public class SearchEntitiesByTypeRequest extends BaseObject {

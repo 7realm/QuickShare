@@ -16,7 +16,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 /**
  * Query that will execute searchEntitiesByType request.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public class SearchByTypePagedQuery extends PagedQuery {

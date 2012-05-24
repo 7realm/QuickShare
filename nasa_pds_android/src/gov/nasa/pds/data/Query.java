@@ -8,7 +8,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 /**
  * Interface for different SOAP queries.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public interface Query {

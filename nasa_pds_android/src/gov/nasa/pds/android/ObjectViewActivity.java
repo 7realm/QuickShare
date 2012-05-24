@@ -34,7 +34,7 @@ import android.widget.Toast;
 /**
  * Activity that will view specific objects.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public class ObjectViewActivity extends Activity {
@@ -123,7 +123,7 @@ public class ObjectViewActivity extends Activity {
     /**
      * Task that will load data for given entity.
      *
-     * @author TCSASSEMBLER
+     * @author 7realm
      * @version 1.0
      */
     private final class DataLoadTast extends AsyncTask<ObjectQuery<Object>, Void, Object> {

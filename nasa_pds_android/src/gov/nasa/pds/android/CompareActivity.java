@@ -31,7 +31,7 @@ import android.widget.TextView;
 /**
  * Activity that will display comparison results.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public class CompareActivity extends Activity {
@@ -177,7 +177,7 @@ public class CompareActivity extends Activity {
     /**
      * Data load task that will load data required for comparision.
      *
-     * @author TCSASSEMBLER
+     * @author 7realm
      * @version 1.0
      */
     private final class DataLoadTast extends AsyncTask<Void, Void, Void> {

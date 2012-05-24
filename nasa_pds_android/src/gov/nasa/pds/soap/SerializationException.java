@@ -6,7 +6,7 @@ package gov.nasa.pds.soap;
 /**
  * Exception that will be thrown on serialization.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public class SerializationException extends RuntimeException {

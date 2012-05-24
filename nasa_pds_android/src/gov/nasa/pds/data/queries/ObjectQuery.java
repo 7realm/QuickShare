@@ -18,7 +18,7 @@ import android.util.Log;
 /**
  * Query that will retrieve information on particular entity.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public class ObjectQuery<T> extends BaseQuery {

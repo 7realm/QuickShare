@@ -12,7 +12,7 @@ import gov.nasa.pds.soap.entities.Restriction;
 /**
  * Base query that return results organized to pages.
  *
- * @author TCSASSEMBLER
+ * @author 7realm
  * @version 1.0
  */
 public abstract class PagedQuery extends BaseQuery {
