@@ -29,6 +29,7 @@ import java.util.Map;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
 import org.ksoap2.SoapFault12;
+import org.ksoap2.serialization.marshals.MarshalAttachment;
 import org.ksoap2.serialization.marshals.MarshalDate;
 import org.ksoap2.serialization.marshals.MarshalDefault;
 import org.xmlpull.v1.XmlPullParser;
@@ -41,7 +42,7 @@ import org.xmlpull.v1.XmlSerializer;
  *         This class extends the SoapEnvelope with Soap Serialization functionality.
  */
 public class SoapSerializationEnvelope extends SoapEnvelope {
-    private static final String DEFAULT_NAMESPACE = "http://pds.nasa.gov/";
+    public static final String DEFAULT_NAMESPACE = "http://pds.nasa.gov/";
     private static final String ANY_TYPE_LABEL = "anyType";
     private static final String ROOT_LABEL = "root";
     private static final String TYPE_LABEL = "type";
@@ -69,6 +70,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         super(version);
         DEFAULT_MARSHAL.register(this);
         new MarshalDate().register(this);
+        new MarshalAttachment().register(this);
     }
 
     @Override
@@ -78,10 +80,10 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         if (parser.getEventType() == XmlPullParser.START_TAG && parser.getNamespace().equals(env)
             && parser.getName().equals("Fault")) {
             SoapFault fault;
-            if (this.version < SoapEnvelope.VER12) {
-                fault = new SoapFault(this.version);
+            if (version < SoapEnvelope.VER12) {
+                fault = new SoapFault(version);
             } else {
-                fault = new SoapFault12(this.version);
+                fault = new SoapFault12(version);
             }
             fault.parse(parser);
             bodyIn = fault;

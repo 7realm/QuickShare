@@ -19,10 +19,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-import org.ksoap2.transport.Transport;
 import org.xmlpull.v1.XmlPullParserException;
 
+import soap.EnvelopeProcess;
 import android.util.Log;
 
 /**
@@ -46,7 +45,7 @@ public class DataCenter {
 
     private static final String URL_PATTERN = "http://%s:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
-    private static String url = "ec2-107-21-159-87.compute-1.amazonaws.com";
+    private static String url = "50.19.174.233";
 
     /**
      * Format date to long format.
@@ -65,7 +64,6 @@ public class DataCenter {
      * @param endDate the period end date
      * @return the formatted period string
      */
-    @SuppressWarnings("deprecation")
     public static String formatPeriod(Date startDate, Date endDate) {
         // handle null values
         if (endDate == null) {
@@ -165,17 +163,10 @@ public class DataCenter {
     }
 
     private static Object executeMethod(SoapSerializationEnvelope envelope) {
-        Transport httpTransport = new HttpTransportSE(String.format(URL_PATTERN, url));
-        httpTransport.debug = true;
-
         try {
             // execute soap call
-            httpTransport.call(null, envelope);
-
-            // dump result and response
-            Log.d("soap", "Request DUMP: " + httpTransport.requestDump);
-            Log.d("soap", "Response DUMP: " + httpTransport.responseDump);
-
+            EnvelopeProcess.parseEnvelope(envelope);
+            
             return envelope.getResponse();
         } catch (SoapFault soapFault) {
             Log.e("soap", "Soap fault : " + soapFault.faultstring);

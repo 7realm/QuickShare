@@ -5,6 +5,9 @@ package gov.nasa.pds.android;
 
 import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.data.EntityType;
+import gov.nasa.pds.data.QueryType;
+import gov.nasa.pds.data.queries.ObjectQuery;
+import gov.nasa.pds.soap.entities.WsDataFile;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -35,6 +38,8 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        WsDataFile result = DataCenter.executeObjectQuery(new ObjectQuery<WsDataFile>(QueryType.GET_FILE, 438));
+        System.out.println(result);
         // restore URL from preferences
 //        String url = getApplicationContext().getSharedPreferences("general", MODE_PRIVATE)
 //            .getString("host", DataCenter.getUrl());
