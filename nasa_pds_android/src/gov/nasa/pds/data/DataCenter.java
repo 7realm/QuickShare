@@ -21,7 +21,7 @@ import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.xmlpull.v1.XmlPullParserException;
 
-import soap.EnvelopeProcess;
+import soap.SoapEnvelopeExecutor;
 import android.util.Log;
 
 /**
@@ -165,7 +165,7 @@ public class DataCenter {
     private static Object executeMethod(SoapSerializationEnvelope envelope) {
         try {
             // execute soap call
-            EnvelopeProcess.parseEnvelope(envelope);
+            SoapEnvelopeExecutor.executeSoap(envelope);
             
             return envelope.getResponse();
         } catch (SoapFault soapFault) {
