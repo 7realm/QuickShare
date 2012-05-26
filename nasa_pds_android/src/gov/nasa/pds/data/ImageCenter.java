@@ -28,6 +28,7 @@ public class ImageCenter {
     public static File getImage(long id) {
         // try get image from cache
         File imageFile = new File(imagesDir, Long.toString(id));
+        Log.i("soap", "Looking for image " + imageFile.getAbsolutePath());
         if (imageFile.exists()) {
             return imageFile;
         }
@@ -44,22 +45,24 @@ public class ImageCenter {
             if (dataFile.getContent() != null) {
                 if (isImage(dataFile.getName())) {
                     Streams.writeToStream(new FileOutputStream(imageFile), dataFile.getContent());
+                    Log.i("soap", "Image " + id + " was fetched from content.");
                     return imageFile;
                 }
             } else {
                 // file has attachment, check if it is image already
                 if (isImage(dataFile.getFilename())) {
-
                     Streams.writeToStream(new FileOutputStream(imageFile), dataFile.getDataHandler().getContent());
+                    Log.i("soap", "Image " + id + " was fetched from attachment.");
                     return imageFile;
                 }
 
                 // need one more query for URL
-                String url = DataCenter.executeObjectQuery(new ObjectQuery<String>(QueryType.GET_PREVIEW, id));
+                String url = DataCenter.executePreviewQuery(id);
                 if (url != null) {
                     // download file from url
                     URLConnection urlConnection = new URL(url).openConnection();
                     Streams.copy(urlConnection.getInputStream(), new FileOutputStream(imageFile), true);
+                    Log.i("soap", "Image " + id + " was fetched from preview.");
                     return imageFile;
                 }
             }

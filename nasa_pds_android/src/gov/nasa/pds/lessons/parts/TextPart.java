@@ -3,6 +3,7 @@
  */
 package gov.nasa.pds.lessons.parts;
 
+import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.lessons.LessonPart;
 
 import java.io.DataInputStream;
@@ -23,28 +24,33 @@ public class TextPart extends LessonPart {
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.text = DataCenter.processDescription(text).trim()
+            .replaceAll("(\\r\\n){2,}", "<br><br>")
+            .replaceAll("(?m)^.*?([=|_]+).*?$", "<br>$1<br>");
     }
 
-    public void addLink(String address, String description) {
-        links.put(address, description);
+    public void addLink(String description) {
+        description = description.replaceAll("\\s+", " ").trim();
+        links.put("http://www.google.com/#q=" + description, description);
     }
 
     @SuppressWarnings("unused")
     protected void renderCaption(File filesDir, StringBuilder page) {
-        page.append("<h2>").append(caption).append("</h2>").append("<br>");
+        page.append("<h2>").append(caption).append("</h2>");
     }
 
     @SuppressWarnings("unused")
     protected void renderText(File filesDir, StringBuilder page) {
-        page.append(text).append("<br>");
+        page.append("<div class=\"description\">").append(text).append("</div>");
     }
 
     @SuppressWarnings("unused")
     protected void renderLinks(File filesDir, StringBuilder page) {
+        page.append("<ul class=\"links\">");
         for (Entry<String, String> entry : links.entrySet()) {
-            page.append("<a href=\"").append(entry.getKey()).append("\">").append(entry.getValue()).append("</a><br>");
+            page.append("<li><a href=\"").append(entry.getKey()).append("\">").append(entry.getValue()).append("</a>");
         }
+        page.append("</ul>");
     }
 
     @Override

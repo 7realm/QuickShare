@@ -3,6 +3,7 @@
  */
 package gov.nasa.pds.data;
 
+import gov.nasa.pds.data.queries.GetPreviewImageQuery;
 import gov.nasa.pds.data.queries.ObjectQuery;
 import gov.nasa.pds.data.queries.PagedQuery;
 import gov.nasa.pds.soap.entities.PagedResults;
@@ -125,9 +126,10 @@ public class DataCenter {
         if (startIndent > 0 && startIndent < maxLength) {
             text = text.replaceAll("(?m)^\\s{" + startIndent + "}", "");
         }
-        if (endIndent > 0 && endIndent < maxLength) {
-            text = text.replaceAll("(?m)\\s{" + endIndent + "}$", "");
-        }
+//        if (endIndent > 0 && endIndent < maxLength) {
+
+            text = text.replaceAll("(?m)[ |\\t]*$", "");
+//        }
         return text;
     }
 
@@ -162,11 +164,23 @@ public class DataCenter {
         return (T) executeMethod(query.getEnvelope());
     }
 
+    /**
+     * Executes preview image query.
+     *
+     * @param id the image id
+     * @return the image url
+     */
+    public static String executePreviewQuery(long id) {
+        Log.i("soap", "Executing image preview query for image: " + id);
+
+        return (String) executeMethod(new GetPreviewImageQuery(id).getEnvelope());
+    }
+
     private static Object executeMethod(SoapSerializationEnvelope envelope) {
         try {
             // execute soap call
             SoapEnvelopeExecutor.executeSoap(envelope);
-            
+
             return envelope.getResponse();
         } catch (SoapFault soapFault) {
             Log.e("soap", "Soap fault : " + soapFault.faultstring);

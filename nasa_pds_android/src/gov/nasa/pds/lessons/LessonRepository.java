@@ -6,6 +6,7 @@ package gov.nasa.pds.lessons;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
@@ -38,6 +39,9 @@ public class LessonRepository {
                 lesson.load(in);
                 LESSONS.put(lastLessonId++, lesson);
             }
+        } catch (FileNotFoundException e) {
+            Log.i("soap", "Lessons file does not exist, creating.");
+            save();
         } catch (IOException e) {
             Log.e("soap", "Failed to load lessons.", e);
         } finally {
@@ -59,7 +63,7 @@ public class LessonRepository {
             out = new DataOutputStream(fileOutput);
 
             // write lessons
-            out.write(LESSONS.size());
+            out.writeInt(LESSONS.size());
             for (Lesson lesson : LESSONS.values()) {
                 lesson.save(out);
             }

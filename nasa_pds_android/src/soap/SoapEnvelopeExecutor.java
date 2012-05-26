@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -99,9 +101,27 @@ public class SoapEnvelopeExecutor {
                     ByteArrayOutputStream output = new ByteArrayOutputStream();
                     multipartStream.readBodyData(output);
 
+                    Inflater decompressor = new Inflater();
+                    byte[] compressed = output.toByteArray();
+                    decompressor.setInput(compressed);
+                    ByteArrayOutputStream decompressed = new ByteArrayOutputStream();
+                    byte[] buf = new byte[1024];
+                    while (!decompressor.finished()) {
+                        try {
+                            int count = decompressor.inflate(buf);
+                            decompressed.write(buf, 0, count);
+                        } catch (DataFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    try {
+                        decompressed.close();
+                    } catch (IOException e) {
+                    }
+
                     // set content to data handler
                     DataHandler dataHandler = MarshalAttachment.ATTACHMENTS.get("cid:" + contentId);
-                    dataHandler.setContent(output.toByteArray());
+                    dataHandler.setContent(decompressed.toByteArray());
                 }
 
                 // advance to next part

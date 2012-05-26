@@ -20,18 +20,30 @@ public class ImagePart extends LessonPart {
     private String caption;
     private long imageId;
 
+    public ImagePart() {
+        // empty default constructor
+    }
+
+    public ImagePart(long imageId, String caption) {
+        this.imageId = imageId;
+        this.caption = caption;
+    }
+
     @Override
     public void render(File filesDir, StringBuilder page) {
         // add image tag to page with caption below
-        page.append("<img src=\"files/").append(imageId).append("\" alt=\"").append("Image is not loaded").append("\">");
-        page.append("<br><i>").append(caption).append("</i><br>");
+        page.append("<div class=\"imageBlock\">")
+            .append("<img class=\"image\" src=\"files/").append(imageId).append("\" alt=\"").append("Image is not loaded").append("\">")
+            .append("<br>").append("<div class=\"imageCaption\">").append(caption).append("</div>");
 
         // copy image file to render location
         File imageFile = ImageCenter.getImage(imageId);
         if (imageFile != null) {
             try {
-                Streams.copy(new FileInputStream(imageFile),
-                    new FileOutputStream(new File(filesDir, Long.toString(imageId))), true);
+                // create rendered image file
+                File renderedImageFile = new File(filesDir, Long.toString(imageId));
+                renderedImageFile.createNewFile();
+                Streams.copy(new FileInputStream(imageFile), new FileOutputStream(renderedImageFile), true);
             } catch (IOException e) {
                 Log.e("soap", "Failed to copy image " + imageId + " to render directory.", e);
             }
@@ -49,5 +61,4 @@ public class ImagePart extends LessonPart {
         caption = in.readUTF();
         imageId = in.readLong();
     }
-
 }

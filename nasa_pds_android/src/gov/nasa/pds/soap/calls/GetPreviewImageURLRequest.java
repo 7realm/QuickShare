@@ -3,6 +3,8 @@
  */
 package gov.nasa.pds.soap.calls;
 
+import gov.nasa.pds.soap.BaseObject;
+
 /**
  * <p>
  * Java class for getPreviewImageURL complex type.
@@ -24,7 +26,7 @@ package gov.nasa.pds.soap.calls;
  *
  *
  */
-public class GetPreviewImageURLRequest {
+public class GetPreviewImageURLRequest extends BaseObject {
 
     protected long imageFileId;
 

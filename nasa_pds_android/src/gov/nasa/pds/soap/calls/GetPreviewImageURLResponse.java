@@ -3,6 +3,8 @@
  */
 package gov.nasa.pds.soap.calls;
 
+import gov.nasa.pds.soap.BaseObject;
+
 /**
  * <p>
  * Java class for getPreviewImageURLResponse complex type.
@@ -24,7 +26,7 @@ package gov.nasa.pds.soap.calls;
  *
  *
  */
-public class GetPreviewImageURLResponse {
+public class GetPreviewImageURLResponse extends BaseObject {
     protected String _return;
 
     /**

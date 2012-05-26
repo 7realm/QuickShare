@@ -25,7 +25,7 @@ public class MissionPart extends TextPart {
 
         // add references with search links
         for (Reference reference : mission.getReferences()) {
-            addLink("http://www.google.com/#q=" + reference.getDescription(), reference.getDescription());
+            addLink(reference.getDescription());
         }
 
         // store duration
@@ -35,7 +35,7 @@ public class MissionPart extends TextPart {
     @Override
     protected void renderText(File filesDir, StringBuilder page) {
         // append duration before text
-        page.append("<h3>").append("Duration: ").append(duration).append("</h3><br>");
+        page.append("<h3>").append("Duration: ").append(duration).append("</h3>");
 
         super.renderText(filesDir, page);
     }

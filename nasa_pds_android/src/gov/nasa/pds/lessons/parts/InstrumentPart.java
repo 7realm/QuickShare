@@ -25,7 +25,7 @@ public class InstrumentPart extends TextPart {
 
         // add references with search links
         for (Reference reference : instrument.getReferences()) {
-            addLink("http://www.google.com/#q=" + reference.getDescription(), reference.getDescription());
+            addLink(reference.getDescription());
         }
 
         // store other values
@@ -36,8 +36,8 @@ public class InstrumentPart extends TextPart {
     @Override
     protected void renderText(File filesDir, StringBuilder page) {
         // append host and type before text
-        page.append("<h3>").append("Host of instrument: ").append(host).append("</h3><br>");
-        page.append("<h3>").append("Instrument type: ").append(type).append("</h3><br>");
+        page.append("<h3>").append("Host of instrument: ").append(host).append("</h3>");
+        page.append("<h3>").append("Instrument type: ").append(type).append("</h3>");
 
         super.renderText(filesDir, page);
     }

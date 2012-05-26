@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import soap.Streams;
+import android.content.Context;
 import android.util.Log;
 
 public class Lesson {
@@ -67,19 +68,41 @@ public class Lesson {
         }
     }
 
-    public void render(File renderDir) {
+    public void render(Context context) {
+        // create files dir
+        File renderDir = context.getExternalCacheDir();
         File filesDir = new File(renderDir, "files");
+        filesDir.mkdirs();
 
+        // copy styles from assets
+        try {
+            Streams.copy(context.getAssets().open("android.css"), new FileOutputStream(new File(filesDir, "android.css")), true);
+            Streams.copy(context.getAssets().open("desktop.css"), new FileOutputStream(new File(filesDir, "desktop.css")), true);
+        } catch (IOException e) {
+            Log.e("soap", "Failed to copy style files from assets to external storage.", e);
+        }
+
+        // create header with title
         StringBuilder page = new StringBuilder();
+        page.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">");
+        page.append("<html><head><title>").append(name).append("</title>");
+        page.append("<meta name=\"viewport\" content=\"user-scalable=no, width=device-width\" />");
 
-        // append lesson title
-        page.append("<h1>").append(name).append("</h1>");
+        // append styles
+        page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"files/android.css\" media=\"only screen and (max-width: 480px)\" />");
+        page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"files/desktop.css\" media=\"screen and (min-width: 481px)\" />");
+
+        // append head
+        page.append("</head><body>").append("<h1>").append(name).append("</h1><hr>");
 
         // append each lesson part
         for (LessonPart part : lessonsParts) {
             part.render(filesDir, page);
-            page.append("<br>");
+            page.append("<hr>");
         }
+
+        // append end tags
+        page.append("</body>");
 
         try {
             Streams.writeToStream(new FileOutputStream(new File(renderDir, "index.html")), page.toString());
