@@ -20,9 +20,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.SoapEnvelopeExecutor;
 import org.xmlpull.v1.XmlPullParserException;
 
-import soap.SoapEnvelopeExecutor;
 import android.util.Log;
 
 /**

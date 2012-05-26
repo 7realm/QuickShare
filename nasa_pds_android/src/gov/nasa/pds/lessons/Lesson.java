@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import soap.Streams;
+import org.ksoap2.transport.Streams;
+
 import android.content.Context;
 import android.util.Log;
 

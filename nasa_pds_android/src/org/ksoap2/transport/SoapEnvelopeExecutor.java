@@ -1,4 +1,4 @@
-package soap;
+package org.ksoap2.transport;
 
 import gov.nasa.pds.soap.entities.DataHandler;
 

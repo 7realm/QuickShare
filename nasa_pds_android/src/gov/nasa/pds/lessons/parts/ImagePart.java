@@ -13,7 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import soap.Streams;
+import org.ksoap2.transport.Streams;
+
 import android.util.Log;
 
 public class ImagePart extends LessonPart {

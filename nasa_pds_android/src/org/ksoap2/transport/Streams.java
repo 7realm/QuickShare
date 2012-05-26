@@ -7,7 +7,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package soap;
+package org.ksoap2.transport;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import soap.Streams;
+import org.ksoap2.transport.Streams;
+
 import android.content.Context;
 import android.util.Log;
 

@@ -14,21 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package soap;
+package org.ksoap2.transport;
+
+import java.io.IOException;
 
 
 /**
- * The {@link ProgressListener} may be used to display a progress bar
- * or do stuff like that.
+ * Interface of an object, which may be closed.
  */
-public interface ProgressListener {
-    /** Updates the listeners status information.
-     * @param pBytesRead The total number of bytes, which have been read
-     *   so far.
-     * @param pContentLength The total number of bytes, which are being
-     *   read. May be -1, if this number is unknown.
-     * @param pItems The number of the field, which is currently being
-     *   read. (0 = no item so far, 1 = first item is being read, ...)
+public interface Closeable {
+    /**
+     * Closes the object.
+     * @throws IOException An I/O error occurred.
      */
-    void update(long pBytesRead, long pContentLength, int pItems);
+    void close() throws IOException;
+
+    /**
+     * Returns, whether the object is already closed.
+     * @return True, if the object is closed, otherwise false.
+     * @throws IOException An I/O error occurred.
+     */
+    boolean isClosed() throws IOException;
 }
