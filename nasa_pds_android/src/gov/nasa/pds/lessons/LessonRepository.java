@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.lessons;
 
 import java.io.DataInputStream;

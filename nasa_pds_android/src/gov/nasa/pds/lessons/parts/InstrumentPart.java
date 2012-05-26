@@ -1,5 +1,7 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.lessons.parts;
-
 import gov.nasa.pds.soap.entities.Instrument;
 import gov.nasa.pds.soap.entities.Reference;
 
@@ -7,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+
 
 public class InstrumentPart extends TextPart {
     private String type;
