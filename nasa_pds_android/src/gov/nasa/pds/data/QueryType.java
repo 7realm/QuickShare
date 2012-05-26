@@ -33,5 +33,7 @@ public enum QueryType {
     /** Get instrument. */
     GET_INSTRUMENT,
     /** Get file.*/
-    GET_FILE
+    GET_FILE,
+    /** Get preview image.*/
+    GET_PREVIEW
 }

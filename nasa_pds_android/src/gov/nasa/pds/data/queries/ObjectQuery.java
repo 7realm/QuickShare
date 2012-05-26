@@ -8,6 +8,8 @@ import gov.nasa.pds.soap.calls.GetDataFileResponse;
 import gov.nasa.pds.soap.calls.GetInstrumentResponse;
 import gov.nasa.pds.soap.calls.GetMissionResponse;
 import gov.nasa.pds.soap.calls.GetObjectRequest;
+import gov.nasa.pds.soap.calls.GetPreviewImageURLRequest;
+import gov.nasa.pds.soap.calls.GetPreviewImageURLResponse;
 import gov.nasa.pds.soap.calls.GetTargetResponse;
 
 import org.ksoap2.SoapEnvelope;
@@ -72,6 +74,9 @@ public class ObjectQuery<T> extends BaseQuery {
         case GET_FILE:
             envelope.addMapping("getDataFile", GetObjectRequest.class);
             envelope.addMapping("getDataFileResponse", GetDataFileResponse.class);
+        case GET_PREVIEW:
+            envelope.addMapping("getPreviewImageURL", GetPreviewImageURLRequest.class);
+            envelope.addMapping("getPreviewImageURLResponse", GetPreviewImageURLResponse.class);
         default:
             Log.w("soap", "Not expected object request: " + getQueryType());
             break;
