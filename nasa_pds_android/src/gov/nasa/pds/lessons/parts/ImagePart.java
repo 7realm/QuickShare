@@ -17,7 +17,7 @@ import org.ksoap2.transport.Streams;
 
 import android.util.Log;
 
-public class ImagePart extends LessonPart {
+public class ImagePart implements LessonPart {
     private String caption;
     private long imageId;
 
@@ -28,6 +28,16 @@ public class ImagePart extends LessonPart {
     public ImagePart(long imageId, String caption) {
         this.imageId = imageId;
         this.caption = caption;
+    }
+
+    @Override
+    public String getPrimaryText() {
+        return "Image";
+    }
+
+    @Override
+    public String getSecondaryText() {
+        return caption;
     }
 
     @Override

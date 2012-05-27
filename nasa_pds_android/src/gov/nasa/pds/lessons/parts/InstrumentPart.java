@@ -14,9 +14,20 @@ import java.io.IOException;
 public class InstrumentPart extends TextPart {
     private String type;
     private String host;
+    private String name;
 
     public InstrumentPart() {
         // empty default
+    }
+
+    @Override
+    public String getPrimaryText() {
+        return "Instrument";
+    }
+
+    @Override
+    public String getSecondaryText() {
+        return name;
     }
 
     public InstrumentPart(Instrument instrument) {
@@ -31,6 +42,7 @@ public class InstrumentPart extends TextPart {
         // store other values
         type = instrument.getType();
         host = instrument.getHosts().isEmpty() ? "" : instrument.getHosts().get(0).getName();
+        name = instrument.getName();
     }
 
     @Override
@@ -47,6 +59,7 @@ public class InstrumentPart extends TextPart {
         super.save(out);
         out.writeUTF(type);
         out.writeUTF(host);
+        out.writeUTF(name);
     }
 
     @Override
@@ -54,5 +67,6 @@ public class InstrumentPart extends TextPart {
         super.load(in);
         type = in.readUTF();
         host = in.readUTF();
+        name = in.readUTF();
     }
 }

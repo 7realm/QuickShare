@@ -10,6 +10,16 @@ public class FilePart extends TextPart {
         // default empty constructor
     }
 
+    @Override
+    public String getPrimaryText() {
+        return "File";
+    }
+
+    @Override
+    public String getSecondaryText() {
+        return caption;
+    }
+
     public FilePart(WsDataFile dataFile) {
         setCaption(dataFile.getName());
 

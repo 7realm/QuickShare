@@ -8,10 +8,14 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class LessonPart {
-    public abstract void render(File filesDir, StringBuilder page);
+public interface LessonPart {
+    String getPrimaryText();
 
-    public abstract void save(DataOutputStream out) throws IOException;
+    String getSecondaryText();
 
-    public abstract void load(DataInputStream in) throws IOException;
+    void render(File filesDir, StringBuilder page);
+
+    void save(DataOutputStream out) throws IOException;
+
+    void load(DataInputStream in) throws IOException;
 }

@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class TextPart extends LessonPart {
+public abstract class TextPart implements LessonPart {
     private final Map<String, String> links = new HashMap<String, String>();
-    private String caption;
+    protected String caption;
     private String text;
 
     public void setCaption(String caption) {
@@ -26,7 +26,7 @@ public class TextPart extends LessonPart {
     public void setText(String text) {
         this.text = DataCenter.processDescription(text).trim()
             .replaceAll("(\\r\\n){2,}", "<br><br>")
-            .replaceAll("(?m)^.*?([[=|_]+]|[-{2,}]).*?$", "<br>$1<br>");
+            .replaceAll("(?m)^.*?([=|_|-]{2,}).*?$", "<br>$1<br>");
     }
 
     public void addLink(String description) {

@@ -14,9 +14,20 @@ import java.io.IOException;
 
 public class MissionPart extends TextPart {
     private String duration;
+    private String name;
 
     public MissionPart() {
         // empty default
+    }
+
+    @Override
+    public String getPrimaryText() {
+        return "Mission";
+    }
+
+    @Override
+    public String getSecondaryText() {
+        return name;
     }
 
     public MissionPart(Mission mission) {
@@ -28,8 +39,9 @@ public class MissionPart extends TextPart {
             addLink(reference.getDescription());
         }
 
-        // store duration
+        // store duration and name
         duration = DataCenter.formatPeriod(mission.getStartDate(), mission.getEndDate());
+        name = mission.getName();
     }
 
     @Override
@@ -43,12 +55,14 @@ public class MissionPart extends TextPart {
     @Override
     public void save(DataOutputStream out) throws IOException {
         super.save(out);
+        out.writeUTF(name);
         out.writeUTF(duration);
     }
 
     @Override
     public void load(DataInputStream in) throws IOException {
         super.load(in);
+        name = in.readUTF();
         duration = in.readUTF();
     }
 }

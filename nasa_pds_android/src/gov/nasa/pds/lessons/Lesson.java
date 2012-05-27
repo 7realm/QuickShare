@@ -19,7 +19,7 @@ import android.util.Log;
 public class Lesson {
     private String name;
     private int id;
-    private final List<LessonPart> lessonsParts = new ArrayList<LessonPart>();
+    private final List<LessonPart> parts = new ArrayList<LessonPart>();
 
     public String getName() {
         return name;
@@ -38,16 +38,16 @@ public class Lesson {
     }
 
     public List<LessonPart> getParts() {
-        return lessonsParts;
+        return parts;
     }
 
     public void save(DataOutputStream out) throws IOException {
         // write general lesson information
         out.writeUTF(name);
-        out.writeInt(lessonsParts.size());
+        out.writeInt(parts.size());
 
         // write each lesson part
-        for (LessonPart part : lessonsParts) {
+        for (LessonPart part : parts) {
             // write class of the part
             out.writeUTF(part.getClass().getName());
 
@@ -70,6 +70,7 @@ public class Lesson {
 
                 // load part from stream
                 part.load(in);
+                parts.add(part);
             }
         } catch (IOException e) {
             throw e;
@@ -106,7 +107,7 @@ public class Lesson {
         page.append("</head><body>").append("<h1>").append(name).append("</h1><hr>");
 
         // append each lesson part
-        for (LessonPart part : lessonsParts) {
+        for (LessonPart part : parts) {
             part.render(filesDir, page);
             page.append("<hr>");
         }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +37,7 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
     private View dragView;
     /** The layout params of the view. */
     private RelativeLayout.LayoutParams layoutParams;
+    private View startItem;
 
     /**
      * Constructor for ReordableListView type.
@@ -74,6 +76,9 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      */
     protected boolean isInsideImageView(int x) {
         View imageView = findViewById(imageViewId);
+        if (imageView == null) {
+            return true;
+        }
         return imageView.getLeft() < x && x < imageView.getRight();
     }
 
@@ -94,18 +99,24 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
             isDragging = true;
         }
 
+        Log.i("reorder", "Dragging: " + isDragging + ", action: " + action);
+
         if (!isDragging) {
             return super.onTouchEvent(ev);
         }
 
+        int firstVisiblePosition = getFirstVisiblePosition();
+        int lastVisiblePosition = getLastVisiblePosition();
         switch (action) {
         case MotionEvent.ACTION_DOWN:
             startPosition = pointToPosition(x, y);
             if (startPosition != INVALID_POSITION) {
-                int itemIndex = startPosition - getFirstVisiblePosition();
-                View child = getChildAt(itemIndex);
-                startOffset = y - child.getTop();
-                onStartDrag(child, itemIndex, y - startOffset);
+                int itemIndex = startPosition - firstVisiblePosition;
+                startItem = getChildAt(itemIndex);
+                startOffset = y - startItem.getTop();
+                onStartDrag(itemIndex, y - startOffset);
+            } else {
+                isDragging = false;
             }
             break;
         case MotionEvent.ACTION_MOVE:
@@ -116,11 +127,24 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         default:
             isDragging = false;
             int endPosition = pointToPosition(x, y);
-            if (startPosition != INVALID_POSITION && endPosition != INVALID_POSITION) {
-                onStopDrag(getChildAt(startPosition - getFirstVisiblePosition()));
-                ((ReordableAdapter) getAdapter()).onDrop(startPosition, endPosition);
-                invalidateViews();
+            if (startPosition != INVALID_POSITION) {
+                if (endPosition == INVALID_POSITION) {
+                    // try to paste at start to end
+                    if (getChildAt(firstVisiblePosition).getTop() > y) {
+                        endPosition = firstVisiblePosition;
+                    } else if (getChildAt(lastVisiblePosition).getBottom() < y) {
+                        endPosition = lastVisiblePosition;
+                    }
+                }
+
+                if (endPosition != INVALID_POSITION) {
+                    ((ReordableAdapter<?>) getAdapter()).onDrop(startPosition, endPosition);
+                }
             }
+
+            // finalize dragging
+            onStopDrag();
+            invalidateViews();
             break;
         }
         return true;
@@ -132,22 +156,23 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      * @param y the y coordinate of item
      */
     private void onDrag(int y) {
-        layoutParams.topMargin = y;
-        dragView.setLayoutParams(layoutParams);
+        if (dragView != null) {
+            layoutParams.topMargin = y;
+            dragView.setLayoutParams(layoutParams);
+        }
     }
 
     /**
      * Executed dragging is started create dragged item.
      *
-     * @param itemView the item that was clicked
      * @param itemIndex the index of
      * @param y the y coordinate of item
      */
-    private void onStartDrag(View itemView, int itemIndex, int y) {
-        itemView.setVisibility(View.INVISIBLE);
+    private void onStartDrag(int itemIndex, int y) {
+        startItem.setVisibility(View.INVISIBLE);
 
         dragView = getAdapter().getView(itemIndex, null, this);
-        layoutParams = new RelativeLayout.LayoutParams(itemView.getWidth(), itemView.getHeight());
+        layoutParams = new RelativeLayout.LayoutParams(startItem.getWidth(), startItem.getHeight());
         layoutParams.topMargin = y;
         ((ViewGroup) getParent()).addView(dragView, layoutParams);
     }
@@ -157,9 +182,12 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      *
      * @param itemView the clicked item
      */
-    public void onStopDrag(View itemView) {
+    public void onStopDrag() {
+        if (startItem != null) {
+            startItem.setVisibility(View.VISIBLE);
+            startItem = null;
+        }
         if (dragView != null) {
-            itemView.setVisibility(View.VISIBLE);
             ((ViewGroup) getParent()).removeView(dragView);
             dragView = null;
         }
@@ -171,14 +199,14 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      * @author TCSASSEMBLER
      * @version 1.0
      */
-    public static class ReordableAdapter extends BaseAdapter {
+    public static class ReordableAdapter<T> extends BaseAdapter {
 
         /** The id of text item inside the layout. */
         private final int textViewId;
         /** The item layout id. */
         private final int itemLayoutId;
         /** Data content. */
-        private final List<String> content;
+        private final List<T> content;
 
         /**
          * Constructor for ReordableAdapter type.
@@ -187,7 +215,7 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
          * @param textViewId the text view id inside layout
          * @param content the data content
          */
-        public ReordableAdapter(int itemLayoutId, int textViewId, List<String> content) {
+        public ReordableAdapter(int itemLayoutId, int textViewId, List<T> content) {
             this.textViewId = textViewId;
             this.itemLayoutId = itemLayoutId;
             this.content = content;
@@ -204,13 +232,13 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         }
 
         /**
-         * Since the data comes from an array, just returning the index is sufficient to get at the data. If we were
-         * using a more complex data structure, we would return whatever object represents one row in the list.
+         * Since the data comes from an array, just returning the index is sufficient to get at the data. If we were using a more complex
+         * data structure, we would return whatever object represents one row in the list.
          *
          * @see android.widget.ListAdapter#getItem(int)
          */
         @Override
-        public String getItem(int position) {
+        public T getItem(int position) {
             return content.get(position);
         }
 
@@ -236,7 +264,7 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
             }
 
             TextView textView = (TextView) convertView.findViewById(textViewId);
-            textView.setText(content.get(position));
+            textView.setText(content.get(position).toString());
             return convertView;
         }
 
@@ -247,7 +275,7 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
          * @param to the drop position of the item
          */
         public void onDrop(int from, int to) {
-            String temp = content.get(from);
+            T temp = content.get(from);
             content.remove(from);
             content.add(to, temp);
         }

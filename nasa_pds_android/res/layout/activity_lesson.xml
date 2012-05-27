@@ -8,9 +8,24 @@
         android:id="@+id/actionbar"
         style="@style/ActionBar" />
 
-    <ListView
-        android:id="@+id/lessonPartsList"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/lessonPartRemove"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="20dp"
+            android:src="@drawable/remove" />
+
+        <com.lib.ReordableListView
+            android:id="@+id/lessonPartsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/lessonPartRemove"
+            android:layout_alignParentTop="true" />
+    </RelativeLayout>
 
 </LinearLayout>
