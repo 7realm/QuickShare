@@ -26,7 +26,7 @@ public class TextPart extends LessonPart {
     public void setText(String text) {
         this.text = DataCenter.processDescription(text).trim()
             .replaceAll("(\\r\\n){2,}", "<br><br>")
-            .replaceAll("(?m)^.*?([=|_]+).*?$", "<br>$1<br>");
+            .replaceAll("(?m)^.*?([[=|_]+]|[-{2,}]).*?$", "<br>$1<br>");
     }
 
     public void addLink(String description) {
@@ -34,17 +34,14 @@ public class TextPart extends LessonPart {
         links.put("http://www.google.com/#q=" + description, description);
     }
 
-    @SuppressWarnings("unused")
     protected void renderCaption(File filesDir, StringBuilder page) {
         page.append("<h2>").append(caption).append("</h2>");
     }
 
-    @SuppressWarnings("unused")
     protected void renderText(File filesDir, StringBuilder page) {
         page.append("<div class=\"description\">").append(text).append("</div>");
     }
 
-    @SuppressWarnings("unused")
     protected void renderLinks(File filesDir, StringBuilder page) {
         page.append("<ul class=\"links\">");
         for (Entry<String, String> entry : links.entrySet()) {

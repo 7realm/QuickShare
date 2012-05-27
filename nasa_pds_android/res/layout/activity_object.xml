@@ -4,30 +4,9 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/objectCaptionView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <Button
-            android:background="@drawable/shape_compare_button"
-            android:id="@+id/objectCompareButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:onClick="onCompareButtonClick"
-            android:text="Add to compare" />
-
-        <TextView
-            android:id="@+id/objectCaption"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/objectCompareButton"
-            android:padding="10dp" />
-    </RelativeLayout>
+    <com.markupartist.android.widget.ActionBar
+        android:id="@+id/actionbar"
+        style="@style/ActionBar" />
 
     <TabHost
         android:id="@+id/objectTabs"

@@ -26,6 +26,10 @@ public class ImageCenter {
         imagesDir = context.getDir("images", Context.MODE_PRIVATE);
     }
 
+    public static boolean isImageFile(WsDataFile dataFile) {
+        return dataFile.getContent() == null ? isImage(dataFile.getFilename()) : isImage(dataFile.getName());
+    }
+
     public static File getImage(long id) {
         // try get image from cache
         File imageFile = new File(imagesDir, Long.toString(id));

@@ -3,6 +3,7 @@
  */
 package gov.nasa.pds.android;
 
+import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.lessons.Lesson;
 import gov.nasa.pds.lessons.LessonRepository;
 import android.app.Activity;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
@@ -43,7 +43,9 @@ public class LessonsActivity extends Activity {
         actionBar.addAction(new AbstractAction(R.drawable.remove, "Browse") {
             @Override
             public void performAction(View view) {
-                Toast.makeText(getApplicationContext(), "Browse", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LessonsActivity.this, PageViewActivity.class);
+                intent.putExtra(PageViewActivity.EXTRA_ENTITY_TYPE, EntityType.TARGET_TYPE);
+                startActivity(intent);
             }
         });
 

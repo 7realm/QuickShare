@@ -4,8 +4,16 @@
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.data.DataCenter;
+import gov.nasa.pds.data.ImageCenter;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.data.queries.ObjectQuery;
+import gov.nasa.pds.lessons.Lesson;
+import gov.nasa.pds.lessons.LessonPart;
+import gov.nasa.pds.lessons.LessonRepository;
+import gov.nasa.pds.lessons.parts.FilePart;
+import gov.nasa.pds.lessons.parts.ImagePart;
+import gov.nasa.pds.lessons.parts.InstrumentPart;
+import gov.nasa.pds.lessons.parts.MissionPart;
 import gov.nasa.pds.soap.ReferencedEntity;
 import gov.nasa.pds.soap.entities.Instrument;
 import gov.nasa.pds.soap.entities.InstrumentHost;
@@ -15,6 +23,8 @@ import gov.nasa.pds.soap.entities.WsDataFile;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -25,11 +35,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.AbstractAction;
+import com.markupartist.android.widget.ActionBar.Action;
 
 /**
  * Activity that will view specific objects.
@@ -43,7 +56,8 @@ public class ObjectViewActivity extends Activity {
     /** Intent extra name for object id. */
     public static final String EXTRA_OBJECT_ID = "object_id";
     private ObjectQuery<Object> query;
-    private ReferencedEntity currentObject;
+    private Object currentObject;
+    private ActionBar actionBar;
 
     /**
      * Life-cycle handler for activity creation.
@@ -64,42 +78,55 @@ public class ObjectViewActivity extends Activity {
         // set content view based on object type
         setContentView(queryType == QueryType.GET_FILE ? R.layout.activity_file : R.layout.activity_object);
 
-        // set text and visibility of add to compare button
-        Button addToCompare = (Button) findViewById(R.id.objectCompareButton);
-        if (addToCompare != null) {
-            addToCompare.setVisibility(queryType == QueryType.GET_MISSION ? View.VISIBLE : View.INVISIBLE);
-            addToCompare.setText(Compare.exists(id) ? "Compare" : "Add to compare");
+        actionBar = (ActionBar) findViewById(R.id.actionbar);
+
+        // add to lesson action
+        actionBar.addAction(new AbstractAction(R.drawable.next_page, "To Lesson") {
+            @Override
+            public void performAction(View view) {
+                final List<Lesson> lessons = LessonRepository.getLessons();
+                String[] items = new String[lessons.size()];
+                int index = 0;
+                for (Lesson lesson : lessons) {
+                    items[index++] = lesson.getName();
+                }
+
+                new AlertDialog.Builder(ObjectViewActivity.this)
+                    .setTitle("Select lesson ot add to:")
+                    .setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int item) {
+                            LessonPart lessonPart = null;
+                            // create lesson part for current object
+                            if (currentObject instanceof Mission) {
+                                lessonPart = new MissionPart((Mission) currentObject);
+                            } else if (currentObject instanceof Instrument) {
+                                lessonPart = new InstrumentPart((Instrument) currentObject);
+                            } else if (currentObject instanceof WsDataFile) {
+                                WsDataFile dataFile = (WsDataFile) currentObject;
+
+                                // create image or file lesson part
+                                lessonPart = ImageCenter.isImageFile(dataFile) ?
+                                    new ImagePart(dataFile.getId(), dataFile.getName()) : new FilePart(dataFile);
+                            }
+
+                            // add lesson part to lesson
+                            if (lessonPart != null) {
+                                lessons.get(item).getParts().add(lessonPart);
+                                LessonRepository.save();
+                            }
+                        }
+                    }).create().show();
+            }
+        });
+
+        // add compare action
+        if (queryType == QueryType.GET_MISSION) {
+            actionBar.addAction(new MissionCompareAction());
         }
 
         // load data
         new DataLoadTast().execute(query);
-    }
-
-    /**
-     * Compare button clicked.
-     *
-     * @param v the clicked view
-     */
-    public void onCompareButtonClick(View v) {
-        // get mission from tag attribute
-        Mission mission = (Mission) v.getTag();
-        if (mission == null) {
-            return;
-        }
-
-        // if compare already exists, then do compare
-        if (Compare.exists(mission.getId())) {
-            // check compare size
-            if (Compare.ITEMS.size() < 2) {
-                Toast.makeText(this, "Please select several items to compare.", Toast.LENGTH_SHORT).show();
-            } else {
-                startActivity(new Intent(this, CompareActivity.class));
-            }
-        } else {
-            // add mission to compare and change label
-            Compare.addMission(mission);
-            setText(R.id.objectCompareButton, "Compare");
-        }
     }
 
     /**
@@ -111,13 +138,50 @@ public class ObjectViewActivity extends Activity {
         CharSequence searchText = ((TextView) ((View) v.getParent()).findViewById(R.id.referenceText)).getText();
 
         // run google with this query
-        Uri uri = Uri.parse("http://www.google.com/#q=" + searchText);
+        Uri uri = Uri.parse("http://www.google.com/#q=" + searchText.toString().trim());
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
 
     private void setText(int viewId, CharSequence text) {
         ((TextView) findViewById(viewId)).setText(text);
+    }
+
+    private final class MissionCompareAction implements Action {
+        @Override
+        public String getText() {
+            // get mission and check its id
+            Mission mission = (Mission) currentObject;
+            return mission != null && Compare.exists(mission.getId()) ? "Compare" : "To compare";
+        }
+
+        @Override
+        public int getDrawable() {
+            return R.drawable.compare_add;
+        }
+
+        @Override
+        public void performAction(View view) {
+            // get mission
+            Mission mission = (Mission) currentObject;
+            if (mission == null) {
+                return;
+            }
+
+            // if compare already exists, then do compare
+            if (Compare.exists(mission.getId())) {
+                // check compare size
+                if (Compare.ITEMS.size() < 2) {
+                    Toast.makeText(ObjectViewActivity.this, "Please select several items to compare.", Toast.LENGTH_SHORT).show();
+                } else {
+                    startActivity(new Intent(ObjectViewActivity.this, CompareActivity.class));
+                }
+            } else {
+                // add mission to compare
+                Compare.addMission(mission);
+            }
+
+        }
     }
 
     /**
@@ -140,33 +204,30 @@ public class ObjectViewActivity extends Activity {
 
         @Override
         protected void onPostExecute(final Object result) {
-            // set tag
-            View compareButton = findViewById(R.id.objectCompareButton);
-            if (compareButton != null) {
-                compareButton.setTag(result);
-            }
+            // store result
+            currentObject = result;
 
             // assign current object
             if (result instanceof ReferencedEntity) {
-                currentObject = (ReferencedEntity) result;
+                ReferencedEntity referencedEntity = (ReferencedEntity) result;
 
                 // set object caption based on query type
                 switch (query.getQueryType()) {
                 case GET_MISSION:
-                    setText(R.id.objectCaption, "Mission: " + currentObject.getName());
+                    actionBar.setTitle("Mission: " + referencedEntity.getName());
                     break;
                 case GET_INSTRUMENT:
-                    setText(R.id.objectCaption, "Instrument: " + currentObject.getName());
+                    actionBar.setTitle("Instrument: " + referencedEntity.getName());
                     break;
                 default:
-                    setText(R.id.objectCaption, "Unknown object");
+                    actionBar.setTitle("Unknown object: " + referencedEntity.getName());
                     break;
                 }
 
                 // build list of references
-                String[] data = new String[currentObject.getReferences().size()];
+                String[] data = new String[referencedEntity.getReferences().size()];
                 for (int i = 0; i < data.length; i++) {
-                    String description = currentObject.getReferences().get(i).getDescription();
+                    String description = referencedEntity.getReferences().get(i).getDescription();
                     data[i] = description == null ? "" : description.replaceAll("\\s+", " ").trim();
                 }
 
@@ -216,7 +277,7 @@ public class ObjectViewActivity extends Activity {
             } else if (result instanceof WsDataFile) {
                 WsDataFile dataFile = (WsDataFile) result;
 
-                setText(R.id.fileCaption, dataFile.getName());
+                actionBar.setTitle("File: " + dataFile.getName());
                 setText(R.id.fileContent, dataFile.getContent());
             } else {
                 Log.w("soap", "Result: " + result + " is not referenced object.");

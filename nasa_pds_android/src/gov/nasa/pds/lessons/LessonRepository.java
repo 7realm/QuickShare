@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class LessonRepository {
     }
 
     public static List<Lesson> getLessons() {
-        return new ArrayList<Lesson>(LESSONS.values());
+        return Collections.unmodifiableList(new ArrayList<Lesson>(LESSONS.values()));
     }
 
     public static int size() {
