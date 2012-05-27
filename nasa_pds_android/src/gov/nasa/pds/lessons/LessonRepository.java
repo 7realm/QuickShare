@@ -9,8 +9,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -37,7 +38,8 @@ public class LessonRepository {
                 // read and add lesson
                 Lesson lesson = new Lesson();
                 lesson.load(in);
-                LESSONS.put(lastLessonId++, lesson);
+                lesson.setId(lastLessonId++);
+                LESSONS.put(lesson.getId(), lesson);
             }
         } catch (FileNotFoundException e) {
             Log.i("soap", "Lessons file does not exist, creating.");
@@ -80,21 +82,32 @@ public class LessonRepository {
         }
     }
 
-    public static Collection<Lesson> getLessons() {
-        return LESSONS.values();
+    public static List<Lesson> getLessons() {
+        return new ArrayList<Lesson>(LESSONS.values());
     }
 
-    public static void addLesson(String name) {
+    public static int size() {
+        return LESSONS.size();
+    }
+
+    public static Lesson getLesson(int id) {
+        return LESSONS.get(id);
+    }
+
+    public static Lesson addLesson(String name) {
         // create and add new lesson
         Lesson lesson = new Lesson();
         lesson.setName(name);
-        LESSONS.put(lastLessonId++, lesson);
+        lesson.setId(lastLessonId++);
+        LESSONS.put(lesson.getId(), lesson);
 
         // save lessons
         save();
+        return lesson;
     }
 
     public static void removeLesson(int id) {
         LESSONS.remove(id);
+        save();
     }
 }

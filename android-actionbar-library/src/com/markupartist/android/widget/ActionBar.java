@@ -21,15 +21,19 @@ import java.util.List;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.markupartist.android.widget.actionbar.R;
 
@@ -39,11 +43,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     private RelativeLayout mBarView;
     private ImageView mLogoView;
     private View mBackIndicator;
-    private TextView mTitleView;
+    private EditText mTitleView;
     private LinearLayout mActionsView;
     private ImageButton mHomeBtn;
     private RelativeLayout mHomeLayout;
     private ProgressBar mProgress;
+    private TitleChangeListener titleChangeListener;
 
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -58,18 +63,31 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mHomeBtn = (ImageButton) mBarView.findViewById(R.id.actionbar_home_btn);
         mBackIndicator = mBarView.findViewById(R.id.actionbar_home_is_back);
 
-        mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
+        mTitleView = (EditText) mBarView.findViewById(R.id.actionbar_title);
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
 
         mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
 
-        TypedArray a = context.obtainStyledAttributes(attrs,
-            R.styleable.ActionBar);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionBar);
         CharSequence title = a.getString(R.styleable.ActionBar_title);
         if (title != null) {
             setTitle(title);
         }
         a.recycle();
+
+        mTitleView.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (titleChangeListener != null) {
+                        titleChangeListener.onTitleChanged(v.getText());
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
     public void setHomeAction(Action action) {
@@ -85,9 +103,9 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Shows the provided logo to the left in the action bar.
-     * 
+     *
      * This is ment to be used instead of the setHomeAction and does not draw a divider to the left of the provided logo.
-     * 
+     *
      * @param resId The drawable resource id
      */
     public void setHomeLogo(int resId) {
@@ -100,11 +118,21 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     /**
      * Emulating Honeycomb, setdisplayHomeAsUpEnabled takes a boolean and toggles whether the "home" view should have a little triangle
      * indicating "up".
-     * 
+     *
      * @param show if "up" triangle will be shown
      */
     public void setDisplayHomeAsUpEnabled(boolean show) {
         mBackIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    public void setTitleEditable(boolean isTitleEditable) {
+        mTitleView.setFocusable(isTitleEditable);
+        mTitleView.setFocusableInTouchMode(true);
+        mTitleView.setBackgroundResource(isTitleEditable ? R.drawable.shape_edit_light : android.R.color.transparent);
+    }
+
+    public void setTitleChangeListener(TitleChangeListener titleChangeListener) {
+        this.titleChangeListener = titleChangeListener;
     }
 
     public void setTitle(CharSequence title) {
@@ -117,7 +145,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Set the enabled state of the progress bar.
-     * 
+     *
      * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}.
      */
     public void setProgressBarVisibility(int visibility) {
@@ -126,7 +154,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Returns the visibility status for the progress bar.
-     * 
+     *
      * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}.
      */
     public int getProgressBarVisibility() {
@@ -135,7 +163,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Function to set a click listener for Title TextView
-     * 
+     *
      * @param listener the onClickListener
      */
     public void setOnTitleClickListener(OnClickListener listener) {
@@ -153,7 +181,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Adds a list of {@link Action}s.
-     * 
+     *
      * @param actionList the actions to add
      */
     public void addActions(List<Action> actionList) {
@@ -165,7 +193,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Adds a new {@link Action}.
-     * 
+     *
      * @param action the action to add
      */
     public void addAction(Action action) {
@@ -175,7 +203,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Adds a new {@link Action} at the specified index.
-     * 
+     *
      * @param action the action to add
      * @param index the position at which to add the action
      */
@@ -192,7 +220,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Remove a action from the action bar.
-     * 
+     *
      * @param index position of action to remove
      */
     public void removeActionAt(int index) {
@@ -201,7 +229,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Remove a action from the action bar.
-     * 
+     *
      * @param action The action to remove
      */
     public void removeAction(Action action) {
@@ -219,7 +247,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Returns the number of actions currently registered with the action bar.
-     * 
+     *
      * @return action count
      */
     public int getActionCount() {
@@ -228,7 +256,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Inflates a {@link View} with the given {@link Action}.
-     * 
+     *
      * @param action the action to inflate
      * @return a view
      */
@@ -242,7 +270,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         // set action text
         TextView textView = (TextView) view.findViewById(R.id.actionBarItemText);
         textView.setText(action.getText());
-        
+
         view.setTag(action);
         view.setOnClickListener(this);
         return view;
@@ -277,5 +305,9 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         public String getText() {
             return text;
         }
+    }
+
+    public static interface TitleChangeListener {
+        void onTitleChanged(CharSequence newTitle);
     }
 }
