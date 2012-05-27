@@ -16,13 +16,9 @@
 
 package com.markupartist.android.widget;
 
-import java.util.LinkedList;
+import java.util.List;
 
-import com.markupartist.android.widget.actionbar.R;
-
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -34,7 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.markupartist.android.widget.actionbar.R;
 
 public class ActionBar extends RelativeLayout implements OnClickListener {
 
@@ -42,7 +39,6 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     private RelativeLayout mBarView;
     private ImageView mLogoView;
     private View mBackIndicator;
-    //private View mHomeView;
     private TextView mTitleView;
     private LinearLayout mActionsView;
     private ImageButton mHomeBtn;
@@ -64,11 +60,11 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
         mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
-        
+
         mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
 
         TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.ActionBar);
+            R.styleable.ActionBar);
         CharSequence title = a.getString(R.styleable.ActionBar_title);
         if (title != null) {
             setTitle(title);
@@ -90,8 +86,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     /**
      * Shows the provided logo to the left in the action bar.
      * 
-     * This is ment to be used instead of the setHomeAction and does not draw
-     * a divider to the left of the provided logo.
+     * This is ment to be used instead of the setHomeAction and does not draw a divider to the left of the provided logo.
      * 
      * @param resId The drawable resource id
      */
@@ -102,13 +97,15 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mHomeLayout.setVisibility(View.GONE);
     }
 
-    /* Emulating Honeycomb, setdisplayHomeAsUpEnabled takes a boolean
-     * and toggles whether the "home" view should have a little triangle
-     * indicating "up" */
+    /**
+     * Emulating Honeycomb, setdisplayHomeAsUpEnabled takes a boolean and toggles whether the "home" view should have a little triangle
+     * indicating "up".
+     * 
+     * @param show if "up" triangle will be shown
+     */
     public void setDisplayHomeAsUpEnabled(boolean show) {
-        mBackIndicator.setVisibility(show? View.VISIBLE : View.GONE);
+        mBackIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
     }
-
 
     public void setTitle(CharSequence title) {
         mTitleView.setText(title);
@@ -121,8 +118,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     /**
      * Set the enabled state of the progress bar.
      * 
-     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE},
-     *   or {@link View#GONE}.
+     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}.
      */
     public void setProgressBarVisibility(int visibility) {
         mProgress.setVisibility(visibility);
@@ -131,8 +127,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     /**
      * Returns the visibility status for the progress bar.
      * 
-     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE},
-     *   or {@link View#GONE}.
+     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}.
      */
     public int getProgressBarVisibility() {
         return mProgress.getVisibility();
@@ -158,9 +153,10 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Adds a list of {@link Action}s.
+     * 
      * @param actionList the actions to add
      */
-    public void addActions(ActionList actionList) {
+    public void addActions(List<Action> actionList) {
         int actions = actionList.size();
         for (int i = 0; i < actions; i++) {
             addAction(actionList.get(i));
@@ -169,6 +165,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Adds a new {@link Action}.
+     * 
      * @param action the action to add
      */
     public void addAction(Action action) {
@@ -178,6 +175,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Adds a new {@link Action} at the specified index.
+     * 
      * @param action the action to add
      * @param index the position at which to add the action
      */
@@ -194,6 +192,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Remove a action from the action bar.
+     * 
      * @param index position of action to remove
      */
     public void removeActionAt(int index) {
@@ -202,6 +201,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Remove a action from the action bar.
+     * 
      * @param action The action to remove
      */
     public void removeAction(Action action) {
@@ -219,6 +219,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Returns the number of actions currently registered with the action bar.
+     * 
      * @return action count
      */
     public int getActionCount() {
@@ -227,76 +228,54 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Inflates a {@link View} with the given {@link Action}.
+     * 
      * @param action the action to inflate
      * @return a view
      */
     private View inflateAction(Action action) {
         View view = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
 
-        ImageButton labelView =
-            (ImageButton) view.findViewById(R.id.actionbar_item);
-        labelView.setImageResource(action.getDrawable());
+        // set action image
+        ImageView imageView = (ImageView) view.findViewById(R.id.actionBarItemImage);
+        imageView.setImageResource(action.getDrawable());
 
+        // set action text
+        TextView textView = (TextView) view.findViewById(R.id.actionBarItemText);
+        textView.setText(action.getText());
+        
         view.setTag(action);
         view.setOnClickListener(this);
         return view;
     }
 
     /**
-     * A {@link LinkedList} that holds a list of {@link Action}s.
+     * Definition of an action that could be performed, along with a icon to show.
      */
-    public static class ActionList extends LinkedList<Action> {
-    }
+    public static interface Action {
+        int getDrawable();
 
-    /**
-     * Definition of an action that could be performed, along with a icon to
-     * show.
-     */
-    public interface Action {
-        public int getDrawable();
-        public void performAction(View view);
+        String getText();
+
+        void performAction(View view);
     }
 
     public static abstract class AbstractAction implements Action {
-        final private int mDrawable;
+        private int drawable;
+        private String text;
 
-        public AbstractAction(int drawable) {
-            mDrawable = drawable;
+        public AbstractAction(int drawable, String text) {
+            this.drawable = drawable;
+            this.text = text;
         }
 
         @Override
         public int getDrawable() {
-            return mDrawable;
-        }
-    }
-
-    public static class IntentAction extends AbstractAction {
-        private Context mContext;
-        private Intent mIntent;
-
-        public IntentAction(Context context, Intent intent, int drawable) {
-            super(drawable);
-            mContext = context;
-            mIntent = intent;
+            return drawable;
         }
 
         @Override
-        public void performAction(View view) {
-            try {
-               mContext.startActivity(mIntent); 
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(mContext,
-                        mContext.getText(R.string.actionbar_activity_not_found),
-                        Toast.LENGTH_SHORT).show();
-            }
+        public String getText() {
+            return text;
         }
     }
-
-    /*
-    public static abstract class SearchAction extends AbstractAction {
-        public SearchAction() {
-            super(R.drawable.actionbar_search);
-        }
-    }
-    */
 }
