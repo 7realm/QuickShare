@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lib.ReordableListView;
+import com.lib.ReordableListView.DragAndDropListner;
 import com.lib.ReordableListView.ReordableAdapter;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
@@ -38,7 +39,21 @@ public class LessonActivity extends Activity {
 
         // set adapter
         ReordableListView listView = (ReordableListView) findViewById(R.id.lessonPartsList);
+        listView.setRemoveViewId(R.id.lessonPartRemove);
         listView.setAdapter(new LessonPartAdapter());
+
+        // set listener for drag and drop events
+        listView.setDragAndDropListner(new DragAndDropListner() {
+            @Override
+            public void onStartDrag(int position, View v) {
+                findViewById(R.id.lessonPartRemove).setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onEndDrag(int position, View v) {
+                findViewById(R.id.lessonPartRemove).setVisibility(View.GONE);
+            }
+        });
 
         // get action bar
         final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
@@ -137,6 +152,5 @@ public class LessonActivity extends Activity {
 
             return convertView;
         }
-
     }
 }

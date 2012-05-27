@@ -32,6 +32,10 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
     private int startOffset;
     /** Image view id, is used to drag items. */
     private int imageViewId;
+    /** Id of view that will be used as bucket to remove items. */
+    private int removeViewId;
+    /** Drag and drop listener for this list view. */
+    private DragAndDropListner dragAndDropListner;
 
     /** The view that is dragged. */
     private View dragView;
@@ -69,6 +73,24 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
     }
 
     /**
+     * Sets id of the in parent group that will be used as remove basket.
+     *
+     * @param removeViewId the id of the view
+     */
+    public void setRemoveViewId(int removeViewId) {
+        this.removeViewId = removeViewId;
+    }
+
+    /**
+     * Set listener that will be triggered on drag events.
+     *
+     * @param dragAndDropListner the listener that will be triggered
+     */
+    public void setDragAndDropListner(DragAndDropListner dragAndDropListner) {
+        this.dragAndDropListner = dragAndDropListner;
+    }
+
+    /**
      * Checks if cursor is inside the drag image.
      *
      * @param x the x cursor position
@@ -99,7 +121,8 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
             isDragging = true;
         }
 
-        Log.i("reorder", "Dragging: " + isDragging + ", action: " + action);
+        Log.i("reorder", "Dragging: " + isDragging + ", action: " + action + ", x: " + x + ", y: " + y);
+        Log.i("reorder_id", "View id: " + v.getId());
 
         if (!isDragging) {
             return super.onTouchEvent(ev);
@@ -126,19 +149,27 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         case MotionEvent.ACTION_UP:
         default:
             isDragging = false;
-            int endPosition = pointToPosition(x, y);
-            if (startPosition != INVALID_POSITION) {
-                if (endPosition == INVALID_POSITION) {
-                    // try to paste at start to end
-                    if (getChildAt(firstVisiblePosition).getTop() > y) {
-                        endPosition = firstVisiblePosition;
-                    } else if (getChildAt(lastVisiblePosition).getBottom() < y) {
-                        endPosition = lastVisiblePosition;
-                    }
-                }
 
-                if (endPosition != INVALID_POSITION) {
-                    ((ReordableAdapter<?>) getAdapter()).onDrop(startPosition, endPosition);
+            if (startPosition != INVALID_POSITION) {
+                // check if dragged view is removed
+                View removeView = getParentGroup().findViewById(removeViewId);
+                if (isPointInsideView(x, y, removeView)) {
+                    getAdapter().onRemove(startPosition);
+                } else {
+                    // calculate drop position
+                    int endPosition = pointToPosition(x, y);
+                    if (endPosition == INVALID_POSITION) {
+                        // try to drop at start to end
+                        if (getChildAt(firstVisiblePosition).getTop() > y) {
+                            endPosition = firstVisiblePosition;
+                        } else if (getChildAt(lastVisiblePosition).getBottom() < y) {
+                            endPosition = lastVisiblePosition;
+                        }
+                    }
+
+                    if (endPosition != INVALID_POSITION) {
+                        getAdapter().onDrop(startPosition, endPosition);
+                    }
                 }
             }
 
@@ -148,6 +179,27 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
             break;
         }
         return true;
+    }
+
+    @Override
+    public ReordableAdapter<?> getAdapter() {
+        return (ReordableAdapter<?>) super.getAdapter();
+    }
+
+    private static boolean isPointInsideView(float x, float y, View view) {
+        if (view == null) {
+            return false;
+        }
+
+        int location[] = new int[2];
+        view.getLocationOnScreen(location);
+        int viewX = view.getLeft();
+        int viewY = view.getTop();
+
+        Log.i("reorder_id", "Inside? " + y + " of " + view.getTop() + ", view Y " + viewY);
+
+        // point is inside view bounds
+        return x > viewX && x < viewX + view.getWidth() && y > viewY && y < viewY + view.getHeight();
     }
 
     /**
@@ -169,12 +221,21 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      * @param y the y coordinate of item
      */
     private void onStartDrag(int itemIndex, int y) {
+        // notify listener and hide dragged item
         startItem.setVisibility(View.INVISIBLE);
+        if (dragAndDropListner != null) {
+            dragAndDropListner.onStartDrag(itemIndex, startItem);
+        }
 
+        // create floating item that will be dragged
         dragView = getAdapter().getView(itemIndex, null, this);
         layoutParams = new RelativeLayout.LayoutParams(startItem.getWidth(), startItem.getHeight());
         layoutParams.topMargin = y;
-        ((ViewGroup) getParent()).addView(dragView, layoutParams);
+        getParentGroup().addView(dragView, layoutParams);
+    }
+
+    private ViewGroup getParentGroup() {
+        return (ViewGroup) getParent();
     }
 
     /**
@@ -182,15 +243,26 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      *
      * @param itemView the clicked item
      */
-    public void onStopDrag() {
+    private void onStopDrag() {
         if (startItem != null) {
+            // notify listener and show dragged item
+            startItem.setVisibility(View.INVISIBLE);
+            if (dragAndDropListner != null) {
+                dragAndDropListner.onEndDrag(startPosition, startItem);
+            }
             startItem.setVisibility(View.VISIBLE);
             startItem = null;
         }
         if (dragView != null) {
-            ((ViewGroup) getParent()).removeView(dragView);
+            getParentGroup().removeView(dragView);
             dragView = null;
         }
+    }
+
+    public static interface DragAndDropListner {
+        void onStartDrag(int position, View v);
+
+        void onEndDrag(int position, View v);
     }
 
     /**
@@ -266,6 +338,15 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
             TextView textView = (TextView) convertView.findViewById(textViewId);
             textView.setText(content.get(position).toString());
             return convertView;
+        }
+
+        /**
+         * Executed when item with index is removed.
+         *
+         * @param index the index of the item to remove
+         */
+        public void onRemove(int index) {
+            content.remove(index);
         }
 
         /**

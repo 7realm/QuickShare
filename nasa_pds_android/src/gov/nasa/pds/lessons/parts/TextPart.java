@@ -26,7 +26,7 @@ public abstract class TextPart implements LessonPart {
     public void setText(String text) {
         this.text = DataCenter.processDescription(text).trim()
             .replaceAll("(\\r\\n){2,}", "<br><br>")
-            .replaceAll("(?m)^.*?([=|_|-]{2,}).*?$", "<br>$1<br>");
+            .replaceAll("(?m)^(.*?)([=|_|-]{2,})(.*?)$", "<br>$1$2$3<br>");
     }
 
     public void addLink(String description) {
