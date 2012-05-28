@@ -26,24 +26,19 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.TitleChangeListener;
 import com.markupartist.android.widget.ActionBar.TitleType;
 
 /**
  * Activity that will browse objects.
- *
+ * 
  * @author 7realm
  * @version 1.0
  */
@@ -55,14 +50,13 @@ public class PageViewActivity extends Activity {
     private EntityType entityType;
     private final Filter filter = new Filter();
     private final AtomicBoolean firstRun = new AtomicBoolean();
-    private Spinner spinner;
     private TextView searchTextView;
-    private CheckBox checkBox;
     private ActionBar actionBar;
+    private ViewGroup searchGroup;
 
     /**
      * Life-cycle handler for activity creation.
-     *
+     * 
      * @param savedInstanceState the saved instance state
      */
     @Override
@@ -97,50 +91,14 @@ public class PageViewActivity extends Activity {
             }
         });
 
-        // set drop down
-        spinner = (Spinner) findViewById(R.id.browserSpinner);
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+        // hide search group
+        searchGroup = (ViewGroup) findViewById(R.id.browserSearchGroup);
+        searchGroup.setVisibility(View.GONE);
 
-            @Override
-            public void onItemSelected(AdapterView<?> adapterview, View view, int pos, long id) {
-                // get entity type by ordinal value
-                EntityType newEntityType = EntityType.valueOf(pos);
-                if (newEntityType == null) {
-                    Log.w("soap", "Selected item at unexpected position.");
-                    return;
-                }
-
-                // set new type
-                setEntityType(newEntityType);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterview) {
-                // do nothing
-            }
-        });
-
-        // set search check box
+        // set search view
         searchTextView = (TextView) findViewById(R.id.browserSearchText);
-        checkBox = (CheckBox) findViewById(R.id.browserCheckBox);
-        checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String text = searchTextView.getText().toString().trim();
 
-                // do not refresh provider only if search text is empty
-                if (!text.isEmpty()) {
-                    filter.setText(isChecked ? text : "");
-                    refreshProvider();
-                }
-
-                // enable or disable search group views
-                searchTextView.setEnabled(isChecked);
-                findViewById(R.id.browserSearchButton).setEnabled(isChecked);
-
-            }
-        });
-
+        // set action bar
         actionBar = (ActionBar) findViewById(R.id.actionbar);
         actionBar.setTitleType(TitleType.DROP_DOWN);
         actionBar.setTitleChangeListener(new TitleChangeListener() {
@@ -153,9 +111,21 @@ public class PageViewActivity extends Activity {
                     return;
                 }
 
+                // remove text filter
+                filter.setText("");
+
                 // set new type
                 setEntityType(newEntityType);
 
+            }
+        });
+
+        // add text filter action
+        actionBar.addAction(new AbstractAction(R.drawable.search_text, "Filter") {
+            @Override
+            public void performAction(View view) {
+                searchGroup.setVisibility(View.VISIBLE);
+                searchTextView.requestFocus();
             }
         });
 
@@ -172,9 +142,6 @@ public class PageViewActivity extends Activity {
 
         // set entity type
         entityType = newEntityType;
-
-        // update spinner
-        spinner.setSelection(entityType.ordinal());
 
         // update action bar
         actionBar.setTitle(entityType.ordinal(), getResources().getStringArray(R.array.entities_type));
@@ -205,10 +172,7 @@ public class PageViewActivity extends Activity {
         new DataLoadTast().execute(1);
 
         // set filter text section
-        boolean hasFilterText = !filter.getText().isEmpty();
-        checkBox.setChecked(hasFilterText);
-        searchTextView.setEnabled(hasFilterText);
-        findViewById(R.id.browserSearchButton).setEnabled(hasFilterText);
+        searchTextView.setText(filter.getText());
 
         // set restriction group
         ViewGroup restrictionGroup0 = (ViewGroup) findViewById(R.id.browserRestrictionGroup0);
@@ -258,7 +222,7 @@ public class PageViewActivity extends Activity {
 
     /**
      * When user deletes restriction.
-     *
+     * 
      * @param v the clicked view
      */
     @SuppressWarnings("unused")
@@ -271,7 +235,7 @@ public class PageViewActivity extends Activity {
 
     /**
      * When user press search button.
-     *
+     * 
      * @param v the clicked view
      */
     @SuppressWarnings("unused")
@@ -283,11 +247,32 @@ public class PageViewActivity extends Activity {
 
             refreshProvider();
         }
+
+        // hide search group
+        searchGroup.setVisibility(View.GONE);
+    }
+
+    /**
+     * When user press search button.
+     * 
+     * @param v the clicked view
+     */
+    @SuppressWarnings("unused")
+    public void onSearchCancelButtonClick(View v) {
+        // clear filter by text
+        if (!filter.getText().equals("")) {
+            filter.setText("");
+
+            refreshProvider();
+        }
+
+        // hide search group
+        searchGroup.setVisibility(View.GONE);
     }
 
     /**
      * When user tries to navigate to next view.
-     *
+     * 
      * @param v the clicked view
      */
     @SuppressWarnings("unused")
@@ -297,7 +282,7 @@ public class PageViewActivity extends Activity {
 
     /**
      * When user tries to navigate to previous view.
-     *
+     * 
      * @param v the clicked view
      */
     @SuppressWarnings("unused")
@@ -307,7 +292,7 @@ public class PageViewActivity extends Activity {
 
     /**
      * Invokes activity that will display information about entity with given id.
-     *
+     * 
      * @param id the id of entity to display
      */
     public void gotoEntity(long id) {
@@ -329,6 +314,12 @@ public class PageViewActivity extends Activity {
      */
     @Override
     public void onBackPressed() {
+        // hide search bar if it is visible
+        if (searchGroup.getVisibility() == View.VISIBLE) {
+            searchGroup.setVisibility(View.GONE);
+            return;
+        }
+
         // if we are on top level then finish activity
         if (entityType == EntityType.TARGET_TYPE) {
             super.onBackPressed();
@@ -342,7 +333,7 @@ public class PageViewActivity extends Activity {
 
     /**
      * Navigates inside clicked entity.
-     *
+     * 
      * @param entityInfo the entity, where we should navigate
      */
     public void openEntity(EntityInfo entityInfo) {
@@ -416,7 +407,7 @@ public class PageViewActivity extends Activity {
 
     /**
      * Task that will load data for all entities.
-     *
+     * 
      * @author 7realm
      * @version 1.0
      */

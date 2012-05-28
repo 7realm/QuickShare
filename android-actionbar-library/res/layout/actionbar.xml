@@ -77,7 +77,6 @@
         <Spinner
             android:id="@+id/actionbarTitleSpinner"
             style="@style/ActionBarTitleView"
-            android:background="@drawable/shape_edit_light"
             android:visibility="gone" />
     </RelativeLayout>
 
