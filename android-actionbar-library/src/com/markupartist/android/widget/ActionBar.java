@@ -16,103 +16,61 @@
 
 package com.markupartist.android.widget;
 
-import java.util.List;
-
 import android.content.Context;
-import android.content.res.TypedArray;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.markupartist.android.widget.actionbar.R;
 
-public class ActionBar extends RelativeLayout implements OnClickListener {
-
-    private LayoutInflater mInflater;
-    private RelativeLayout mBarView;
-    private ImageView mLogoView;
-    private View mBackIndicator;
-    private EditText mTitleView;
-    private LinearLayout mActionsView;
-    private ImageButton mHomeBtn;
-    private RelativeLayout mHomeLayout;
-    private ProgressBar mProgress;
+public class ActionBar extends RelativeLayout implements OnClickListener, TextWatcher {
+    private ViewGroup layoutView;
+    private TextView titleTextView;
+    private Spinner titleSpinnerView;
+    private ViewGroup actionListView;
+    private ProgressBar progressBar;
     private TitleChangeListener titleChangeListener;
+    private TitleType titleType = TitleType.LABEL;
+    private LayoutInflater layoutInflater;
 
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // inflate layout
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutView = (ViewGroup) layoutInflater.inflate(R.layout.actionbar, null);
+        addView(layoutView);
 
-        mBarView = (RelativeLayout) mInflater.inflate(R.layout.actionbar, null);
-        addView(mBarView);
+        // store reusable elements
+        actionListView = (ViewGroup) layoutView.findViewById(R.id.actionbarActionList);
+        progressBar = (ProgressBar) layoutView.findViewById(R.id.actionbarProgressBar);
 
-        mLogoView = (ImageView) mBarView.findViewById(R.id.actionbar_home_logo);
-        mHomeLayout = (RelativeLayout) mBarView.findViewById(R.id.actionbar_home_bg);
-        mHomeBtn = (ImageButton) mBarView.findViewById(R.id.actionbar_home_btn);
-        mBackIndicator = mBarView.findViewById(R.id.actionbar_home_is_back);
-
-        mTitleView = (EditText) mBarView.findViewById(R.id.actionbar_title);
-        mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
-
-        mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
-
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionBar);
-        CharSequence title = a.getString(R.styleable.ActionBar_title);
-        if (title != null) {
-            setTitle(title);
-        }
-        a.recycle();
-
-        mTitleView.setOnEditorActionListener(new OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if (titleChangeListener != null) {
-                        titleChangeListener.onTitleChanged(v.getText());
-                    }
-                }
-
-                return false;
-            }
-        });
+        // adjust title settings
+        setTitleType(titleType);
     }
 
-    public void setHomeAction(Action action) {
-        mHomeBtn.setOnClickListener(this);
-        mHomeBtn.setTag(action);
-        mHomeBtn.setImageResource(action.getDrawable());
-        mHomeLayout.setVisibility(View.VISIBLE);
-    }
+    public void setUpAction(Action action) {
+        // set action to button
+        ImageButton upButton = (ImageButton) layoutView.findViewById(R.id.actionbarUpButton);
+        upButton.setOnClickListener(this);
+        upButton.setTag(action);
+        upButton.setImageResource(action.getDrawable());
 
-    public void clearHomeAction() {
-        mHomeLayout.setVisibility(View.GONE);
-    }
-
-    /**
-     * Shows the provided logo to the left in the action bar.
-     *
-     * This is ment to be used instead of the setHomeAction and does not draw a divider to the left of the provided logo.
-     *
-     * @param resId The drawable resource id
-     */
-    public void setHomeLogo(int resId) {
-        // TODO: Add possibility to add an IntentAction as well.
-        mLogoView.setImageResource(resId);
-        mLogoView.setVisibility(View.VISIBLE);
-        mHomeLayout.setVisibility(View.GONE);
+        // make section visible
+        layoutView.findViewById(R.id.actionbarUpLayout).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -122,13 +80,71 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @param show if "up" triangle will be shown
      */
     public void setDisplayHomeAsUpEnabled(boolean show) {
-        mBackIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+        layoutView.findViewById(R.id.actionbarUpIndicator).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    public void setTitleEditable(boolean isTitleEditable) {
-        mTitleView.setFocusable(isTitleEditable);
-        mTitleView.setFocusableInTouchMode(true);
-        mTitleView.setBackgroundResource(isTitleEditable ? R.drawable.shape_edit_light : android.R.color.transparent);
+    public void setTitleType(TitleType titleType) {
+        this.titleType = titleType;
+
+        switch (titleType) {
+        case LABEL:
+            titleTextView = (TextView) findViewById(R.id.actionbarTitleLabel);
+            titleTextView.removeTextChangedListener(this);
+
+            findViewById(R.id.actionbarTitleLabel).setVisibility(VISIBLE);
+            findViewById(R.id.actionbarTitleEdit).setVisibility(GONE);
+            findViewById(R.id.actionbarTitleSpinner).setVisibility(GONE);
+            break;
+
+        case EDIT:
+            titleTextView = (TextView) findViewById(R.id.actionbarTitleEdit);
+            titleTextView.addTextChangedListener(this);
+
+            findViewById(R.id.actionbarTitleLabel).setVisibility(GONE);
+            findViewById(R.id.actionbarTitleEdit).setVisibility(VISIBLE);
+            findViewById(R.id.actionbarTitleSpinner).setVisibility(GONE);
+            break;
+
+        case DROP_DOWN:
+            titleSpinnerView = (Spinner) findViewById(R.id.actionbarTitleSpinner);
+            titleSpinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+                @Override
+                public void onItemSelected(AdapterView<?> adapterview, View view, int pos, long id) {
+                    if (titleChangeListener != null) {
+                        titleChangeListener.onTitleChanged(null, pos);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterview) {
+                    // do nothing
+                }
+            });
+
+            findViewById(R.id.actionbarTitleLabel).setVisibility(GONE);
+            findViewById(R.id.actionbarTitleEdit).setVisibility(GONE);
+            findViewById(R.id.actionbarTitleSpinner).setVisibility(VISIBLE);
+            break;
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if (titleChangeListener != null) {
+            titleChangeListener.onTitleChanged(s.toString(), -1);
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        // do nothing
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // do nothing
+
     }
 
     public void setTitleChangeListener(TitleChangeListener titleChangeListener) {
@@ -136,38 +152,30 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     }
 
     public void setTitle(CharSequence title) {
-        mTitleView.setText(title);
+        if (titleType == TitleType.LABEL || titleType == TitleType.EDIT) {
+            titleTextView.setText(title);
+        } else {
+            throw new UnsupportedOperationException("Setting text title to incorrect title type: " + titleType);
+        }
     }
 
-    public void setTitle(int resid) {
-        mTitleView.setText(resid);
-    }
-
-    /**
-     * Set the enabled state of the progress bar.
-     *
-     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}.
-     */
-    public void setProgressBarVisibility(int visibility) {
-        mProgress.setVisibility(visibility);
-    }
-
-    /**
-     * Returns the visibility status for the progress bar.
-     *
-     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}.
-     */
-    public int getProgressBarVisibility() {
-        return mProgress.getVisibility();
+    public void setTitle(int titleIndex, String[] items) {
+        if (titleType == TitleType.DROP_DOWN) {
+            titleSpinnerView.setAdapter(
+                new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, android.R.id.text1, items));
+            titleSpinnerView.setSelection(titleIndex);
+        } else {
+            throw new UnsupportedOperationException("Setting spinner title to incorrect title type: " + titleType);
+        }
     }
 
     /**
-     * Function to set a click listener for Title TextView
+     * Set the visible state of the progress bar.
      *
-     * @param listener the onClickListener
+     * @param isVisible if progress bar should be visible
      */
-    public void setOnTitleClickListener(OnClickListener listener) {
-        mTitleView.setOnClickListener(listener);
+    public void setProgressBarVisibile(boolean isVisible) {
+        progressBar.setVisibility(isVisible ? VISIBLE : GONE);
     }
 
     @Override
@@ -180,24 +188,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     }
 
     /**
-     * Adds a list of {@link Action}s.
-     *
-     * @param actionList the actions to add
-     */
-    public void addActions(List<Action> actionList) {
-        int actions = actionList.size();
-        for (int i = 0; i < actions; i++) {
-            addAction(actionList.get(i));
-        }
-    }
-
-    /**
      * Adds a new {@link Action}.
      *
      * @param action the action to add
      */
     public void addAction(Action action) {
-        final int index = mActionsView.getChildCount();
+        final int index = actionListView.getChildCount();
         addAction(action, index);
     }
 
@@ -208,14 +204,14 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @param index the position at which to add the action
      */
     public void addAction(Action action, int index) {
-        mActionsView.addView(inflateAction(action), index);
+        actionListView.addView(inflateAction(action), index);
     }
 
     /**
      * Removes all action views from this action bar
      */
     public void removeAllActions() {
-        mActionsView.removeAllViews();
+        actionListView.removeAllViews();
     }
 
     /**
@@ -224,7 +220,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @param index position of action to remove
      */
     public void removeActionAt(int index) {
-        mActionsView.removeViewAt(index);
+        actionListView.removeViewAt(index);
     }
 
     /**
@@ -233,13 +229,13 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @param action The action to remove
      */
     public void removeAction(Action action) {
-        int childCount = mActionsView.getChildCount();
+        int childCount = actionListView.getChildCount();
         for (int i = 0; i < childCount; i++) {
-            View view = mActionsView.getChildAt(i);
+            View view = actionListView.getChildAt(i);
             if (view != null) {
                 final Object tag = view.getTag();
                 if (tag instanceof Action && tag.equals(action)) {
-                    mActionsView.removeView(view);
+                    actionListView.removeView(view);
                 }
             }
         }
@@ -251,7 +247,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @return action count
      */
     public int getActionCount() {
-        return mActionsView.getChildCount();
+        return actionListView.getChildCount();
     }
 
     /**
@@ -261,7 +257,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @return a view
      */
     private View inflateAction(Action action) {
-        View view = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
+        View view = layoutInflater.inflate(R.layout.actionbar_item, actionListView, false);
 
         // set action image
         ImageView imageView = (ImageView) view.findViewById(R.id.actionBarItemImage);
@@ -308,6 +304,17 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     }
 
     public static interface TitleChangeListener {
-        void onTitleChanged(CharSequence newTitle);
+        void onTitleChanged(CharSequence newTitle, int newTitlePosition);
+    }
+
+    /**
+     * Represents type of action bar title.
+     *
+     * @author TCSASSEMBLER
+     */
+    public static enum TitleType {
+        LABEL,
+        EDIT,
+        DROP_DOWN
     }
 }

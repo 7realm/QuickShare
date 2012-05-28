@@ -37,6 +37,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.TitleChangeListener;
+import com.markupartist.android.widget.ActionBar.TitleType;
+
 /**
  * Activity that will browse objects.
  *
@@ -54,6 +58,7 @@ public class PageViewActivity extends Activity {
     private Spinner spinner;
     private TextView searchTextView;
     private CheckBox checkBox;
+    private ActionBar actionBar;
 
     /**
      * Life-cycle handler for activity creation.
@@ -136,6 +141,24 @@ public class PageViewActivity extends Activity {
             }
         });
 
+        actionBar = (ActionBar) findViewById(R.id.actionbar);
+        actionBar.setTitleType(TitleType.DROP_DOWN);
+        actionBar.setTitleChangeListener(new TitleChangeListener() {
+            @Override
+            public void onTitleChanged(CharSequence newTitle, int newTitlePosition) {
+                // get entity type by ordinal value
+                EntityType newEntityType = EntityType.valueOf(newTitlePosition);
+                if (newEntityType == null) {
+                    Log.w("soap", "Selected item at unexpected position.");
+                    return;
+                }
+
+                // set new type
+                setEntityType(newEntityType);
+
+            }
+        });
+
         // set query for base type from intent
         EntityType entityType = (EntityType) getIntent().getSerializableExtra(EXTRA_ENTITY_TYPE);
         setEntityType(entityType == null ? EntityType.TARGET_TYPE : entityType);
@@ -152,6 +175,9 @@ public class PageViewActivity extends Activity {
 
         // update spinner
         spinner.setSelection(entityType.ordinal());
+
+        // update action bar
+        actionBar.setTitle(entityType.ordinal(), getResources().getStringArray(R.array.entities_type));
 
         refreshProvider();
     }

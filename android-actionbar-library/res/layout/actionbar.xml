@@ -1,103 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/screen"
-    android:layout_width="fill_parent"
+    android:id="@+id/actionbarLayout"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/actionbar_height"
     android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="horizontal" >
+    android:focusableInTouchMode="true" >
 
     <RelativeLayout
-        android:id="@+id/actionbar_home"
+        android:id="@+id/actionbarUpLayout"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/actionbar_height"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal"
-        android:visibility="visible" >
+        android:background="@color/actionbar_separator"
+        android:visibility="gone" >
+
+        <ImageButton
+            android:id="@+id/actionbarUpButton"
+            style="@style/ActionBarHomeItem"
+            android:background="@drawable/actionbar_button" />
 
         <ImageView
-            android:id="@+id/actionbar_home_logo"
-            style="@style/ActionBarHomeLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/actionbar_height"
-            android:background="@drawable/actionbar_background"
-            android:padding="0dip"
-            android:visibility="gone" />
-
-        <RelativeLayout
-            android:id="@+id/actionbar_home_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/actionbar_height"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@color/actionbar_separator"
-            android:orientation="horizontal"
-            android:visibility="gone" >
-
-            <!-- TODO: Make configurable. -->
-
-            <ImageButton
-                android:id="@+id/actionbar_home_btn"
-                style="@style/ActionBarHomeItem"
-                android:background="@drawable/actionbar_button" />
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/actionbar_home_is_back"
+            android:id="@+id/actionbarUpIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/actionbar_home_btn"
             android:background="@drawable/actionbar_back_indicator"
             android:padding="0dip"
             android:visibility="gone" />
+    </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/actionbar_actions"
+    <LinearLayout
+        android:id="@+id/actionbarActionList"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_margin="0dp"
+        android:background="@color/actionbar_separator"
+        android:padding="0dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/actionbarActionList"
+        android:layout_toRightOf="@id/actionbarUpLayout" >
+
+        <ProgressBar
+            android:id="@+id/actionbarProgressBar"
+            style="@style/ActionBarProgressBar"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/actionbar_height"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="0dp"
-            android:background="@color/actionbar_separator"
-            android:padding="0dp" />
+            android:indeterminateOnly="true"
+            android:paddingRight="7dip"
+            android:visibility="gone" />
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/actionbar_actions"
-            android:layout_toRightOf="@id/actionbar_home_bg" >
+        <com.markupartist.android.widget.ScrollingTextView
+            android:id="@+id/actionbarTitleLabel"
+            style="@style/ActionBarTitleView"
+            android:background="@null"
+            android:ellipsize="marquee"
+            android:lines="1"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true" />
 
-            <ProgressBar
-                android:id="@+id/actionbar_progress"
-                style="@style/ActionBarProgressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:indeterminateOnly="true"
-                android:paddingRight="7dip"
-                android:visibility="gone" />
+        <EditText
+            android:id="@+id/actionbarTitleEdit"
+            style="@style/ActionBarTitleView"
+            android:background="@drawable/shape_edit_light"
+            android:inputType="text"
+            android:maxLines="1"
+            android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/actionbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_toLeftOf="@id/actionbar_progress"
-                android:background="@null"
-                android:focusable="false"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textColor="@color/actionbar_title"
-                android:textSize="16dip"
-                android:textStyle="bold" />
-        </RelativeLayout>
+        <Spinner
+            android:id="@+id/actionbarTitleSpinner"
+            style="@style/ActionBarTitleView"
+            android:background="@drawable/shape_edit_light"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

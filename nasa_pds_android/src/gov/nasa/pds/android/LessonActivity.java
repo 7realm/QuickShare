@@ -23,6 +23,7 @@ import com.lib.ReordableListView.ReordableAdapter;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.TitleChangeListener;
+import com.markupartist.android.widget.ActionBar.TitleType;
 
 public class LessonActivity extends Activity {
     public static final String EXTRA_LESSON_ID = "intent.extra.lesson.id";
@@ -57,16 +58,16 @@ public class LessonActivity extends Activity {
 
         // get action bar
         final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+        actionBar.setTitleType(TitleType.EDIT);
         actionBar.setTitle(lesson.getName());
-        actionBar.setTitleEditable(true);
         actionBar.setTitleChangeListener(new TitleChangeListener() {
             @Override
-            public void onTitleChanged(CharSequence newTitle) {
-                // update title
-                lesson.setName(newTitle.toString());
-                LessonRepository.save();
-
-                actionBar.requestFocus();
+            public void onTitleChanged(CharSequence newTitle, int newTitlePosition) {
+                if (!lesson.getName().equals(newTitle)) {
+                    // update title
+                    lesson.setName(newTitle.toString());
+                    LessonRepository.save();
+                }
             }
         });
 
