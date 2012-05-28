@@ -6,6 +6,7 @@ package gov.nasa.pds.android;
 import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.data.ImageCenter;
 import gov.nasa.pds.data.QueryType;
+import gov.nasa.pds.data.queries.FileQuery;
 import gov.nasa.pds.data.queries.ObjectQuery;
 import gov.nasa.pds.lessons.Lesson;
 import gov.nasa.pds.lessons.LessonPart;
@@ -20,6 +21,7 @@ import gov.nasa.pds.soap.entities.InstrumentHost;
 import gov.nasa.pds.soap.entities.Mission;
 import gov.nasa.pds.soap.entities.WsDataFile;
 
+import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
@@ -35,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -46,7 +49,7 @@ import com.markupartist.android.widget.ActionBar.Action;
 
 /**
  * Activity that will view specific objects.
- * 
+ *
  * @author 7realm
  * @version 1.0
  */
@@ -58,10 +61,11 @@ public class ObjectViewActivity extends Activity {
     private ObjectQuery<Object> query;
     private Object currentObject;
     private ActionBar actionBar;
+    private long id;
 
     /**
      * Life-cycle handler for activity creation.
-     * 
+     *
      * @param savedInstanceState the saved instance state
      */
     @SuppressWarnings("unchecked")
@@ -72,11 +76,16 @@ public class ObjectViewActivity extends Activity {
 
         // get query data form intent
         QueryType queryType = (QueryType) getIntent().getExtras().get(EXTRA_QUERY_TYPE);
-        long id = getIntent().getLongExtra(EXTRA_OBJECT_ID, 0);
-        query = new ObjectQuery<Object>(queryType, id);
+        id = getIntent().getLongExtra(EXTRA_OBJECT_ID, 0);
 
         // set content view based on object type
-        setContentView(queryType == QueryType.GET_FILE ? R.layout.activity_file : R.layout.activity_object);
+        if (queryType == QueryType.GET_FILE || queryType == QueryType.GET_IMAGE) {
+            setContentView(R.layout.activity_file);
+            query = new FileQuery(queryType, id);
+        } else {
+            setContentView(R.layout.activity_object);
+            query = new ObjectQuery<Object>(queryType, id);
+        }
 
         // add to lesson action
         actionBar = (ActionBar) findViewById(R.id.actionbar);
@@ -107,6 +116,12 @@ public class ObjectViewActivity extends Activity {
                                 // create image or file lesson part
                                 lessonPart = ImageCenter.isImageFile(dataFile) ?
                                     new ImagePart(dataFile.getId(), dataFile.getName()) : new FilePart(dataFile);
+                            } else if (currentObject instanceof File) {
+                                File imageFile = (File) currentObject;
+
+                                lessonPart = new ImagePart(id, imageFile.getName());
+                            } else {
+                                Log.w("soap", "Unknown object is not added to lesson: " + currentObject);
                             }
 
                             // add lesson part to lesson
@@ -130,7 +145,7 @@ public class ObjectViewActivity extends Activity {
 
     /**
      * The reference button clicked.
-     * 
+     *
      * @param v the clicked view
      */
     public void onReferenceButtonClick(View v) {
@@ -185,7 +200,7 @@ public class ObjectViewActivity extends Activity {
 
     /**
      * Task that will load data for given entity.
-     * 
+     *
      * @author 7realm
      * @version 1.0
      */
@@ -276,8 +291,27 @@ public class ObjectViewActivity extends Activity {
             } else if (result instanceof WsDataFile) {
                 WsDataFile dataFile = (WsDataFile) result;
 
-                actionBar.setTitle("File: " + dataFile.getName());
-                setText(R.id.fileContent, dataFile.getContent());
+                if (ImageCenter.isImageFile(dataFile)) {
+                    File imageFile = ImageCenter.getImage(dataFile.getId());
+
+                    // set image from downloaded file
+                    actionBar.setTitle("Image: " + dataFile.getName());
+                    ImageView imageView = (ImageView) findViewById(R.id.fileImage);
+                    imageView.setImageURI(Uri.fromFile(imageFile));
+                    findViewById(R.id.fileDocument).setVisibility(View.GONE);
+                } else {
+                    actionBar.setTitle("File: " + dataFile.getName());
+                    setText(R.id.fileContent, dataFile.getContent());
+                    findViewById(R.id.fileImage).setVisibility(View.GONE);
+                }
+            } else if (result instanceof File) {
+                File imageFile = (File) result;
+
+                // set image from downloaded file
+                actionBar.setTitle("Image: " + imageFile.getName());
+                ImageView imageView = (ImageView) findViewById(R.id.fileImage);
+                imageView.setImageURI(Uri.fromFile(imageFile));
+                findViewById(R.id.fileDocument).setVisibility(View.GONE);
             } else {
                 Log.w("soap", "Result: " + result + " is not referenced object.");
             }

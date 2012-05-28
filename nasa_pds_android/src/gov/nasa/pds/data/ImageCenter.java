@@ -42,9 +42,26 @@ public class ImageCenter {
         WsDataFile dataFile = DataCenter.executeObjectQuery(new ObjectQuery<WsDataFile>(QueryType.GET_FILE, id));
         if (dataFile == null) {
             Log.w("soap", "Failed to get file for id " + id + ".");
+
+            try {
+                // try to get as preview image
+                String url = DataCenter.executePreviewQuery(id);
+                if (url != null) {
+                    return downloadImage(id, imageFile, url);
+                }
+            } catch (IOException e) {
+                Log.e("soap", "Failed to save image " + imageFile.getAbsolutePath(), e);
+            }
+
             return null;
         }
 
+        return processDataFile(dataFile);
+    }
+
+    public static File processDataFile(WsDataFile dataFile) {
+        long id = dataFile.getId();
+        File imageFile = new File(imagesDir, Long.toString(id));
         try {
             // file contains content
             if (dataFile.getContent() != null) {
@@ -64,11 +81,7 @@ public class ImageCenter {
                 // need one more query for URL
                 String url = DataCenter.executePreviewQuery(id);
                 if (url != null) {
-                    // download file from url
-                    URLConnection urlConnection = new URL(url).openConnection();
-                    Streams.copy(urlConnection.getInputStream(), new FileOutputStream(imageFile), true);
-                    Log.i("soap", "Image " + id + " was fetched from preview.");
-                    return imageFile;
+                    return downloadImage(id, imageFile, url);
                 }
             }
         } catch (IOException e) {
@@ -76,5 +89,13 @@ public class ImageCenter {
         }
 
         return null;
+    }
+
+    private static File downloadImage(long id, File imageFile, String url) throws IOException {
+        // download file from url
+        URLConnection urlConnection = new URL(url).openConnection();
+        Streams.copy(urlConnection.getInputStream(), new FileOutputStream(imageFile), true);
+        Log.i("soap", "Image " + id + " was fetched from preview.");
+        return imageFile;
     }
 }

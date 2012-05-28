@@ -8,22 +8,33 @@
         android:id="@+id/actionbar"
         style="@style/ActionBar" />
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" >
+        android:layout_height="match_parent" >
 
-        <HorizontalScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+        <ImageView
+            android:id="@+id/fileImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/fileContent"
+        <ScrollView
+            android:id="@+id/fileDocument"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" >
+
+            <HorizontalScrollView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:typeface="monospace" />
-        </HorizontalScrollView>
-    </ScrollView>
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/fileContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:typeface="monospace" />
+            </HorizontalScrollView>
+        </ScrollView>
+    </FrameLayout>
 
 </LinearLayout>

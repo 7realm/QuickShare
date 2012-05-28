@@ -62,7 +62,7 @@ public class SoapEnvelopeExecutor {
         }
 
         Header contentTypeHeader = response.getFirstHeader("Content-Type");
-        if (contentTypeHeader == null) {
+        if (contentTypeHeader == null || !contentTypeHeader.getValue().contains("boundary")) {
             // parse content as for single part message
             Log.w("soap", "Missing Content-Type header in response.");
             parseResponse(envelope, response.getEntity().getContent());

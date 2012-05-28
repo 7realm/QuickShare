@@ -3,11 +3,14 @@
  */
 package gov.nasa.pds.data;
 
+import gov.nasa.pds.data.queries.FileQuery;
 import gov.nasa.pds.data.queries.GetPreviewImageQuery;
 import gov.nasa.pds.data.queries.ObjectQuery;
 import gov.nasa.pds.data.queries.PagedQuery;
 import gov.nasa.pds.soap.entities.PagedResults;
+import gov.nasa.pds.soap.entities.WsDataFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -126,10 +129,10 @@ public class DataCenter {
         if (startIndent > 0 && startIndent < maxLength) {
             text = text.replaceAll("(?m)^\\s{" + startIndent + "}", "");
         }
-//        if (endIndent > 0 && endIndent < maxLength) {
+        // if (endIndent > 0 && endIndent < maxLength) {
 
-            text = text.replaceAll("(?m)[ |\\t]*$", "");
-//        }
+        text = text.replaceAll("(?m)[ |\\t]*$", "");
+        // }
         return text;
     }
 
@@ -160,6 +163,19 @@ public class DataCenter {
     @SuppressWarnings("unchecked")
     public static <T> T executeObjectQuery(ObjectQuery<T> query) {
         Log.i("soap", "Executing object query: " + query.getQueryType());
+
+        if (query instanceof FileQuery) {
+            // use image center for image queries
+            if (query.getQueryType() == QueryType.GET_IMAGE) {
+                return (T) ImageCenter.getImage(query.getId());
+            } else if (query.getQueryType() == QueryType.GET_FILE) {
+                WsDataFile dataFile = (WsDataFile) executeMethod(query.getEnvelope());
+
+                // try process result as image
+                File potentialImage = ImageCenter.processDataFile(dataFile);
+                return (T) (potentialImage == null ? dataFile : potentialImage);
+            }
+        }
 
         return (T) executeMethod(query.getEnvelope());
     }
