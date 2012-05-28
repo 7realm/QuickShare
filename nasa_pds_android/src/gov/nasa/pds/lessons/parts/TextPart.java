@@ -34,14 +34,17 @@ public abstract class TextPart implements LessonPart {
         links.put("http://www.google.com/#q=" + description, description);
     }
 
+    @SuppressWarnings("unused")
     protected void renderCaption(File filesDir, StringBuilder page) {
         page.append("<h2>").append(caption).append("</h2>");
     }
 
+    @SuppressWarnings("unused")
     protected void renderText(File filesDir, StringBuilder page) {
         page.append("<div class=\"description\">").append(text).append("</div>");
     }
 
+    @SuppressWarnings("unused")
     protected void renderLinks(File filesDir, StringBuilder page) {
         page.append("<ul class=\"links\">");
         for (Entry<String, String> entry : links.entrySet()) {

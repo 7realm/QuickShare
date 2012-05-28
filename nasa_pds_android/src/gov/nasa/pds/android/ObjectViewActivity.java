@@ -46,7 +46,7 @@ import com.markupartist.android.widget.ActionBar.Action;
 
 /**
  * Activity that will view specific objects.
- *
+ * 
  * @author 7realm
  * @version 1.0
  */
@@ -61,7 +61,7 @@ public class ObjectViewActivity extends Activity {
 
     /**
      * Life-cycle handler for activity creation.
-     *
+     * 
      * @param savedInstanceState the saved instance state
      */
     @SuppressWarnings("unchecked")
@@ -78,9 +78,8 @@ public class ObjectViewActivity extends Activity {
         // set content view based on object type
         setContentView(queryType == QueryType.GET_FILE ? R.layout.activity_file : R.layout.activity_object);
 
-        actionBar = (ActionBar) findViewById(R.id.actionbar);
-
         // add to lesson action
+        actionBar = (ActionBar) findViewById(R.id.actionbar);
         actionBar.addAction(new AbstractAction(R.drawable.next_page, "To Lesson") {
             @Override
             public void performAction(View view) {
@@ -121,7 +120,7 @@ public class ObjectViewActivity extends Activity {
         });
 
         // add compare action
-        if (queryType == QueryType.GET_MISSION) {
+        if (query.getQueryType() == QueryType.GET_MISSION) {
             actionBar.addAction(new MissionCompareAction());
         }
 
@@ -131,7 +130,7 @@ public class ObjectViewActivity extends Activity {
 
     /**
      * The reference button clicked.
-     *
+     * 
      * @param v the clicked view
      */
     public void onReferenceButtonClick(View v) {
@@ -186,7 +185,7 @@ public class ObjectViewActivity extends Activity {
 
     /**
      * Task that will load data for given entity.
-     *
+     * 
      * @author 7realm
      * @version 1.0
      */
@@ -282,6 +281,9 @@ public class ObjectViewActivity extends Activity {
             } else {
                 Log.w("soap", "Result: " + result + " is not referenced object.");
             }
+
+            // update actions
+            actionBar.updateActions();
 
             setProgressBarIndeterminateVisibility(false);
         }

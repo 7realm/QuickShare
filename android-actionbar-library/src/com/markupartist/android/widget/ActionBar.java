@@ -76,7 +76,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
     /**
      * Emulating Honeycomb, setdisplayHomeAsUpEnabled takes a boolean and toggles whether the "home" view should have a little triangle
      * indicating "up".
-     *
+     * 
      * @param show if "up" triangle will be shown
      */
     public void setDisplayHomeAsUpEnabled(boolean show) {
@@ -144,7 +144,6 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         // do nothing
-
     }
 
     public void setTitleChangeListener(TitleChangeListener titleChangeListener) {
@@ -171,7 +170,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Set the visible state of the progress bar.
-     *
+     * 
      * @param isVisible if progress bar should be visible
      */
     public void setProgressBarVisibile(boolean isVisible) {
@@ -184,22 +183,34 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
         if (tag instanceof Action) {
             final Action action = (Action) tag;
             action.performAction(view);
+
+            // update view after action
+            updateView(view, action);
+        }
+    }
+
+    public void updateActions() {
+        for (int i = 0; i < actionListView.getChildCount(); i++) {
+            View childView = actionListView.getChildAt(i);
+            if (childView.getTag() instanceof Action) {
+                updateView(childView, (Action) childView.getTag());
+            }
         }
     }
 
     /**
      * Adds a new {@link Action}.
-     *
+     * 
      * @param action the action to add
      */
     public void addAction(Action action) {
-        final int index = actionListView.getChildCount();
+        int index = actionListView.getChildCount();
         addAction(action, index);
     }
 
     /**
      * Adds a new {@link Action} at the specified index.
-     *
+     * 
      * @param action the action to add
      * @param index the position at which to add the action
      */
@@ -216,7 +227,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Remove a action from the action bar.
-     *
+     * 
      * @param index position of action to remove
      */
     public void removeActionAt(int index) {
@@ -225,7 +236,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Remove a action from the action bar.
-     *
+     * 
      * @param action The action to remove
      */
     public void removeAction(Action action) {
@@ -243,7 +254,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Returns the number of actions currently registered with the action bar.
-     *
+     * 
      * @return action count
      */
     public int getActionCount() {
@@ -252,13 +263,21 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Inflates a {@link View} with the given {@link Action}.
-     *
+     * 
      * @param action the action to inflate
      * @return a view
      */
     private View inflateAction(Action action) {
         View view = layoutInflater.inflate(R.layout.actionbar_item, actionListView, false);
 
+        updateView(view, action);
+
+        view.setTag(action);
+        view.setOnClickListener(this);
+        return view;
+    }
+
+    private static void updateView(View view, Action action) {
         // set action image
         ImageView imageView = (ImageView) view.findViewById(R.id.actionBarItemImage);
         imageView.setImageResource(action.getDrawable());
@@ -266,10 +285,6 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
         // set action text
         TextView textView = (TextView) view.findViewById(R.id.actionBarItemText);
         textView.setText(action.getText());
-
-        view.setTag(action);
-        view.setOnClickListener(this);
-        return view;
     }
 
     /**
@@ -309,7 +324,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Represents type of action bar title.
-     *
+     * 
      * @author TCSASSEMBLER
      */
     public static enum TitleType {
