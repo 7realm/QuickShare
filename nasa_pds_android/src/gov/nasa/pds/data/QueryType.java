@@ -34,6 +34,9 @@ public enum QueryType {
     GET_INSTRUMENT,
     /** Get file.*/
     GET_FILE,
+    /** Get image.*/
+    GET_IMAGE,
+
     /** Get preview image.*/
     GET_PREVIEW
 }

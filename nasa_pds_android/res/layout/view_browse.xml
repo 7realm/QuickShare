@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:id="@+id/browserPageNavigationGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="2dip" >
+
+        <ImageView
+            android:id="@+id/browserPreviousButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="3dip"
+            android:onClick="onPreviousButtonClick"
+            android:src="@drawable/prev_page" />
+
+        <ImageView
+            android:id="@+id/browserNextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="3dip"
+            android:onClick="onNextButtonClick"
+            android:src="@drawable/next_page" />
+
+        <TextView
+            android:id="@+id/browserPageCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/browserNextButton"
+            android:layout_toRightOf="@id/browserPreviousButton"
+            android:gravity="center" />
+    </RelativeLayout>
+
+    <ViewFlipper
+        android:id="@+id/browserFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/browserPageNavigationGroup"
+        android:layout_alignParentTop="true" >
+    </ViewFlipper>
+
+</RelativeLayout>

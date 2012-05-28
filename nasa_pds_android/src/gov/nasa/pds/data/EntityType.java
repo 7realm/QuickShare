@@ -19,7 +19,9 @@ public enum EntityType {
     /** Instrument entity. */
     INSTRUMENT("Instrument"),
     /** Data file entity. */
-    FILE("DataFile");
+    FILE("DataFile"),
+     /** Data file entity. */
+    IMAGE("DataFile");
 
     private String className;
 
@@ -44,12 +46,12 @@ public enum EntityType {
     }
 
     /**
-     * Get last enum value.
+     * If enum is lowest level value.
      *
-     * @return the last enum value
+     * @return true if enum is lowest level value
      */
-    public static EntityType lowest() {
-        return values()[values().length - 1];
+    public boolean isLowest() {
+        return this == FILE || this == IMAGE;
     }
 
     /**
@@ -104,6 +106,9 @@ public enum EntityType {
             return QueryType.GET_INSTRUMENT;
         case FILE:
             return QueryType.GET_FILE;
+        case IMAGE:
+            // TODO need this?
+            return QueryType.GET_IMAGE;
         case TARGET_TYPE:
         default:
             return null;
@@ -125,6 +130,8 @@ public enum EntityType {
             return QueryType.GET_INSTRUMENTS_INFO;
         case FILE:
             return QueryType.GET_DOCUMENTS_INFO;
+        case IMAGE:
+            return QueryType.GET_IMAGES_INFO;
         case TARGET_TYPE:
         default:
             return QueryType.GET_TYPES_INFO;

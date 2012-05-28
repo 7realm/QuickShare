@@ -149,7 +149,7 @@ class Filter {
         /**
          * Get {@link Restriction} entity for SOAP requests.
          *
-         * @return the created restricion entity
+         * @return the created restriction entity
          */
         public Restriction getRestriction() {
             Restriction result = new Restriction();
