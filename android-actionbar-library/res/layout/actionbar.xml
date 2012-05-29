@@ -12,22 +12,9 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:background="@color/actionbar_separator"
+        android:paddingRight="1dp"
         android:visibility="gone" >
 
-        <ImageButton
-            android:id="@+id/actionbarUpButton"
-            style="@style/ActionBarHomeItem"
-            android:background="@drawable/actionbar_button" />
-
-        <ImageView
-            android:id="@+id/actionbarUpIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/actionbar_back_indicator"
-            android:padding="0dip"
-            android:visibility="gone" />
     </RelativeLayout>
 
     <LinearLayout

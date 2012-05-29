@@ -32,7 +32,7 @@ public class LessonsActivity extends Activity {
         actionBar.setTitle("Lessons");
 
         // add new lesson action
-        actionBar.addAction(new AbstractAction(R.drawable.compare_add, "Add") {
+        actionBar.addAction(new AbstractAction(R.drawable.lesson_add, "Add") {
             @Override
             public void performAction(View view) {
                 startActivity(new Intent(LessonsActivity.this, LessonActivity.class));
@@ -40,7 +40,7 @@ public class LessonsActivity extends Activity {
         });
 
         // browse action
-        actionBar.addAction(new AbstractAction(R.drawable.remove, "Browse") {
+        actionBar.addAction(new AbstractAction(R.drawable.level_down, "Browse") {
             @Override
             public void performAction(View view) {
                 Intent intent = new Intent(LessonsActivity.this, PageViewActivity.class);

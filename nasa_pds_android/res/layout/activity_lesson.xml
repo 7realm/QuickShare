@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:padding="20dp"
-            android:src="@drawable/remove"
+            android:src="@drawable/lesson_part_remove"
             android:visibility="gone" />
 
         <com.lib.ReordableListView

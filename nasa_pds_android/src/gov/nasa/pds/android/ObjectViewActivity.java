@@ -89,7 +89,7 @@ public class ObjectViewActivity extends Activity {
 
         // add to lesson action
         actionBar = (ActionBar) findViewById(R.id.actionbar);
-        actionBar.addAction(new AbstractAction(R.drawable.next_page, "To Lesson") {
+        actionBar.addAction(new AbstractAction(R.drawable.add_to_lesson, "To Lesson") {
             @Override
             public void performAction(View view) {
                 final List<Lesson> lessons = LessonRepository.getLessons();

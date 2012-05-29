@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -63,14 +62,13 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
     }
 
     public void setUpAction(Action action) {
-        // set action to button
-        ImageButton upButton = (ImageButton) layoutView.findViewById(R.id.actionbarUpButton);
-        upButton.setOnClickListener(this);
-        upButton.setTag(action);
-        upButton.setImageResource(action.getDrawable());
+        // make group visible
+        ViewGroup upButtonLayout = (ViewGroup) layoutView.findViewById(R.id.actionbarUpLayout);
+        upButtonLayout.setVisibility(View.VISIBLE);
 
-        // make section visible
-        layoutView.findViewById(R.id.actionbarUpLayout).setVisibility(View.VISIBLE);
+        // set action to button
+        View upActionView = inflateAction(action);
+        upButtonLayout.addView(upActionView);
     }
 
     /**
@@ -79,8 +77,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
      *
      * @param show if "up" triangle will be shown
      */
-    public void setDisplayHomeAsUpEnabled(boolean show) {
-        layoutView.findViewById(R.id.actionbarUpIndicator).setVisibility(show ? View.VISIBLE : View.GONE);
+    public void setUpTriangle(boolean show) {
+//        layoutView.findViewById(R.id.actionbarUpIndicator).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     public void setTitleType(TitleType titleType) {

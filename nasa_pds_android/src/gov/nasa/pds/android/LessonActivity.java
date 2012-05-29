@@ -1,3 +1,4 @@
+
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.lessons.Lesson;
@@ -80,7 +81,7 @@ public class LessonActivity extends Activity {
         });
 
         // add share action
-        actionBar.addAction(new AbstractAction(R.drawable.search_google, "Share") {
+        actionBar.addAction(new AbstractAction(R.drawable.lesson_share, "Share") {
             @Override
             public void performAction(View view) {
                 Toast.makeText(getApplicationContext(), "Share", Toast.LENGTH_SHORT).show();
@@ -88,7 +89,7 @@ public class LessonActivity extends Activity {
         });
 
         // add remove action
-        actionBar.addAction(new AbstractAction(R.drawable.remove, "Remove") {
+        actionBar.addAction(new AbstractAction(R.drawable.lesson_remove, "Remove") {
             @Override
             public void performAction(View view) {
                 LessonRepository.removeLesson(lesson.getId());

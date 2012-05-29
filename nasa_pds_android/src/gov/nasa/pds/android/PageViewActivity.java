@@ -85,6 +85,15 @@ public class PageViewActivity extends Activity {
 
         // set action bar
         actionBar = (ActionBar) findViewById(R.id.actionbar);
+        actionBar.setUpTriangle(true);
+        actionBar.setUpAction(new AbstractAction(R.drawable.level_up, "Lessons") {
+            @Override
+            public void performAction(View view) {
+                finish();
+            }
+        });
+
+        // set title
         actionBar.setTitleType(TitleType.DROP_DOWN);
         actionBar.setTitleChangeListener(new TitleChangeListener() {
             @Override

@@ -5,7 +5,8 @@
 
     <TextView
         android:id="@+id/actionBarItemText"
-        android:textSize="7sp"
+        android:textSize="8sp"
+        android:lines="1"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
