@@ -1,4 +1,3 @@
-
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.lessons.Lesson;
@@ -15,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -139,7 +139,7 @@ public class LessonActivity extends Activity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = View.inflate(LessonActivity.this, android.R.layout.simple_list_item_2, null);
+                convertView = View.inflate(LessonActivity.this, R.layout.item_lesson_part, null);
             }
 
             LessonPart lessonPart = getItem(position);
@@ -151,6 +151,10 @@ public class LessonActivity extends Activity {
             // secondary text view
             TextView secondaryText = (TextView) convertView.findViewById(android.R.id.text2);
             secondaryText.setText(lessonPart.getSecondaryText());
+
+            // set icon
+            ImageView imageView = (ImageView) convertView.findViewById(android.R.id.icon);
+            imageView.setImageResource(lessonPart.getIconId());
 
             return convertView;
         }

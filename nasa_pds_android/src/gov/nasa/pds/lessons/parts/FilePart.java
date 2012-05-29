@@ -3,6 +3,7 @@
  */
 package gov.nasa.pds.lessons.parts;
 
+import gov.nasa.pds.android.R;
 import gov.nasa.pds.soap.entities.WsDataFile;
 
 public class FilePart extends TextPart {
@@ -20,8 +21,13 @@ public class FilePart extends TextPart {
         return caption;
     }
 
+    @Override
+    public int getIconId() {
+        return R.drawable.object_file;
+    }
+
     public FilePart(WsDataFile dataFile) {
-        setCaption(dataFile.getName());
+        setCaption("File: " + dataFile.getName());
 
         // set content from corresponding source
         setText(dataFile.getContent() != null ? dataFile.getContent() : new String(dataFile.getDataHandler().getContent()));

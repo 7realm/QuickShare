@@ -3,6 +3,7 @@
  */
 package gov.nasa.pds.lessons.parts;
 
+import gov.nasa.pds.android.R;
 import gov.nasa.pds.data.DataCenter;
 import gov.nasa.pds.soap.entities.Mission;
 import gov.nasa.pds.soap.entities.Reference;
@@ -28,6 +29,11 @@ public class MissionPart extends TextPart {
     @Override
     public String getSecondaryText() {
         return name;
+    }
+
+    @Override
+    public int getIconId() {
+        return R.drawable.object_mission;
     }
 
     public MissionPart(Mission mission) {

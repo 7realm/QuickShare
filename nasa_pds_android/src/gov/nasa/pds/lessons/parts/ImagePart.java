@@ -3,6 +3,7 @@
  */
 package gov.nasa.pds.lessons.parts;
 
+import gov.nasa.pds.android.R;
 import gov.nasa.pds.data.ImageCenter;
 import gov.nasa.pds.lessons.LessonPart;
 
@@ -38,6 +39,11 @@ public class ImagePart implements LessonPart {
     @Override
     public String getSecondaryText() {
         return caption;
+    }
+
+    @Override
+    public int getIconId() {
+        return R.drawable.object_file;
     }
 
     @Override

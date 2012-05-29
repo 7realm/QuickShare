@@ -2,6 +2,8 @@
  * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
  */
 package gov.nasa.pds.lessons.parts;
+
+import gov.nasa.pds.android.R;
 import gov.nasa.pds.soap.entities.Instrument;
 import gov.nasa.pds.soap.entities.Reference;
 
@@ -9,7 +11,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-
 
 public class InstrumentPart extends TextPart {
     private String type;
@@ -28,6 +29,11 @@ public class InstrumentPart extends TextPart {
     @Override
     public String getSecondaryText() {
         return name;
+    }
+
+    @Override
+    public int getIconId() {
+        return R.drawable.object_instrument;
     }
 
     public InstrumentPart(Instrument instrument) {

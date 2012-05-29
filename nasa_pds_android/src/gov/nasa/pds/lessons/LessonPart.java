@@ -13,6 +13,8 @@ public interface LessonPart {
 
     String getSecondaryText();
 
+    int getIconId();
+
     void render(File filesDir, StringBuilder page);
 
     void save(DataOutputStream out) throws IOException;
