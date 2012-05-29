@@ -76,7 +76,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
     /**
      * Emulating Honeycomb, setdisplayHomeAsUpEnabled takes a boolean and toggles whether the "home" view should have a little triangle
      * indicating "up".
-     * 
+     *
      * @param show if "up" triangle will be shown
      */
     public void setDisplayHomeAsUpEnabled(boolean show) {
@@ -161,7 +161,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
     public void setTitle(int titleIndex, String[] items) {
         if (titleType == TitleType.DROP_DOWN) {
             titleSpinnerView.setAdapter(
-                new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, android.R.id.text1, items));
+                new ArrayAdapter<String>(getContext(), R.layout.actionbar_list_item, android.R.id.text1, items));
             titleSpinnerView.setSelection(titleIndex);
         } else {
             throw new UnsupportedOperationException("Setting spinner title to incorrect title type: " + titleType);
@@ -170,7 +170,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Set the visible state of the progress bar.
-     * 
+     *
      * @param isVisible if progress bar should be visible
      */
     public void setProgressBarVisibile(boolean isVisible) {
@@ -200,7 +200,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Adds a new {@link Action}.
-     * 
+     *
      * @param action the action to add
      */
     public void addAction(Action action) {
@@ -210,7 +210,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Adds a new {@link Action} at the specified index.
-     * 
+     *
      * @param action the action to add
      * @param index the position at which to add the action
      */
@@ -227,7 +227,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Remove a action from the action bar.
-     * 
+     *
      * @param index position of action to remove
      */
     public void removeActionAt(int index) {
@@ -236,7 +236,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Remove a action from the action bar.
-     * 
+     *
      * @param action The action to remove
      */
     public void removeAction(Action action) {
@@ -254,7 +254,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Returns the number of actions currently registered with the action bar.
-     * 
+     *
      * @return action count
      */
     public int getActionCount() {
@@ -263,7 +263,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Inflates a {@link View} with the given {@link Action}.
-     * 
+     *
      * @param action the action to inflate
      * @return a view
      */
@@ -324,7 +324,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
     /**
      * Represents type of action bar title.
-     * 
+     *
      * @author TCSASSEMBLER
      */
     public static enum TitleType {
