@@ -7,7 +7,10 @@ import gov.nasa.pds.lessons.LessonRepository;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -92,8 +95,18 @@ public class LessonActivity extends Activity {
         actionBar.addAction(new AbstractAction(R.drawable.lesson_remove, "Remove") {
             @Override
             public void performAction(View view) {
-                LessonRepository.removeLesson(lesson.getId());
-                finish();
+                // display dialog to confirm remove
+                new AlertDialog.Builder(LessonActivity.this)
+                    .setTitle("Remove lesson '" + lesson.getName() + "'?")
+                    .setPositiveButton("Yes", new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            LessonRepository.removeLesson(lesson.getId());
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .create().show();
             }
         });
     }

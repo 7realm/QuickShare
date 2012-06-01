@@ -100,7 +100,7 @@ public class ObjectViewActivity extends Activity {
                 }
 
                 new AlertDialog.Builder(ObjectViewActivity.this)
-                    .setTitle("Select lesson ot add to:")
+                    .setTitle("Select lesson:")
                     .setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int item) {
@@ -128,6 +128,10 @@ public class ObjectViewActivity extends Activity {
                             if (lessonPart != null) {
                                 lessons.get(item).getParts().add(lessonPart);
                                 LessonRepository.save();
+
+                                // show confirmation
+                                Toast.makeText(ObjectViewActivity.this,
+                                    lessonPart.getPrimaryText() + " is added to lesson.", Toast.LENGTH_LONG).show();
                             }
                         }
                     }).create().show();

@@ -49,7 +49,7 @@ public class DataCenter {
 
     private static final String URL_PATTERN = "http://%s:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
-    private static String url = "50.19.174.233";
+    private static String url = "192.168.42.97";
 
     /**
      * Format date to long format.
@@ -195,7 +195,7 @@ public class DataCenter {
     private static Object executeMethod(SoapSerializationEnvelope envelope) {
         try {
             // execute soap call
-            SoapEnvelopeExecutor.executeSoap(envelope);
+            SoapEnvelopeExecutor.executeSoap(String.format(URL_PATTERN, url), envelope);
 
             return envelope.getResponse();
         } catch (SoapFault soapFault) {

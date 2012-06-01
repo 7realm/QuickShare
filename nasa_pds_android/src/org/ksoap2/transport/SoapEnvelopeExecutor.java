@@ -31,15 +31,14 @@ import android.util.Log;
 public class SoapEnvelopeExecutor {
     private static final String CONTENT_TYPE_XML_CHARSET_UTF_8 = "text/xml;charset=utf-8";
     private static final String CONTENT_TYPE_SOAP_XML_CHARSET_UTF_8 = "application/soap+xml;charset=utf-8";
-    private static final String URL = "http://50.19.174.233:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
-    public static Object executeSoap(SoapSerializationEnvelope envelope) throws IllegalStateException, IOException, XmlPullParserException {
+    public static Object executeSoap(String url, SoapSerializationEnvelope envelope) throws IllegalStateException, IOException, XmlPullParserException {
         // get request data
         byte[] requestData = createRequestData(envelope);
         Log.d("soap", "Request: " + new String(requestData));
 
         // prepare POST method
-        HttpPost request = new HttpPost(URL);
+        HttpPost request = new HttpPost(url);
         request.setHeader("User-Agent", "mobile");
         if (envelope.version != SoapEnvelope.VER12) {
             request.setHeader("SOAPAction", "\"\"");

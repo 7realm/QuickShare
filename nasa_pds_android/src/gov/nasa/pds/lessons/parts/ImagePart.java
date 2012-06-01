@@ -51,7 +51,8 @@ public class ImagePart implements LessonPart {
         // add image tag to page with caption below
         page.append("<div class=\"imageBlock\">")
             .append("<img class=\"image\" src=\"files/").append(imageId).append("\" alt=\"").append("Image is not loaded").append("\">")
-            .append("<br>").append("<div class=\"imageCaption\">").append(caption).append("</div>");
+            .append("<br>").append("<div class=\"imageCaption\">").append(caption).append("</div>")
+            .append("</div>");
 
         // copy image file to render location
         File imageFile = ImageCenter.getImage(imageId);

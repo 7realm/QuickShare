@@ -6,6 +6,8 @@ package gov.nasa.pds.lessons.parts;
 import gov.nasa.pds.android.R;
 import gov.nasa.pds.soap.entities.WsDataFile;
 
+import java.io.File;
+
 public class FilePart extends TextPart {
     public FilePart() {
         // default empty constructor
@@ -31,5 +33,12 @@ public class FilePart extends TextPart {
 
         // set content from corresponding source
         setText(dataFile.getContent() != null ? dataFile.getContent() : new String(dataFile.getDataHandler().getContent()));
+    }
+
+    @Override
+    protected void renderText(File filesDir, StringBuilder page) {
+        page.append("<br>");
+
+        super.renderText(filesDir, page);
     }
 }
