@@ -14,7 +14,6 @@
         android:background="@color/actionbar_separator"
         android:paddingRight="1dp"
         android:visibility="gone" >
-
     </RelativeLayout>
 
     <LinearLayout
@@ -61,10 +60,12 @@
             android:maxLines="1"
             android:visibility="gone" />
 
-        <Spinner
-            android:id="@+id/actionbarTitleSpinner"
+        <TextView
+            android:id="@+id/actionbarTitleDrowDown"
             style="@style/ActionBarTitleView"
             android:background="@drawable/spinner_background_holo_dark"
+            android:ellipsize="marquee"
+            android:lines="1"
             android:visibility="gone" />
     </RelativeLayout>
 

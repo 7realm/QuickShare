@@ -1,49 +1,41 @@
 /*
- * Copyright (C) 2010 Johan Nilsson <http://markupartist.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2010 Johan Nilsson <http://markupartist.com> Licensed under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package com.markupartist.android.widget;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.markupartist.android.widget.actionbar.R;
 
 public class ActionBar extends RelativeLayout implements OnClickListener, TextWatcher {
-    private ViewGroup layoutView;
+    private final ViewGroup layoutView;
     private TextView titleTextView;
-    private Spinner titleSpinnerView;
-    private ViewGroup actionListView;
-    private ProgressBar progressBar;
+    private final ViewGroup actionListView;
+    private final ProgressBar progressBar;
     private TitleChangeListener titleChangeListener;
     private TitleType titleType = TitleType.LABEL;
-    private LayoutInflater layoutInflater;
+    private final LayoutInflater layoutInflater;
+    private String[] dropDownItems;
 
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -71,16 +63,6 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
         upButtonLayout.addView(upActionView);
     }
 
-    /**
-     * Emulating Honeycomb, setdisplayHomeAsUpEnabled takes a boolean and toggles whether the "home" view should have a little triangle
-     * indicating "up".
-     *
-     * @param show if "up" triangle will be shown
-     */
-    public void setUpTriangle(boolean show) {
-//        layoutView.findViewById(R.id.actionbarUpIndicator).setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
     public void setTitleType(TitleType titleType) {
         this.titleType = titleType;
 
@@ -91,7 +73,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
             findViewById(R.id.actionbarTitleLabel).setVisibility(VISIBLE);
             findViewById(R.id.actionbarTitleEdit).setVisibility(GONE);
-            findViewById(R.id.actionbarTitleSpinner).setVisibility(GONE);
+            findViewById(R.id.actionbarTitleDrowDown).setVisibility(GONE);
             break;
 
         case EDIT:
@@ -100,29 +82,44 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
             findViewById(R.id.actionbarTitleLabel).setVisibility(GONE);
             findViewById(R.id.actionbarTitleEdit).setVisibility(VISIBLE);
-            findViewById(R.id.actionbarTitleSpinner).setVisibility(GONE);
+            findViewById(R.id.actionbarTitleDrowDown).setVisibility(GONE);
             break;
 
         case DROP_DOWN:
-            titleSpinnerView = (Spinner) findViewById(R.id.actionbarTitleSpinner);
-            titleSpinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
+            titleTextView = (TextView) findViewById(R.id.actionbarTitleDrowDown);
+            titleTextView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
-                public void onItemSelected(AdapterView<?> adapterview, View view, int pos, long id) {
-                    if (titleChangeListener != null) {
-                        titleChangeListener.onTitleChanged(null, pos);
+                public void onClick(View v) {
+                    if (dropDownItems == null) {
+                        Log.w("action_bar", "Drop down items are not set.");
+                        return;
                     }
-                }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterview) {
-                    // do nothing
+                    // show alert dialog that will emulate drop down
+                    new AlertDialog.Builder(getContext())
+                        .setTitle("Select browse item type:")
+                        .setItems(dropDownItems, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // check if we did not selected the current item
+                                if (!dropDownItems[which].equals(titleTextView.getText())) {
+                                    titleTextView.setText(dropDownItems[which]);
+
+                                    // notify title change listener
+                                    if (titleChangeListener != null) {
+                                        titleChangeListener.onTitleChanged(dropDownItems[which], which);
+                                    }
+                                }
+                            }
+                        })
+                        .create().show();
                 }
             });
 
             findViewById(R.id.actionbarTitleLabel).setVisibility(GONE);
             findViewById(R.id.actionbarTitleEdit).setVisibility(GONE);
-            findViewById(R.id.actionbarTitleSpinner).setVisibility(VISIBLE);
+            findViewById(R.id.actionbarTitleDrowDown).setVisibility(VISIBLE);
             break;
         }
     }
@@ -156,11 +153,10 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
         }
     }
 
-    public void setTitle(int titleIndex, String[] items) {
+    public void setTitle(int titleIndex, String[] dropDownItems) {
+        this.dropDownItems = dropDownItems;
         if (titleType == TitleType.DROP_DOWN) {
-            titleSpinnerView.setAdapter(
-                new ArrayAdapter<String>(getContext(), R.layout.actionbar_list_item, android.R.id.text1, items));
-            titleSpinnerView.setSelection(titleIndex);
+            titleTextView.setText(dropDownItems[titleIndex]);
         } else {
             throw new UnsupportedOperationException("Setting spinner title to incorrect title type: " + titleType);
         }
@@ -297,8 +293,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
     }
 
     public static abstract class AbstractAction implements Action {
-        private int drawable;
-        private String text;
+        private final int drawable;
+        private final String text;
 
         public AbstractAction(int drawable, String text) {
             this.drawable = drawable;
