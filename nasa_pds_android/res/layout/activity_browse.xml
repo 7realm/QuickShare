@@ -28,7 +28,7 @@
             <RelativeLayout
                 style="@style/ActionBarItem"
                 android:layout_marginLeft="1dp"
-                android:background="@drawable/actionbar_button"
+                android:background="@drawable/background_actionbar_button"
                 android:onClick="onSearchCancelButtonClick" >
 
                 <TextView
@@ -51,7 +51,7 @@
             <RelativeLayout
                 style="@style/ActionBarItem"
                 android:layout_marginLeft="1dp"
-                android:background="@drawable/actionbar_button"
+                android:background="@drawable/background_actionbar_button"
                 android:onClick="onSearchButtonClick" >
 
                 <TextView

@@ -55,7 +55,7 @@
         <EditText
             android:id="@+id/actionbarTitleEdit"
             style="@style/ActionBarTitleView"
-            android:background="@drawable/edit_text_holo_dark"
+            android:background="@drawable/background_edit"
             android:inputType="text"
             android:maxLines="1"
             android:visibility="gone" />
@@ -63,7 +63,7 @@
         <TextView
             android:id="@+id/actionbarTitleDrowDown"
             style="@style/ActionBarTitleView"
-            android:background="@drawable/spinner_background_holo_dark"
+            android:background="@drawable/background_drop_down"
             android:ellipsize="marquee"
             android:lines="1"
             android:visibility="gone" />
