@@ -13,36 +13,75 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/actionbar_height"
         android:layout_alignParentTop="true"
-        android:background="@android:color/darker_gray" >
+        android:background="@drawable/actionbar_background"
+        android:orientation="horizontal" >
 
-        <ImageView
-            android:id="@+id/browserSearchCancelButton"
+        <LinearLayout
+            android:id="@+id/browserSearchButtons"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:onClick="onSearchCancelButtonClick"
-            android:src="@drawable/remove" />
+            android:layout_weight="1"
+            android:background="@color/actionbar_separator"
+            android:orientation="horizontal" >
 
-        <ImageView
-            android:id="@+id/browserSearchButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:layout_toLeftOf="@id/browserSearchCancelButton"
-            android:onClick="onSearchButtonClick"
-            android:src="@drawable/search_text" />
+            <RelativeLayout
+                style="@style/ActionBarItem"
+                android:layout_marginLeft="1dp"
+                android:background="@drawable/actionbar_button"
+                android:onClick="onSearchCancelButtonClick" >
+
+                <TextView
+                    android:id="@android:id/text1"
+                    style="@style/ActionBarItemCaption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@android:id/text1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/remove" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ActionBarItem"
+                android:layout_marginLeft="1dp"
+                android:background="@drawable/actionbar_button"
+                android:onClick="onSearchButtonClick" >
+
+                <TextView
+                    android:id="@android:id/text1"
+                    style="@style/ActionBarItemCaption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Search" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@android:id/text1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/search_text" />
+            </RelativeLayout>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/browserSearchText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:layout_toLeftOf="@id/browserSearchButton"
+            android:layout_margin="0dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@id/browserSearchButtons"
+            android:layout_weight="0.5"
             android:hint="Enter text here to search" />
     </RelativeLayout>
 

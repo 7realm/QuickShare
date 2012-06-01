@@ -5,16 +5,10 @@
 
     <TextView
         android:id="@+id/actionBarItemText"
-        android:textSize="8sp"
-        android:lines="1"
-        android:textStyle="bold"
+        style="@style/ActionBarItemCaption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="0dp"
-        android:gravity="center"
-        android:text="Remove"
-        android:padding="0dp" />
+        android:text="Remove" />
 
     <ImageView
         android:id="@+id/actionBarItemImage"
