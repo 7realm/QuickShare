@@ -10,7 +10,6 @@ import gov.nasa.pds.soap.entities.EntityInfo;
 
 import java.util.Iterator;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -26,10 +24,10 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.TitleChangeListener;
 import com.markupartist.android.widget.ActionBar.TitleType;
+import com.markupartist.android.widget.ActionBarActivity;
 
 /**
  * Activity that will browse objects.
@@ -37,13 +35,12 @@ import com.markupartist.android.widget.ActionBar.TitleType;
  * @author 7realm
  * @version 1.0
  */
-public class PageViewActivity extends Activity {
+public class PageViewActivity extends ActionBarActivity {
     /** Intent extra for query type. */
     public static final String EXTRA_ENTITY_TYPE = "query_type";
     private final Filter filter = new Filter();
     private EntityType entityType;
     private TextView searchTextView;
-    private ActionBar actionBar;
     private ViewGroup searchGroup;
     private BrowserView browserTab;
     private BrowserView browserTab0;
@@ -57,7 +54,6 @@ public class PageViewActivity extends Activity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse);
 
@@ -99,8 +95,7 @@ public class PageViewActivity extends Activity {
         });
 
         // set action bar
-        actionBar = (ActionBar) findViewById(R.id.actionbar);
-        actionBar.setUpAction(new AbstractAction(R.drawable.level_up, "Lessons") {
+        getActionBar().setUpAction(new AbstractAction(R.drawable.level_up, "Lessons") {
             @Override
             public void performAction(View view) {
                 finish();
@@ -108,8 +103,8 @@ public class PageViewActivity extends Activity {
         });
 
         // set title
-        actionBar.setTitleType(TitleType.DROP_DOWN);
-        actionBar.setTitleChangeListener(new TitleChangeListener() {
+        getActionBar().setTitleType(TitleType.DROP_DOWN);
+        getActionBar().setTitleChangeListener(new TitleChangeListener() {
             @Override
             public void onTitleChanged(CharSequence newTitle, int newTitlePosition) {
                 // get entity type by ordinal value
@@ -128,7 +123,7 @@ public class PageViewActivity extends Activity {
         });
 
         // add text filter action
-        actionBar.addAction(new AbstractAction(R.drawable.search_text, "Filter") {
+        getActionBar().addAction(new AbstractAction(R.drawable.search_text, "Filter") {
             @Override
             public void performAction(View view) {
                 searchGroup.setVisibility(View.VISIBLE);
@@ -223,7 +218,7 @@ public class PageViewActivity extends Activity {
         entityType = newEntityType;
 
         // update action bar
-        actionBar.setTitle(entityType.ordinal(), getResources().getStringArray(R.array.entities_type));
+        getActionBar().setTitle(entityType.ordinal(), getResources().getStringArray(R.array.entities_type));
 
         refresh();
     }
@@ -305,8 +300,7 @@ public class PageViewActivity extends Activity {
     private final class BrowserEventHandlerImpl implements BrowserEventHandler {
         @Override
         public void onStartDataLoad() {
-            setProgressBarIndeterminateVisibility(true);
-
+            startProgress();
         }
 
         @Override
@@ -323,7 +317,7 @@ public class PageViewActivity extends Activity {
 
         @Override
         public void onEndDataLoad() {
-            setProgressBarIndeterminateVisibility(false);
+            stopProgress();
         }
     }
 

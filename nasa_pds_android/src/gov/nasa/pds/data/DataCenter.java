@@ -49,7 +49,7 @@ public class DataCenter {
 
     private static final String URL_PATTERN = "http://%s:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
 
-    private static String url = "192.168.42.92";
+    private static String url = "192.168.42.225";
 
     /**
      * Format date to long format.

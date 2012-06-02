@@ -15,16 +15,13 @@
         <item name="android:layout_marginLeft">1dp</item>
     </style>
 
-    <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Large"></style>
-
     <style name="ActionBarTitleView" parent="ActionBarTitleViewTextStyle">
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">10dip</item>
-        <item name="android:layout_marginRight">10dip</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_toLeftOf">@id/actionbarProgressBar</item>
     </style>
 
     <style name="ActionBarTitleViewTextStyle">

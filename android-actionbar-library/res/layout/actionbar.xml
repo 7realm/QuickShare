@@ -34,13 +34,11 @@
 
         <ProgressBar
             android:id="@+id/actionbarProgressBar"
-            style="@style/ActionBarProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:indeterminateOnly="true"
-            android:paddingRight="7dip"
             android:visibility="gone" />
 
         <com.markupartist.android.widget.ScrollingTextView

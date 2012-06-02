@@ -6,7 +6,6 @@ import gov.nasa.pds.lessons.LessonRepository;
 
 import java.io.File;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -24,12 +23,12 @@ import android.widget.Toast;
 import com.lib.ReordableListView;
 import com.lib.ReordableListView.DragAndDropListner;
 import com.lib.ReordableListView.ReordableAdapter;
-import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.TitleChangeListener;
 import com.markupartist.android.widget.ActionBar.TitleType;
+import com.markupartist.android.widget.ActionBarActivity;
 
-public class LessonActivity extends Activity {
+public class LessonActivity extends ActionBarActivity {
     public static final String EXTRA_LESSON_ID = "intent.extra.lesson.id";
     private Lesson lesson;
 
@@ -61,10 +60,9 @@ public class LessonActivity extends Activity {
         });
 
         // get action bar
-        final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-        actionBar.setTitleType(TitleType.EDIT);
-        actionBar.setTitle(lesson.getName());
-        actionBar.setTitleChangeListener(new TitleChangeListener() {
+        getActionBar().setTitleType(TitleType.EDIT);
+        getActionBar().setTitle(lesson.getName());
+        getActionBar().setTitleChangeListener(new TitleChangeListener() {
             @Override
             public void onTitleChanged(CharSequence newTitle, int newTitlePosition) {
                 if (!lesson.getName().equals(newTitle)) {
@@ -76,7 +74,7 @@ public class LessonActivity extends Activity {
         });
 
         // add preview action
-        actionBar.addAction(new AbstractAction(R.drawable.search_text, "Preview") {
+        getActionBar().addAction(new AbstractAction(R.drawable.search_text, "Preview") {
             @Override
             public void performAction(View view) {
                 new RenderTast().execute();
@@ -84,7 +82,7 @@ public class LessonActivity extends Activity {
         });
 
         // add share action
-        actionBar.addAction(new AbstractAction(R.drawable.lesson_share, "Share") {
+        getActionBar().addAction(new AbstractAction(R.drawable.lesson_share, "Share") {
             @Override
             public void performAction(View view) {
                 Toast.makeText(getApplicationContext(), "Share", Toast.LENGTH_SHORT).show();
@@ -92,7 +90,7 @@ public class LessonActivity extends Activity {
         });
 
         // add remove action
-        actionBar.addAction(new AbstractAction(R.drawable.lesson_remove, "Remove") {
+        getActionBar().addAction(new AbstractAction(R.drawable.lesson_remove, "Remove") {
             @Override
             public void performAction(View view) {
                 // display dialog to confirm remove

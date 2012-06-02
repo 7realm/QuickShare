@@ -24,7 +24,6 @@ import gov.nasa.pds.soap.entities.WsDataFile;
 import java.io.File;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,7 +34,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -43,9 +41,9 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.Action;
+import com.markupartist.android.widget.ActionBarActivity;
 
 /**
  * Activity that will view specific objects.
@@ -53,14 +51,13 @@ import com.markupartist.android.widget.ActionBar.Action;
  * @author 7realm
  * @version 1.0
  */
-public class ObjectViewActivity extends Activity {
+public class ObjectViewActivity extends ActionBarActivity {
     /** Intent extra name for query type. */
     public static final String EXTRA_QUERY_TYPE = "query_type";
     /** Intent extra name for object id. */
     public static final String EXTRA_OBJECT_ID = "object_id";
     private ObjectQuery<Object> query;
     private Object currentObject;
-    private ActionBar actionBar;
     private long id;
 
     /**
@@ -71,7 +68,6 @@ public class ObjectViewActivity extends Activity {
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
         // get query data form intent
@@ -88,8 +84,7 @@ public class ObjectViewActivity extends Activity {
         }
 
         // add to lesson action
-        actionBar = (ActionBar) findViewById(R.id.actionbar);
-        actionBar.addAction(new AbstractAction(R.drawable.add_to_lesson, "To Lesson") {
+        getActionBar().addAction(new AbstractAction(R.drawable.add_to_lesson, "To Lesson") {
             @Override
             public void performAction(View view) {
                 final List<Lesson> lessons = LessonRepository.getLessons();
@@ -140,7 +135,7 @@ public class ObjectViewActivity extends Activity {
 
         // add compare action
         if (query.getQueryType() == QueryType.GET_MISSION) {
-            actionBar.addAction(new MissionCompareAction());
+            getActionBar().addAction(new MissionCompareAction());
         }
 
         // load data
@@ -217,7 +212,7 @@ public class ObjectViewActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            setProgressBarIndeterminateVisibility(true);
+            startProgress();
         }
 
         @Override
@@ -232,13 +227,13 @@ public class ObjectViewActivity extends Activity {
                 // set object caption based on query type
                 switch (query.getQueryType()) {
                 case GET_MISSION:
-                    actionBar.setTitle("Mission: " + referencedEntity.getName());
+                    getActionBar().setTitle("Mission: " + referencedEntity.getName());
                     break;
                 case GET_INSTRUMENT:
-                    actionBar.setTitle("Instrument: " + referencedEntity.getName());
+                    getActionBar().setTitle("Instrument: " + referencedEntity.getName());
                     break;
                 default:
-                    actionBar.setTitle("Unknown object: " + referencedEntity.getName());
+                    getActionBar().setTitle("Unknown object: " + referencedEntity.getName());
                     break;
                 }
 
@@ -299,12 +294,12 @@ public class ObjectViewActivity extends Activity {
                     File imageFile = ImageCenter.getImage(dataFile.getId());
 
                     // set image from downloaded file
-                    actionBar.setTitle("Image: " + dataFile.getName());
+                    getActionBar().setTitle("Image: " + dataFile.getName());
                     ImageView imageView = (ImageView) findViewById(R.id.fileImage);
                     imageView.setImageURI(Uri.fromFile(imageFile));
                     findViewById(R.id.fileDocument).setVisibility(View.GONE);
                 } else {
-                    actionBar.setTitle("File: " + dataFile.getName());
+                    getActionBar().setTitle("File: " + dataFile.getName());
                     setText(R.id.fileContent, dataFile.getContent());
                     findViewById(R.id.fileImage).setVisibility(View.GONE);
                 }
@@ -312,7 +307,7 @@ public class ObjectViewActivity extends Activity {
                 File imageFile = (File) result;
 
                 // set image from downloaded file
-                actionBar.setTitle("Image: " + imageFile.getName());
+                getActionBar().setTitle("Image: " + imageFile.getName());
                 ImageView imageView = (ImageView) findViewById(R.id.fileImage);
                 imageView.setImageURI(Uri.fromFile(imageFile));
                 findViewById(R.id.fileDocument).setVisibility(View.GONE);
@@ -321,9 +316,9 @@ public class ObjectViewActivity extends Activity {
             }
 
             // update actions
-            actionBar.updateActions();
+            getActionBar().updateActions();
 
-            setProgressBarIndeterminateVisibility(false);
+            stopProgress();
         }
     }
 }

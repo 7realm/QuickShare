@@ -6,7 +6,6 @@ package gov.nasa.pds.android;
 import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.lessons.Lesson;
 import gov.nasa.pds.lessons.LessonRepository;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +17,9 @@ import android.widget.TextView;
 
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
+import com.markupartist.android.widget.ActionBarActivity;
 
-public class LessonsActivity extends Activity {
+public class LessonsActivity extends ActionBarActivity {
     private BaseAdapter adapter;
 
     @Override
@@ -28,7 +28,7 @@ public class LessonsActivity extends Activity {
         setContentView(R.layout.activity_lessons);
 
         // set action bar
-        ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+        ActionBar actionBar = getActionBar();
         actionBar.setTitle("Lessons");
         actionBar.setUpAction(new AbstractAction(R.drawable.logo, null) {
 

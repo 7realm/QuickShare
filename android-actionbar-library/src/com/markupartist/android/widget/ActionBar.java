@@ -1,12 +1,3 @@
-/*
- * Copyright (C) 2010 Johan Nilsson <http://markupartist.com> Licensed under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the specific language governing permissions and limitations under the
- * License.
- */
-
 package com.markupartist.android.widget;
 
 import android.app.AlertDialog;
@@ -28,13 +19,14 @@ import android.widget.TextView;
 import com.markupartist.android.widget.actionbar.R;
 
 public class ActionBar extends RelativeLayout implements OnClickListener, TextWatcher {
+    private final LayoutInflater layoutInflater;
     private final ViewGroup layoutView;
-    private TextView titleTextView;
     private final ViewGroup actionListView;
     private final ProgressBar progressBar;
+
+    private TextView titleTextView;
     private TitleChangeListener titleChangeListener;
     private TitleType titleType = TitleType.LABEL;
-    private final LayoutInflater layoutInflater;
     private String[] dropDownItems;
 
     public ActionBar(Context context, AttributeSet attrs) {
@@ -167,7 +159,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
      *
      * @param isVisible if progress bar should be visible
      */
-    public void setProgressBarVisibile(boolean isVisible) {
+    public void setProgressBarVisible(boolean isVisible) {
         progressBar.setVisibility(isVisible ? VISIBLE : GONE);
     }
 

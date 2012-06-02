@@ -44,6 +44,7 @@ public class CompareActivity extends Activity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // TODO change progress indicator
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compare);
@@ -175,7 +176,7 @@ public class CompareActivity extends Activity {
     }
 
     /**
-     * Data load task that will load data required for comparision.
+     * Data load task that will load data required for comparison.
      *
      * @author 7realm
      * @version 1.0
