@@ -87,13 +87,12 @@
             android:inputType="text" />
     </RelativeLayout>
 
-    <LinearLayout
+    <HorizontalScrollView
         android:id="@+id/browserRestrictionGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/actionbar"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical" >
+        android:layout_centerHorizontal="true" >
 
         <LinearLayout
             android:id="@+id/browserRestrictionGroup0"
@@ -102,15 +101,7 @@
             android:layout_gravity="center_vertical"
             android:orientation="horizontal" >
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/browserRestrictionGroup1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal" >
-        </LinearLayout>
-    </LinearLayout>
+    </HorizontalScrollView>
 
     <FrameLayout
         android:id="@+id/browserContent"

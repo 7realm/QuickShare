@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -255,21 +256,21 @@ public class PageViewActivity extends Activity {
     private void refreshRestrictionGroup() {
         // set restriction group
         ViewGroup restrictionGroup0 = (ViewGroup) findViewById(R.id.browserRestrictionGroup0);
-        ViewGroup restrictionGroup1 = (ViewGroup) findViewById(R.id.browserRestrictionGroup1);
+//        ViewGroup restrictionGroup1 = (ViewGroup) findViewById(R.id.browserRestrictionGroup1);
         restrictionGroup0.removeAllViews();
-        restrictionGroup1.removeAllViews();
-        int index = 0;
+//        restrictionGroup1.removeAllViews();
+//        int index = 0;
         for (Iterator<NamedRestriction> i = filter.getRestrictions().iterator(); i.hasNext();) {
             NamedRestriction restriction = i.next();
 
             // create and fill restriction view
-            View restrictionView = LayoutInflater.from(this).inflate(R.layout.view_restriction, null);
-            if (index < 2) {
+            View restrictionView = LayoutInflater.from(this).inflate(R.layout.view_restriction, restrictionGroup0, false);
+//            if (index < 2) {
                 restrictionGroup0.addView(restrictionView);
-            } else {
-                restrictionGroup1.addView(restrictionView);
-            }
-            index++;
+//            } else {
+//                restrictionGroup1.addView(restrictionView);
+//            }
+//            index++;
 
             // set object icon
             ImageView objectIcon = (ImageView) restrictionView.findViewById(R.id.restrictionObjectIcon);
@@ -297,6 +298,10 @@ public class PageViewActivity extends Activity {
                 restrictionView.findViewById(R.id.restrictionDeleteButton).setVisibility(View.VISIBLE);
             }
         }
+
+        // TODO
+        HorizontalScrollView scrollView = (HorizontalScrollView) findViewById(R.id.browserRestrictionGroup);
+        scrollView.scrollTo(2000, 2000);
     }
 
     private final class BrowserEventHandlerImpl implements BrowserEventHandler {
