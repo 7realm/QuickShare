@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle" >
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <stroke
-        android:width="2dp"
-        android:color="@color/rounded_border" />
+<!--     Non focused states -->
+<!--     <item android:drawable="@drawable/lesson_item_normal" android:state_focused="false" android:state_pressed="false" android:state_selected="false"/> -->
+<!--     <item android:drawable="@drawable/lesson_item_pressed" android:state_focused="false" android:state_pressed="false" android:state_selected="true"/> -->
 
-    <gradient
-        android:angle="270"
-        android:endColor="@color/table_first"
-        android:startColor="@color/table_second" />
+<!--     Focused states -->
+<!--     <item android:drawable="@drawable/lesson_item_pressed" android:state_focused="true" android:state_pressed="false" android:state_selected="false"/> -->
+<!--     <item android:drawable="@drawable/lesson_item_pressed" android:state_focused="true" android:state_pressed="false" android:state_selected="true"/> -->
 
-    <corners android:radius="5dp" />
-
-</shape>
+    <!-- Pressed -->
+    <item android:drawable="@drawable/lesson_item_pressed" android:state_pressed="true"/>
+    
+    <item android:drawable="@drawable/lesson_item_normal" android:state_focused="false" android:state_pressed="false" android:state_selected="false"/> 
+</selector>

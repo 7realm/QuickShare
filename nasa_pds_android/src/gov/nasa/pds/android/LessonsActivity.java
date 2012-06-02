@@ -8,6 +8,7 @@ import gov.nasa.pds.lessons.Lesson;
 import gov.nasa.pds.lessons.LessonRepository;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBarActivity;
 
@@ -28,9 +28,8 @@ public class LessonsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_lessons);
 
         // set action bar
-        ActionBar actionBar = getActionBar();
-        actionBar.setTitle("Lessons");
-        actionBar.setUpAction(new AbstractAction(R.drawable.logo, null) {
+        getActionBar().setTitle("Lessons");
+        getActionBar().setUpAction(new AbstractAction(R.drawable.logo, null) {
 
             @Override
             public void performAction(View view) {
@@ -39,7 +38,7 @@ public class LessonsActivity extends ActionBarActivity {
         });
 
         // add new lesson action
-        actionBar.addAction(new AbstractAction(R.drawable.lesson_add, "Add") {
+        getActionBar().addAction(new AbstractAction(R.drawable.lesson_add, "Add") {
             @Override
             public void performAction(View view) {
                 startActivity(new Intent(LessonsActivity.this, LessonActivity.class));
@@ -47,7 +46,7 @@ public class LessonsActivity extends ActionBarActivity {
         });
 
         // browse action
-        actionBar.addAction(new AbstractAction(R.drawable.level_down, "Browse") {
+        getActionBar().addAction(new AbstractAction(R.drawable.level_down, "Browse") {
             @Override
             public void performAction(View view) {
                 Intent intent = new Intent(LessonsActivity.this, PageViewActivity.class);
@@ -61,7 +60,7 @@ public class LessonsActivity extends ActionBarActivity {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = View.inflate(LessonsActivity.this, R.layout.item_lesson, null);
+                    convertView = LayoutInflater.from(LessonsActivity.this).inflate(R.layout.item_lesson, null);
                 }
 
                 // update lesson view
