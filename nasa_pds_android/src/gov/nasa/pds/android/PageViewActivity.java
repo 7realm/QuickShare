@@ -13,13 +13,16 @@ import java.util.Iterator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
@@ -82,6 +85,16 @@ public class PageViewActivity extends Activity {
 
         // set search view
         searchTextView = (TextView) findViewById(R.id.browserSearchText);
+        searchTextView.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                // user press enter after search text
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    onSearchButtonClick(v);
+                }
+                return false;
+            }
+        });
 
         // set action bar
         actionBar = (ActionBar) findViewById(R.id.actionbar);

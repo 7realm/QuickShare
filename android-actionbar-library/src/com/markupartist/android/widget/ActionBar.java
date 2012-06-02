@@ -278,7 +278,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
         // set action text
         TextView textView = (TextView) view.findViewById(R.id.actionBarItemText);
-        textView.setText(action.getText());
+        if (action.getText() == null || action.getText().trim().length() == 0) {
+            textView.setVisibility(GONE);
+        } else {
+            textView.setVisibility(VISIBLE);
+            textView.setText(action.getText());
+        }
     }
 
     /**

@@ -30,6 +30,13 @@ public class LessonsActivity extends Activity {
         // set action bar
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
         actionBar.setTitle("Lessons");
+        actionBar.setUpAction(new AbstractAction(R.drawable.logo, null) {
+
+            @Override
+            public void performAction(View view) {
+                // do nothing
+            }
+        });
 
         // add new lesson action
         actionBar.addAction(new AbstractAction(R.drawable.lesson_add, "Add") {
