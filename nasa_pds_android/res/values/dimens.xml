@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="home_icon_size">72dip</dimen>
-    <dimen name="theme_line_height">1dip</dimen>
+    <dimen name="home_icon_size">72dp</dimen>
+    <dimen name="theme_line_height">1dp</dimen>
+    <dimen name="image_button_size">36dp</dimen>
 </resources>

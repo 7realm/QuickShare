@@ -11,22 +11,22 @@
 
         <ImageView
             android:id="@+id/browserPreviousButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_margin="3dip"
             android:onClick="onPreviousButtonClick"
+            android:padding="3dip"
             android:src="@drawable/prev_page" />
 
         <ImageView
             android:id="@+id/browserNextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="3dip"
             android:onClick="onNextButtonClick"
+            android:padding="3dip"
             android:src="@drawable/next_page" />
 
         <TextView

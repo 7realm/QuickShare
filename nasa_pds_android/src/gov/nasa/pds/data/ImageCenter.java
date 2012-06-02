@@ -60,6 +60,10 @@ public class ImageCenter {
     }
 
     public static File processDataFile(WsDataFile dataFile) {
+        if (dataFile == null) {
+            return null;
+        }
+
         long id = dataFile.getId();
         File imageFile = new File(imagesDir, Long.toString(id));
         try {
