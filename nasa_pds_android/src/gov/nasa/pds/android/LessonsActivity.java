@@ -54,7 +54,7 @@ public class LessonsActivity extends Activity {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = View.inflate(LessonsActivity.this, android.R.layout.simple_list_item_1, null);
+                    convertView = View.inflate(LessonsActivity.this, R.layout.item_lesson, null);
                 }
 
                 // update lesson view

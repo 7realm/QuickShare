@@ -21,32 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_weight="1"
             android:background="@color/actionbar_separator"
             android:orientation="horizontal" >
-
-            <RelativeLayout
-                style="@style/ActionBarItem"
-                android:layout_marginLeft="1dp"
-                android:background="@drawable/background_actionbar_button"
-                android:onClick="onSearchCancelButtonClick" >
-
-                <TextView
-                    android:id="@android:id/text1"
-                    style="@style/ActionBarItemCaption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Cancel" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@android:id/text1"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:src="@drawable/remove" />
-            </RelativeLayout>
 
             <RelativeLayout
                 style="@style/ActionBarItem"
@@ -70,6 +46,29 @@
                     android:layout_alignParentTop="true"
                     android:src="@drawable/search_text" />
             </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ActionBarItem"
+                android:layout_marginLeft="1dp"
+                android:background="@drawable/background_actionbar_button"
+                android:onClick="onSearchCancelButtonClick" >
+
+                <TextView
+                    android:id="@android:id/text1"
+                    style="@style/ActionBarItemCaption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@android:id/text1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/remove" />
+            </RelativeLayout>
         </LinearLayout>
 
         <EditText
@@ -81,7 +80,6 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_toLeftOf="@id/browserSearchButtons"
-            android:layout_weight="0.5"
             android:hint="Enter text here to search" />
     </RelativeLayout>
 
