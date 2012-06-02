@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentLeft = "true"
-    android:layout_alignParentTop = "true"
-    android:layout_marginBottom="6dp"
-    android:layout_marginRight="3dp"
-    android:layout_marginTop="6dp"
+    android:layout_alignParentTop="true"
+    android:layout_margin="3dp"
     android:background="@drawable/shape_round_border"
     android:paddingBottom="3dp"
     android:paddingLeft="3dp"
@@ -17,25 +14,33 @@
         android:id="@+id/restrictionObjectIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
         android:layout_margin="2dp" />
-
-    <TextView
-        android:id="@+id/restrictionCaption"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="3dp"
-        android:singleLine="true" />
 
     <ImageView
         android:id="@+id/restrictionDeleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp"
+        android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
+        android:layout_margin="2dp"
         android:onClick="onRestrictionDeleteButtonClick"
         android:src="@drawable/remove"
         android:visibility="gone" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/restrictionCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@id/restrictionDeleteButton"
+        android:layout_toRightOf="@id/restrictionObjectIcon"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textStyle="italic" />
+
+</RelativeLayout>

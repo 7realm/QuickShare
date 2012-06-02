@@ -16,7 +16,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -261,8 +260,9 @@ public class PageViewActivity extends ActionBarActivity {
             View restrictionView = LayoutInflater.from(this).inflate(R.layout.view_restriction, restrictionGroup, false);
 
             // adjust layout params to make calatog-like style
-            MarginLayoutParams layoutParams = (MarginLayoutParams) restrictionView.getLayoutParams();
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) restrictionView.getLayoutParams();
             layoutParams.leftMargin += index * 6;
+            layoutParams.rightMargin += index * 6;
             layoutParams.topMargin += index * 6;
 
             // add view with set layout parameters
