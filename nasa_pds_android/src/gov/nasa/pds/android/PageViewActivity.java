@@ -17,10 +17,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -255,22 +256,23 @@ public class PageViewActivity extends Activity {
 
     private void refreshRestrictionGroup() {
         // set restriction group
-        ViewGroup restrictionGroup0 = (ViewGroup) findViewById(R.id.browserRestrictionGroup0);
-//        ViewGroup restrictionGroup1 = (ViewGroup) findViewById(R.id.browserRestrictionGroup1);
-        restrictionGroup0.removeAllViews();
-//        restrictionGroup1.removeAllViews();
-//        int index = 0;
+        RelativeLayout restrictionGroup = (RelativeLayout) findViewById(R.id.browserRestrictionGroup);
+        restrictionGroup.removeAllViews();
+        int index = 0;
         for (Iterator<NamedRestriction> i = filter.getRestrictions().iterator(); i.hasNext();) {
             NamedRestriction restriction = i.next();
 
             // create and fill restriction view
-            View restrictionView = LayoutInflater.from(this).inflate(R.layout.view_restriction, restrictionGroup0, false);
-//            if (index < 2) {
-                restrictionGroup0.addView(restrictionView);
-//            } else {
-//                restrictionGroup1.addView(restrictionView);
-//            }
-//            index++;
+            View restrictionView = LayoutInflater.from(this).inflate(R.layout.view_restriction, restrictionGroup, false);
+
+            // adjust layout params to make calatog-like style
+            MarginLayoutParams layoutParams = (MarginLayoutParams) restrictionView.getLayoutParams();
+            layoutParams.leftMargin += index * 6;
+            layoutParams.topMargin += index * 6;
+
+            // add view with set layout parameters
+            restrictionGroup.addView(restrictionView);
+            index++;
 
             // set object icon
             ImageView objectIcon = (ImageView) restrictionView.findViewById(R.id.restrictionObjectIcon);
@@ -298,10 +300,6 @@ public class PageViewActivity extends Activity {
                 restrictionView.findViewById(R.id.restrictionDeleteButton).setVisibility(View.VISIBLE);
             }
         }
-
-        // TODO
-        HorizontalScrollView scrollView = (HorizontalScrollView) findViewById(R.id.browserRestrictionGroup);
-        scrollView.scrollTo(2000, 2000);
     }
 
     private final class BrowserEventHandlerImpl implements BrowserEventHandler {

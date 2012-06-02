@@ -87,21 +87,13 @@
             android:inputType="text" />
     </RelativeLayout>
 
-    <HorizontalScrollView
+    <RelativeLayout
         android:id="@+id/browserRestrictionGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/actionbar"
         android:layout_centerHorizontal="true" >
-
-        <LinearLayout
-            android:id="@+id/browserRestrictionGroup0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal" >
-        </LinearLayout>
-    </HorizontalScrollView>
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/browserContent"
