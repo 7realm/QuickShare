@@ -27,6 +27,7 @@ import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.TitleChangeListener;
 import com.markupartist.android.widget.ActionBar.TitleType;
 import com.markupartist.android.widget.ActionBarActivity;
+import com.markupartist.android.widget.actionbar.R;
 
 /**
  * Activity that will browse objects.
@@ -59,8 +60,8 @@ public class PageViewActivity extends ActionBarActivity {
         // set tab host
         tabs = (TabHost) findViewById(R.id.browserTabs);
         tabs.setup();
-        tabs.addTab(tabs.newTabSpec("documents").setIndicator("Documents").setContent(R.id.browserTab0));
-        tabs.addTab(tabs.newTabSpec("images").setIndicator("Images").setContent(R.id.browserTab1));
+        addTab(tabs, R.layout.view_tab_indicator, "Documents", -1, R.id.browserTab0);
+        addTab(tabs, R.layout.view_tab_indicator, "Images", -1, R.id.browserTab1);
 
         // get browser tabs
         BrowserEventHandler eventHandler = new BrowserEventHandlerImpl();

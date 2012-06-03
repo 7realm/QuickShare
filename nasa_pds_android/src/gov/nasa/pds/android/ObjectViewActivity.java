@@ -46,6 +46,7 @@ import android.widget.Toast;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.Action;
 import com.markupartist.android.widget.ActionBarActivity;
+import com.markupartist.android.widget.actionbar.R;
 
 /**
  * Activity that will view specific objects.
@@ -297,9 +298,9 @@ public class ObjectViewActivity extends ActionBarActivity {
                 // add tabs
                 final TabHost tabHost = (TabHost) findViewById(R.id.objectTabs);
                 tabHost.setup();
-                tabHost.addTab(tabHost.newTabSpec("general").setIndicator("General").setContent(R.id.objectPropertiesView));
-                tabHost.addTab(tabHost.newTabSpec("description").setIndicator("Description").setContent(R.id.objectDescriptionView));
-                tabHost.addTab(tabHost.newTabSpec("references").setIndicator("References").setContent(R.id.objectReferenceList));
+                addTab(tabHost, R.layout.view_tab_indicator, "General", R.drawable.tab_general, R.id.objectPropertiesView);
+                addTab(tabHost, R.layout.view_tab_indicator, "Description", R.drawable.tab_description, R.id.objectDescriptionView);
+                addTab(tabHost, R.layout.view_tab_indicator, "References", R.drawable.tab_internet, R.id.objectReferenceList);
             } else if (result instanceof WsDataFile) {
                 WsDataFile dataFile = (WsDataFile) result;
 
