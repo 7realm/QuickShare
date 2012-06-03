@@ -28,6 +28,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
     private TitleChangeListener titleChangeListener;
     private TitleType titleType = TitleType.LABEL;
     private String[] dropDownItems;
+    private int selectedIndex;
 
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -91,18 +92,21 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
                     // show alert dialog that will emulate drop down
                     new AlertDialog.Builder(getContext())
                         .setTitle("Select browse item type:")
-                        .setItems(dropDownItems, new DialogInterface.OnClickListener() {
+                        .setSingleChoiceItems(dropDownItems, selectedIndex, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // check if we did not selected the current item
                                 if (!dropDownItems[which].equals(titleTextView.getText())) {
                                     titleTextView.setText(dropDownItems[which]);
+                                    selectedIndex = which;
 
                                     // notify title change listener
                                     if (titleChangeListener != null) {
                                         titleChangeListener.onTitleChanged(dropDownItems[which], which);
                                     }
                                 }
+
+                                dialog.dismiss();
                             }
                         })
                         .create().show();
@@ -148,6 +152,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
     public void setTitle(int titleIndex, String[] dropDownItems) {
         this.dropDownItems = dropDownItems;
         if (titleType == TitleType.DROP_DOWN) {
+            selectedIndex = titleIndex;
             titleTextView.setText(dropDownItems[titleIndex]);
         } else {
             throw new UnsupportedOperationException("Setting spinner title to incorrect title type: " + titleType);
