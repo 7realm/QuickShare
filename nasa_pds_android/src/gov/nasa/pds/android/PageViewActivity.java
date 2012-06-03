@@ -223,7 +223,6 @@ public class PageViewActivity extends ActionBarActivity {
     }
 
     private void refresh() {
-
         if (entityType.isLowest()) {
             // show tabs
             tabs.setVisibility(View.VISIBLE);

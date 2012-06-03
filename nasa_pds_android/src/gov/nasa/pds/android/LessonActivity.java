@@ -73,6 +73,14 @@ public class LessonActivity extends ActionBarActivity {
             }
         });
 
+        // set up action
+        getActionBar().setUpAction(new AbstractAction(R.drawable.level_up, "Lessons") {
+            @Override
+            public void performAction(View view) {
+                finish();
+            }
+        });
+
         // add preview action
         getActionBar().addAction(new AbstractAction(R.drawable.search_text, "Preview") {
             @Override
@@ -135,11 +143,10 @@ public class LessonActivity extends ActionBarActivity {
 
             // execute preview intent
             Uri uri = Uri.fromFile(new File(getExternalCacheDir(), "index.html"));
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            intent.setClassName("com.android.browser", "com.android.browser.BrowserActivity");
+            Intent intent = new Intent(LessonActivity.this, WebViewActivity.class);
+            intent.putExtra(WebViewActivity.EXTRA_WEB_URL, uri.toString());
             startActivity(intent);
         }
-
     }
 
     private final class LessonPartAdapter extends ReordableAdapter<LessonPart> {
