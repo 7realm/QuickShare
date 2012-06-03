@@ -19,9 +19,11 @@ import gov.nasa.pds.soap.ReferencedEntity;
 import gov.nasa.pds.soap.entities.Instrument;
 import gov.nasa.pds.soap.entities.InstrumentHost;
 import gov.nasa.pds.soap.entities.Mission;
+import gov.nasa.pds.soap.entities.Reference;
 import gov.nasa.pds.soap.entities.WsDataFile;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -238,10 +240,21 @@ public class ObjectViewActivity extends ActionBarActivity {
                 }
 
                 // build list of references
-                String[] data = new String[referencedEntity.getReferences().size()];
-                for (int i = 0; i < data.length; i++) {
-                    String description = referencedEntity.getReferences().get(i).getDescription();
-                    data[i] = description == null ? "" : description.replaceAll("\\s+", " ").trim();
+                List<String> data = new ArrayList<String>();
+                List<Reference> references = referencedEntity.getReferences();
+                int i = 0;
+                while (i < references.size()) {
+                    String description = references.get(i).getDescription();
+
+                    // remove incorrect references
+                    if (description == null || description.trim().isEmpty() ||
+                        description.equalsIgnoreCase("<dummy reference>")) {
+                        references.remove(i);
+                        continue;
+                    }
+
+                    data.add(description.replaceAll("\\s+", " ").trim());
+                    i++;
                 }
 
                 // create reference tab
@@ -272,8 +285,8 @@ public class ObjectViewActivity extends ActionBarActivity {
                     // fill instrument hosts
                     List<InstrumentHost> hosts = instrument.getHosts();
                     StringBuilder builder = new StringBuilder(hosts.isEmpty() ? "" : hosts.get(0).getName());
-                    for (int i = 1; i < hosts.size(); i++) {
-                        builder.append(hosts.get(i).getName()).append("\n");
+                    for (int j = 1; j < hosts.size(); j++) {
+                        builder.append(hosts.get(j).getName()).append("\n");
                     }
                     setText(R.id.instrumentHost, builder.toString());
                     setText(R.id.objectDescription, DataCenter.processDescription(instrument.getDescription()));
