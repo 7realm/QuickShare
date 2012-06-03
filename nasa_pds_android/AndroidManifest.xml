@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:theme="@android:style/Theme.NoTitleBar"
+        android:theme="@style/NasaAppTheme"
         android:name=".NasaApplication"
         android:icon="@drawable/logo"
         android:label="@string/app_name" >
