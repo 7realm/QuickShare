@@ -36,6 +36,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -241,7 +243,7 @@ public class ObjectViewActivity extends ActionBarActivity {
                 }
 
                 // build list of references
-                List<String> data = new ArrayList<String>();
+                final List<String> data = new ArrayList<String>();
                 List<Reference> references = referencedEntity.getReferences();
                 int i = 0;
                 while (i < references.size()) {
@@ -259,8 +261,17 @@ public class ObjectViewActivity extends ActionBarActivity {
                 }
 
                 // create reference tab
-                ((ListView) findViewById(R.id.objectReferenceList)).setAdapter(
-                    new ArrayAdapter<String>(ObjectViewActivity.this, R.layout.item_reference, R.id.referenceText, data));
+                ListView listView = (ListView) findViewById(R.id.objectReferenceList);
+                listView.setAdapter(new ArrayAdapter<String>(ObjectViewActivity.this, R.layout.item_reference, R.id.referenceText, data));
+                listView.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // run google with this query
+                        Uri uri = Uri.parse("http://www.google.com/#q=" + data.get(position).trim());
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                    }
+                });
 
                 // get object container
                 final ViewGroup objectContainer = (ViewGroup) findViewById(R.id.objectPropertiesView);
@@ -298,9 +309,9 @@ public class ObjectViewActivity extends ActionBarActivity {
                 // add tabs
                 final TabHost tabHost = (TabHost) findViewById(R.id.objectTabs);
                 tabHost.setup();
-                addTab(tabHost, R.layout.view_tab_indicator, "General", R.drawable.tab_general, R.id.objectPropertiesView);
-                addTab(tabHost, R.layout.view_tab_indicator, "Description", R.drawable.tab_description, R.id.objectDescriptionView);
-                addTab(tabHost, R.layout.view_tab_indicator, "References", R.drawable.tab_internet, R.id.objectReferenceList);
+                addTab(tabHost, R.layout.view_tab_indicator, "General", -1, R.id.objectPropertiesView);
+                addTab(tabHost, R.layout.view_tab_indicator, "Description", -1, R.id.objectDescriptionView);
+                addTab(tabHost, R.layout.view_tab_indicator, "References", -1, R.id.objectReferenceList);
             } else if (result instanceof WsDataFile) {
                 WsDataFile dataFile = (WsDataFile) result;
 
