@@ -61,7 +61,7 @@ public class LessonActivity extends ActionBarActivity {
 
         // get action bar
         getActionBar().setTitleType(TitleType.EDIT);
-        getActionBar().setTitle(lesson.getName());
+        getActionBar().setTitle(lesson.getName(), lessonId == -1);
         getActionBar().setTitleChangeListener(new TitleChangeListener() {
             @Override
             public void onTitleChanged(CharSequence newTitle, int newTitlePosition) {
@@ -73,6 +73,7 @@ public class LessonActivity extends ActionBarActivity {
 
                 // hide keyboard for action bar edit field
                 hideKeyboard(R.id.actionbarTitleEdit);
+                findViewById(R.id.actionbarLayout).requestFocus();
             }
         });
 

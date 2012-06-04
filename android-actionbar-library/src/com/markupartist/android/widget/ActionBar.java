@@ -75,10 +75,14 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    System.out.println(actionId);
+                    switch (actionId) {
+                    case EditorInfo.IME_ACTION_DONE:
+                    case EditorInfo.IME_ACTION_NEXT:
                         if (titleChangeListener != null) {
                             titleChangeListener.onTitleChanged(v.getText().toString(), -1);
                         }
+                        break;
                     }
                     return false;
                 }
@@ -136,7 +140,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     }
 
     public void setTitle(CharSequence title) {
-        if (titleType == TitleType.LABEL || titleType == TitleType.EDIT) {
+        if (titleType == TitleType.LABEL) {
             titleTextView.setText(title);
         } else {
             throw new UnsupportedOperationException("Setting text title to incorrect title type: " + titleType);
@@ -150,6 +154,19 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
             titleTextView.setText(dropDownItems[titleIndex]);
         } else {
             throw new UnsupportedOperationException("Setting spinner title to incorrect title type: " + titleType);
+        }
+    }
+
+    public void setTitle(CharSequence title, boolean selectAll) {
+        if (titleType == TitleType.EDIT) {
+            titleTextView.setText(title);
+
+            // select text in view
+            if (selectAll) {
+                titleTextView.requestFocus();
+            }
+        } else {
+            throw new UnsupportedOperationException("Setting edit title to incorrect title type: " + titleType);
         }
     }
 
