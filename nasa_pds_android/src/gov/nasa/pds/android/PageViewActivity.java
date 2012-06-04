@@ -32,7 +32,7 @@ import com.markupartist.android.widget.actionbar.R;
 /**
  * Activity that will browse objects.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class PageViewActivity extends ActionBarActivity {

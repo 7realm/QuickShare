@@ -19,7 +19,7 @@ import android.widget.EditText;
 /**
  * Home activity of application, it is displayed first.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class HomeActivity extends Activity {
@@ -100,7 +100,7 @@ public class HomeActivity extends Activity {
     /**
      * Task that will test the connection.
      *
-     * @author 7realm
+     * @author TCSASSEMBLER
      * @version 1.0
      */
     private class TestConnectionTask extends AsyncTask<Void, Void, Boolean> {

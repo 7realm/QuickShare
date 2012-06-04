@@ -22,7 +22,7 @@ import gov.nasa.pds.soap.NamedEntity;
  * &lt;/complexType>
  * </pre>
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class TargetType extends NamedEntity {

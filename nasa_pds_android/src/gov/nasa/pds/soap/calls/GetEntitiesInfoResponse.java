@@ -9,7 +9,7 @@ import gov.nasa.pds.soap.entities.PagedResults;
 /**
  * Base class for SOAP response that get list of entities.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class GetEntitiesInfoResponse extends BaseObject {

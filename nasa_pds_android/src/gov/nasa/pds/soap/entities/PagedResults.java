@@ -27,11 +27,11 @@ import java.util.List;
  * &lt;/complexType>
  * </pre>
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class PagedResults extends BaseObject {
-    protected final List<Object> results = new ArrayList<Object>();;
+    protected final List<Object> results = new ArrayList<Object>();
     protected long total;
 
     /**
@@ -56,7 +56,7 @@ public class PagedResults extends BaseObject {
      *
      */
     public List<Object> getResults() {
-        return this.results;
+        return results;
     }
 
     /**
@@ -72,7 +72,7 @@ public class PagedResults extends BaseObject {
      *
      */
     public void setTotal(long value) {
-        this.total = value;
+        total = value;
     }
 
 }

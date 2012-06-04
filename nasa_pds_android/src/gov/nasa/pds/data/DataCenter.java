@@ -31,7 +31,7 @@ import android.util.Log;
 /**
  * Data provider class, that will execute all queries.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class DataCenter {

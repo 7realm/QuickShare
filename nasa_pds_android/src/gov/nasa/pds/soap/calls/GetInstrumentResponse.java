@@ -25,7 +25,7 @@ import gov.nasa.pds.soap.entities.Instrument;
  * &lt;/complexType>
  * </pre>
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class GetInstrumentResponse extends BaseObject {

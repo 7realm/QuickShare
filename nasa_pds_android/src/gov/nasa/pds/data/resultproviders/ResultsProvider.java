@@ -20,7 +20,7 @@ import android.widget.TextView;
 /**
  * Base data adapter that will fill results from paged query to list.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public abstract class ResultsProvider extends BaseAdapter {

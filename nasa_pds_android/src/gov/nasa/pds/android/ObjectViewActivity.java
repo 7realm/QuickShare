@@ -53,7 +53,7 @@ import com.markupartist.android.widget.actionbar.R;
 /**
  * Activity that will view specific objects.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class ObjectViewActivity extends ActionBarActivity {
@@ -162,7 +162,7 @@ public class ObjectViewActivity extends ActionBarActivity {
     /**
      * Task that will load data for given entity.
      *
-     * @author 7realm
+     * @author TCSASSEMBLER
      * @version 1.0
      */
     private final class DataLoadTast extends AsyncTask<ObjectQuery<Object>, Void, Object> {

@@ -24,7 +24,7 @@ import gov.nasa.pds.soap.IdentifiableEntity;
  * &lt;/complexType>
  * </pre>
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class Reference extends IdentifiableEntity {

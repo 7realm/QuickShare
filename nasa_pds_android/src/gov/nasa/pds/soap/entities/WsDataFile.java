@@ -26,7 +26,7 @@ import gov.nasa.pds.soap.BaseObject;
  * &lt;/complexType>
  * </pre>
  * 
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class WsDataFile extends BaseObject {

@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Class that contains information about filter.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 class Filter {
@@ -128,7 +128,7 @@ class Filter {
     /**
      * Restriction that contains not only class and id, but also name.
      *
-     * @author 7realm
+     * @author TCSASSEMBLER
      * @version 1.0
      */
     static class NamedRestriction {

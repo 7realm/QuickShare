@@ -17,7 +17,7 @@ import org.ksoap2.serialization.PropertyInfo;
 /**
  * Base serializable object for all entities and requests.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public abstract class BaseObject implements KvmSerializable {

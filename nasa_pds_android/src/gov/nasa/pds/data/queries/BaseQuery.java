@@ -9,7 +9,7 @@ import gov.nasa.pds.data.QueryType;
 /**
  * Base query class, it contains query type.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public abstract class BaseQuery implements Query {

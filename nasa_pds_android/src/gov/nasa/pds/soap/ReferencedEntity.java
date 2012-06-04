@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Base class that contains references.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public abstract class ReferencedEntity extends NamedEntity {

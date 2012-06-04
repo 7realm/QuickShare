@@ -25,7 +25,7 @@ import gov.nasa.pds.soap.entities.Target;
  * &lt;/complexType>
  * </pre>
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class GetTargetResponse extends BaseObject {

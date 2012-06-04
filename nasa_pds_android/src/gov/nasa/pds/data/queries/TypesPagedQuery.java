@@ -15,7 +15,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 /**
  * Query that will return all Target Types.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class TypesPagedQuery extends PagedQuery {

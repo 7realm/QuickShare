@@ -10,7 +10,7 @@ import gov.nasa.pds.data.queries.PagedQuery;
 /**
  * Data adapter that will fill results from paged query to list.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class PageResultsProvider extends ResultsProvider {

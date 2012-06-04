@@ -10,7 +10,7 @@ import gov.nasa.pds.soap.entities.Restriction;
 /**
  * Base class for SOAP request to get list of entities.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class GetEntitiesInfoRequest extends BaseObject {

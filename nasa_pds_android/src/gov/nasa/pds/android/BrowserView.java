@@ -182,7 +182,7 @@ public class BrowserView extends FrameLayout {
     /**
      * Task that will load data for all entities.
      *
-     * @author 7realm
+     * @author TCSASSEMBLER
      * @version 1.0
      */
     private final class DataLoadTast extends AsyncTask<Integer, Void, Void> {

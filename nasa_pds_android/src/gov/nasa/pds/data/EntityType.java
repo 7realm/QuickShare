@@ -6,7 +6,7 @@ package gov.nasa.pds.data;
 /**
  * Entity type, that is used in application.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public enum EntityType {

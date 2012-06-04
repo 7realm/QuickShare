@@ -29,7 +29,7 @@ import java.util.List;
  * &lt;/complexType>
  * </pre>
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 public class InstrumentHost extends ReferencedEntity {

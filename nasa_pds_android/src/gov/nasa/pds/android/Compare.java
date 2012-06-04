@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * This class represent data that will be compared.
  *
- * @author 7realm
+ * @author TCSASSEMBLER
  * @version 1.0
  */
 class Compare {
@@ -105,7 +105,7 @@ class Compare {
     /**
      * The compare item data.
      *
-     * @author 7realm
+     * @author TCSASSEMBLER
      * @version 1.0
      */
     static class CompareItem {
