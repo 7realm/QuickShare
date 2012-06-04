@@ -9,6 +9,7 @@
         style="@style/ActionBar" />
 
     <ListView
+        android:background="@drawable/background2"
         android:id="@+id/lessonsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
