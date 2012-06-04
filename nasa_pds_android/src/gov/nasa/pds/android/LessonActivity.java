@@ -118,6 +118,9 @@ public class LessonActivity extends ActionBarActivity {
                     .create().show();
             }
         });
+
+        // hide or show lesson help
+        findViewById(R.id.lessonHelpText).setVisibility(lesson.getParts().size() == 0 ? View.VISIBLE : View.GONE);
     }
 
     /**
