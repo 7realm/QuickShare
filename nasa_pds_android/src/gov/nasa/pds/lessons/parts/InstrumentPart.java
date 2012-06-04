@@ -38,7 +38,7 @@ public class InstrumentPart extends TextPart {
 
     public InstrumentPart(Instrument instrument) {
         setCaption("Instrument: " + instrument.getName());
-        setText(instrument.getDescription());
+        processText(instrument.getDescription());
 
         // add references with search links
         for (Reference reference : instrument.getReferences()) {

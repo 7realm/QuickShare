@@ -220,6 +220,12 @@ public class LessonActivity extends ActionBarActivity {
             // check if we dropped view to edit basket
             if (isPointInsideView(x, y, editBasket)) {
                 Toast.makeText(LessonActivity.this, "Dropped view to edit basket.", Toast.LENGTH_LONG).show();
+
+                // start edit activity
+                Intent intent = new Intent(LessonActivity.this, PartActivity.class);
+                intent.putExtra(PartActivity.EXTRA_LESSON_ID, lesson.getId());
+                intent.putExtra(PartActivity.EXTRA_PART_ID, index);
+                startActivity(intent);
                 return true;
             }
 

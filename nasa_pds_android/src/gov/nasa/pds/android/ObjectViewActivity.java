@@ -215,21 +215,20 @@ public class ObjectViewActivity extends ActionBarActivity {
             } else {
                 if (query.getQueryType() == QueryType.GET_FILE || query.getQueryType() == QueryType.GET_IMAGE) {
                     findViewById(R.id.fileHelpText).setVisibility(View.VISIBLE);
-                    switch (query.getQueryType()) {
-                    case GET_MISSION:
-                        getActionBar().setTitle("Mission #" + id);
-                        break;
-                    case GET_INSTRUMENT:
-                        getActionBar().setTitle("Instrument #" + id);
-                        break;
-                    case GET_IMAGE:
-                        getActionBar().setTitle("Image #" + id);
-                        break;
-                    default:
-                        getActionBar().setTitle("File #" + id);
-                        break;
-                    }
-                    getActionBar().setTitle("Unknown object");
+                }
+                switch (query.getQueryType()) {
+                case GET_MISSION:
+                    getActionBar().setTitle("Mission #" + id);
+                    break;
+                case GET_INSTRUMENT:
+                    getActionBar().setTitle("Instrument #" + id);
+                    break;
+                case GET_IMAGE:
+                    getActionBar().setTitle("Image #" + id);
+                    break;
+                default:
+                    getActionBar().setTitle("File #" + id);
+                    break;
                 }
                 Log.w("soap", "Result: " + result + " is not referenced object.");
             }

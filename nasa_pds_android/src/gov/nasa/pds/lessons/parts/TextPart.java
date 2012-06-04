@@ -4,7 +4,6 @@
 package gov.nasa.pds.lessons.parts;
 
 import gov.nasa.pds.data.DataCenter;
-import gov.nasa.pds.lessons.LessonPart;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,18 +13,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public abstract class TextPart implements LessonPart {
+public abstract class TextPart extends CaptionedPart {
     private final Map<String, String> links = new HashMap<String, String>();
-    protected String caption;
     private String text;
 
-    public void setCaption(String caption) {
-        this.caption = caption;
+    public String getText() {
+        return text;
     }
 
     public void setText(String text) {
+        this.text = text;
+    }
+
+    public void processText(String text) {
         this.text = DataCenter.processDescription(text).trim()
-            .replaceAll("(\\r\\n){2,}", "<br><br>")
+            .replaceAll("(\\r\\n){2,}", "<br><br>\n")
             .replaceAll("(?m)^(.*?)([=|_|-]{2,})(.*?)$", "<br>$1$2$3<br>");
     }
 

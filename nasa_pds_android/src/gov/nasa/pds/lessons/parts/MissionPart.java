@@ -38,7 +38,7 @@ public class MissionPart extends TextPart {
 
     public MissionPart(Mission mission) {
         setCaption("Mission: " + mission.getName());
-        setText(mission.getDescription());
+        processText(mission.getDescription());
 
         // add references with search links
         for (Reference reference : mission.getReferences()) {

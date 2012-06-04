@@ -32,7 +32,7 @@ public class FilePart extends TextPart {
         setCaption("File: " + dataFile.getName());
 
         // set content from corresponding source
-        setText(dataFile.getContent() != null ? dataFile.getContent() : new String(dataFile.getDataHandler().getContent()));
+        processText(dataFile.getContent() != null ? dataFile.getContent() : new String(dataFile.getDataHandler().getContent()));
     }
 
     @Override

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <com.markupartist.android.widget.ActionBar
+        android:id="@+id/actionbar"
+        style="@style/ActionBar" />
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/actionbar"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="14dp"
+        android:text="Caption:" />
+
+    <EditText
+        android:id="@+id/partCaptionEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@android:id/text1"
+        android:layout_margin="10dp"
+        android:inputType="text"
+        android:textAppearance="@android:style/TextAppearance.Small" >
+
+        <requestFocus />
+    </EditText>
+
+    <ImageView
+        android:id="@+id/partImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/partCaptionEdit"
+        android:layout_centerInParent="true" />
+
+    <RelativeLayout
+        android:id="@+id/partDescriptionGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/partCaptionEdit" >
+
+        <TextView
+            android:id="@android:id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="14dp"
+            android:text="Description" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@android:id/text2"
+            android:layout_margin="10dp" >
+
+            <EditText
+                android:id="@+id/partDescriptionEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:inputType="textMultiLine"
+                android:textAppearance="@android:style/TextAppearance.Small" />
+        </HorizontalScrollView>
+    </RelativeLayout>
+
+</RelativeLayout>

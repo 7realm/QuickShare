@@ -5,7 +5,6 @@ package gov.nasa.pds.lessons.parts;
 
 import gov.nasa.pds.android.R;
 import gov.nasa.pds.data.ImageCenter;
-import gov.nasa.pds.lessons.LessonPart;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,8 +17,7 @@ import android.util.Log;
 
 import com.lib.Streams;
 
-public class ImagePart implements LessonPart {
-    private String caption;
+public class ImagePart extends CaptionedPart{
     private long imageId;
 
     public ImagePart() {
@@ -44,6 +42,10 @@ public class ImagePart implements LessonPart {
     @Override
     public int getIconId() {
         return R.drawable.object_file;
+    }
+
+    public long getImageId() {
+        return imageId;
     }
 
     @Override
