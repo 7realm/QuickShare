@@ -21,25 +21,10 @@ public class WebViewActivity extends ActionBarActivity {
 
         // get URL from intent
         String url = getIntent().getStringExtra(EXTRA_WEB_URL);
-        Log.i("soap", "Opening URL: " + url);
-
-        // find view by ids
-//TODO        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.webViewProgress);
-        WebView webview = (WebView) findViewById(R.id.webView);
-
-        // set action bar
-        getActionBar().setTitle("Preview");
-
-        // set progress indicator
-//        webview.setWebChromeClient(new WebChromeClient() {
-//            @Override
-//            public void onProgressChanged(WebView view, int progress) {
-//                Log.i("soap", "Progress: " + progress);
-//                progressBar.setProgress(progress);
-//            }
-//        });
+        Log.i("soap", "Preview URL: " + url);
 
         // load passed url
+        WebView webview = (WebView) findViewById(R.id.webView);
         webview.loadUrl(url);
 
         // set progress indicator
@@ -60,7 +45,8 @@ public class WebViewActivity extends ActionBarActivity {
         });
 
         // set action bar
-        getActionBar().setUpAction(new AbstractAction(R.drawable.level_up, "Lesson") {
+        getActionBar().setTitle("Preview");
+        getActionBar().setUpAction(new AbstractAction(R.drawable.level_left, "Lesson") {
             @Override
             public void performAction(View view) {
                 finish();

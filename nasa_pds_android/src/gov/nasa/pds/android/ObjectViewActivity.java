@@ -143,63 +143,20 @@ public class ObjectViewActivity extends ActionBarActivity {
             getActionBar().addAction(new MissionCompareAction());
         }
 
+        // add back button
+        getActionBar().setUpAction(new AbstractAction(R.drawable.level_left, "Browse") {
+            @Override
+            public void performAction(View view) {
+                finish();
+            }
+        });
+
         // load data
         new DataLoadTast().execute(query);
     }
 
-    /**
-     * The reference button clicked.
-     *
-     * @param v the clicked view
-     */
-    public void onReferenceButtonClick(View v) {
-        CharSequence searchText = ((TextView) ((View) v.getParent()).findViewById(R.id.referenceText)).getText();
-
-        // run google with this query
-        Uri uri = Uri.parse("http://www.google.com/#q=" + searchText.toString().trim());
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
-    }
-
     private void setText(int viewId, CharSequence text) {
         ((TextView) findViewById(viewId)).setText(text);
-    }
-
-    private final class MissionCompareAction implements Action {
-        @Override
-        public String getText() {
-            // get mission and check its id
-            Mission mission = (Mission) currentObject;
-            return mission != null && Compare.exists(mission.getId()) ? "Compare" : "To compare";
-        }
-
-        @Override
-        public int getDrawable() {
-            return R.drawable.compare_add;
-        }
-
-        @Override
-        public void performAction(View view) {
-            // get mission
-            Mission mission = (Mission) currentObject;
-            if (mission == null) {
-                return;
-            }
-
-            // if compare already exists, then do compare
-            if (Compare.exists(mission.getId())) {
-                // check compare size
-                if (Compare.ITEMS.size() < 2) {
-                    Toast.makeText(ObjectViewActivity.this, "Please select several items to compare.", Toast.LENGTH_SHORT).show();
-                } else {
-                    startActivity(new Intent(ObjectViewActivity.this, CompareActivity.class));
-                }
-            } else {
-                // add mission to compare
-                Compare.addMission(mission);
-            }
-
-        }
     }
 
     /**
@@ -229,89 +186,7 @@ public class ObjectViewActivity extends ActionBarActivity {
             if (result instanceof ReferencedEntity) {
                 ReferencedEntity referencedEntity = (ReferencedEntity) result;
 
-                // set object caption based on query type
-                switch (query.getQueryType()) {
-                case GET_MISSION:
-                    getActionBar().setTitle("Mission: " + referencedEntity.getName());
-                    break;
-                case GET_INSTRUMENT:
-                    getActionBar().setTitle("Instrument: " + referencedEntity.getName());
-                    break;
-                default:
-                    getActionBar().setTitle("Unknown object: " + referencedEntity.getName());
-                    break;
-                }
-
-                // build list of references
-                final List<String> data = new ArrayList<String>();
-                List<Reference> references = referencedEntity.getReferences();
-                int i = 0;
-                while (i < references.size()) {
-                    String description = references.get(i).getDescription();
-
-                    // remove incorrect references
-                    if (description == null || description.trim().isEmpty() ||
-                        description.equalsIgnoreCase("<dummy reference>")) {
-                        references.remove(i);
-                        continue;
-                    }
-
-                    data.add(description.replaceAll("\\s+", " ").trim());
-                    i++;
-                }
-
-                // create reference tab
-                ListView listView = (ListView) findViewById(R.id.objectReferenceList);
-                listView.setAdapter(new ArrayAdapter<String>(ObjectViewActivity.this, R.layout.item_reference, R.id.referenceText, data));
-                listView.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // run google with this query
-                        Uri uri = Uri.parse("http://www.google.com/#q=" + data.get(position).trim());
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        startActivity(intent);
-                    }
-                });
-
-                // get object container
-                final ViewGroup objectContainer = (ViewGroup) findViewById(R.id.objectPropertiesView);
-                objectContainer.removeAllViews();
-                if (currentObject instanceof Mission) {
-                    Mission mission = (Mission) currentObject;
-
-                    // inflate and fill mission view
-                    LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_mission, objectContainer);
-                    setText(R.id.missionName, mission.getName());
-                    setText(R.id.missionStartDate, DataCenter.formatLong(mission.getStartDate()));
-                    setText(R.id.missionEndDate, DataCenter.formatLong(mission.getEndDate()));
-                    setText(R.id.missionDuration, DataCenter.formatPeriod(mission.getStartDate(), mission.getEndDate()));
-                    setText(R.id.objectDescription, DataCenter.processDescription(mission.getDescription()));
-                } else if (currentObject instanceof Instrument) {
-                    Instrument instrument = (Instrument) currentObject;
-
-                    // inflate and fill instrument view
-                    LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_instrument, objectContainer);
-                    setText(R.id.instrumentName, instrument.getName());
-                    setText(R.id.instrumentType, instrument.getType());
-
-                    // fill instrument hosts
-                    List<InstrumentHost> hosts = instrument.getHosts();
-                    StringBuilder builder = new StringBuilder(hosts.isEmpty() ? "" : hosts.get(0).getName());
-                    for (int j = 1; j < hosts.size(); j++) {
-                        builder.append(hosts.get(j).getName()).append("\n");
-                    }
-                    setText(R.id.instrumentHost, builder.toString());
-                    setText(R.id.objectDescription, DataCenter.processDescription(instrument.getDescription()));
-                } else {
-                    Log.w("soap", "Unexpected object type: " + result);
-                }
-
-                // add tabs
-                final TabHost tabHost = (TabHost) findViewById(R.id.objectTabs);
-                tabHost.setup();
-                addTab(tabHost, R.layout.view_tab_indicator, "General", -1, R.id.objectPropertiesView);
-                addTab(tabHost, R.layout.view_tab_indicator, "Description", -1, R.id.objectDescriptionView);
-                addTab(tabHost, R.layout.view_tab_indicator, "References", -1, R.id.objectReferenceList);
+                processReferencedEntity(referencedEntity);
             } else if (result instanceof WsDataFile) {
                 WsDataFile dataFile = (WsDataFile) result;
 
@@ -340,6 +215,21 @@ public class ObjectViewActivity extends ActionBarActivity {
             } else {
                 if (query.getQueryType() == QueryType.GET_FILE || query.getQueryType() == QueryType.GET_IMAGE) {
                     findViewById(R.id.fileHelpText).setVisibility(View.VISIBLE);
+                    switch (query.getQueryType()) {
+                    case GET_MISSION:
+                        getActionBar().setTitle("Mission #" + id);
+                        break;
+                    case GET_INSTRUMENT:
+                        getActionBar().setTitle("Instrument #" + id);
+                        break;
+                    case GET_IMAGE:
+                        getActionBar().setTitle("Image #" + id);
+                        break;
+                    default:
+                        getActionBar().setTitle("File #" + id);
+                        break;
+                    }
+                    getActionBar().setTitle("Unknown object");
                 }
                 Log.w("soap", "Result: " + result + " is not referenced object.");
             }
@@ -348,6 +238,132 @@ public class ObjectViewActivity extends ActionBarActivity {
             getActionBar().updateActions();
 
             stopProgress();
+        }
+
+        private void processReferencedEntity(ReferencedEntity referencedEntity) {
+            // set object caption based on query type
+            switch (query.getQueryType()) {
+            case GET_MISSION:
+                getActionBar().setTitle("Mission: " + referencedEntity.getName());
+                break;
+            case GET_INSTRUMENT:
+                getActionBar().setTitle("Instrument: " + referencedEntity.getName());
+                break;
+            default:
+                getActionBar().setTitle("Unknown object: " + referencedEntity.getName());
+                break;
+            }
+
+            // build list of references
+            final List<String> data = new ArrayList<String>();
+            List<Reference> references = referencedEntity.getReferences();
+            int i = 0;
+            while (i < references.size()) {
+                String description = references.get(i).getDescription();
+
+                // remove incorrect references
+                if (description == null || description.trim().isEmpty() ||
+                    description.equalsIgnoreCase("<dummy reference>")) {
+                    references.remove(i);
+                    continue;
+                }
+
+                data.add(description.replaceAll("\\s+", " ").trim());
+                i++;
+            }
+
+            // create reference list
+            ListView listView = (ListView) findViewById(R.id.objectReferenceList);
+            listView.setAdapter(new ArrayAdapter<String>(ObjectViewActivity.this, R.layout.item_reference, R.id.referenceText, data));
+            listView.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // run google with this query
+                    Uri uri = Uri.parse("http://www.google.com/#q=" + data.get(position).trim());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+            });
+
+            // set object container
+            final ViewGroup objectContainer = (ViewGroup) findViewById(R.id.objectPropertiesView);
+            objectContainer.removeAllViews();
+            if (currentObject instanceof Mission) {
+                Mission mission = (Mission) currentObject;
+
+                // inflate and fill mission view
+                LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_mission, objectContainer);
+                setText(R.id.missionName, mission.getName());
+                setText(R.id.missionStartDate, DataCenter.formatLong(mission.getStartDate()));
+                setText(R.id.missionEndDate, DataCenter.formatLong(mission.getEndDate()));
+                setText(R.id.missionDuration, DataCenter.formatPeriod(mission.getStartDate(), mission.getEndDate()));
+                setText(R.id.objectDescription, DataCenter.processDescription(mission.getDescription()));
+            } else if (currentObject instanceof Instrument) {
+                Instrument instrument = (Instrument) currentObject;
+
+                // inflate and fill instrument view
+                LayoutInflater.from(ObjectViewActivity.this).inflate(R.layout.view_instrument, objectContainer);
+                setText(R.id.instrumentName, instrument.getName());
+                setText(R.id.instrumentType, instrument.getType());
+
+                // fill instrument hosts
+                List<InstrumentHost> hosts = instrument.getHosts();
+                StringBuilder builder = new StringBuilder(hosts.isEmpty() ? "" : hosts.get(0).getName());
+                for (int j = 1; j < hosts.size(); j++) {
+                    builder.append(hosts.get(j).getName()).append("\n");
+                }
+                setText(R.id.instrumentHost, builder.toString());
+                setText(R.id.objectDescription, DataCenter.processDescription(instrument.getDescription()));
+            } else {
+                Log.w("soap", "Unexpected object type: " + referencedEntity);
+            }
+
+            // setup tabs
+            final TabHost tabHost = (TabHost) findViewById(R.id.objectTabs);
+            tabHost.setup();
+            addTab(tabHost, R.layout.view_tab_indicator, "General", -1, R.id.objectPropertiesView);
+            addTab(tabHost, R.layout.view_tab_indicator, "Description", -1, R.id.objectDescriptionView);
+            addTab(tabHost, R.layout.view_tab_indicator, "References", -1, R.id.objectReferenceList);
+        }
+    }
+
+    private final class MissionCompareAction implements Action {
+        @Override
+        public String getText() {
+            // get mission and check its id
+            Mission mission = (Mission) currentObject;
+            return mission != null && Compare.exists(mission.getId()) ? "Compare" : "To compare";
+        }
+
+        @Override
+        public int getDrawable() {
+            return R.drawable.compare_add;
+        }
+
+        @Override
+        public void performAction(View view) {
+            // get mission
+            Mission mission = (Mission) currentObject;
+            if (mission == null) {
+                return;
+            }
+
+            // if compare already exists, then do compare
+            if (Compare.exists(mission.getId())) {
+                // check compare size
+                if (Compare.ITEMS.size() < 2) {
+                    Toast.makeText(ObjectViewActivity.this, "This item already exists in compare pull."
+                        + " Please select several other items to compare.", Toast.LENGTH_SHORT).show();
+                } else {
+                    startActivity(new Intent(ObjectViewActivity.this, CompareActivity.class));
+                }
+            } else {
+                // add mission to compare
+                Compare.addMission(mission);
+
+                Toast.makeText(ObjectViewActivity.this, "Mission '" + mission.getName() + "' is added to compare pool.", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 }

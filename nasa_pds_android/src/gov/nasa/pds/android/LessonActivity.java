@@ -171,7 +171,7 @@ public class LessonActivity extends ActionBarActivity {
                 // execute share intent
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("application/zip");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Lesson " + lesson.getName());
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Lesson '" + lesson.getName() + "'");
                 shareIntent.putExtra(Intent.EXTRA_TEXT, "Please unzip and open index.html file in your browser.");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(getCompressedFile()));
                 startActivity(Intent.createChooser(shareIntent, "Share lesson"));

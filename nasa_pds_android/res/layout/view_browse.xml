@@ -18,7 +18,7 @@
             android:background="@drawable/background_image_button"
             android:onClick="onPreviousButtonClick"
             android:padding="4dip"
-            android:src="@drawable/prev_page" />
+            android:src="@drawable/page_previous" />
 
         <ImageView
             android:id="@+id/browserNextButton"
@@ -29,7 +29,7 @@
             android:background="@drawable/background_image_button"
             android:onClick="onNextButtonClick"
             android:padding="4dp"
-            android:src="@drawable/next_page" />
+            android:src="@drawable/page_next" />
 
         <TextView
             android:id="@+id/browserPageCaption"

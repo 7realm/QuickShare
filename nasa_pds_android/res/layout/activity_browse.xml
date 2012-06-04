@@ -28,7 +28,8 @@
                 style="@style/ActionBarItem"
                 android:layout_marginLeft="1dp"
                 android:background="@drawable/background_actionbar_button"
-                android:onClick="onSearchButtonClick" >
+                android:onClick="onSearchButtonClick"
+                android:visibility="gone" >
 
                 <TextView
                     android:id="@android:id/text1"
