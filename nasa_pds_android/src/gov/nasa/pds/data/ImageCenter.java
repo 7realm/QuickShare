@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.ksoap2.transport.Streams;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.lib.Streams;
 
 public class ImageCenter {
     private static File imagesDir;

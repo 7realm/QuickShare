@@ -12,6 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <TextView
+            android:id="@+id/fileHelpText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:lines="2"
+            android:padding="30dp"
+            android:text="File is not available."
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/fileImage"
             android:layout_width="match_parent"

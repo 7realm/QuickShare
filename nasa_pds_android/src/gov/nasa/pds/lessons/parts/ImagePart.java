@@ -14,9 +14,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.ksoap2.transport.Streams;
-
 import android.util.Log;
+
+import com.lib.Streams;
 
 public class ImagePart implements LessonPart {
     private String caption;

@@ -317,6 +317,7 @@ public class ObjectViewActivity extends ActionBarActivity {
 
                 if (ImageCenter.isImageFile(dataFile)) {
                     File imageFile = ImageCenter.getImage(dataFile.getId());
+                    findViewById(R.id.fileHelpText).setVisibility(imageFile == null ? View.VISIBLE : View.GONE);
 
                     // set image from downloaded file
                     getActionBar().setTitle("Image: " + dataFile.getName());
@@ -337,6 +338,9 @@ public class ObjectViewActivity extends ActionBarActivity {
                 imageView.setImageURI(Uri.fromFile(imageFile));
                 findViewById(R.id.fileDocument).setVisibility(View.GONE);
             } else {
+                if (query.getQueryType() == QueryType.GET_FILE || query.getQueryType() == QueryType.GET_IMAGE) {
+                    findViewById(R.id.fileHelpText).setVisibility(View.VISIBLE);
+                }
                 Log.w("soap", "Result: " + result + " is not referenced object.");
             }
 

@@ -18,11 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lib.ReordableListView;
 import com.lib.ReordableListView.DragAndDropListner;
 import com.lib.ReordableListView.ReordableAdapter;
+import com.lib.ZipUtility;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.TitleChangeListener;
 import com.markupartist.android.widget.ActionBar.TitleType;
@@ -88,7 +88,7 @@ public class LessonActivity extends ActionBarActivity {
         getActionBar().addAction(new AbstractAction(R.drawable.search_text, "Preview") {
             @Override
             public void performAction(View view) {
-                new RenderTast().execute();
+                new RenderTast().execute(PostRenderAction.PREVIEW);
             }
         });
 
@@ -96,7 +96,7 @@ public class LessonActivity extends ActionBarActivity {
         getActionBar().addAction(new AbstractAction(R.drawable.lesson_share, "Share") {
             @Override
             public void performAction(View view) {
-                Toast.makeText(getApplicationContext(), "Share", Toast.LENGTH_SHORT).show();
+                new RenderTast().execute(PostRenderAction.SHARE);
             }
         });
 
@@ -128,14 +128,25 @@ public class LessonActivity extends ActionBarActivity {
      *
      * @author TCSASSEMBLER
      */
-    private final class RenderTast extends AsyncTask<Void, Void, Void> {
+    private final class RenderTast extends AsyncTask<PostRenderAction, Void, PostRenderAction> {
         private ProgressDialog dialog;
 
+        private File getCompressedFile() {
+            return new File(getExternalCacheDir(), "lesson.zip");
+        }
+
         @Override
-        protected Void doInBackground(Void... params) {
+        protected PostRenderAction doInBackground(PostRenderAction... params) {
             // render lesson
             lesson.render(LessonActivity.this);
-            return null;
+
+            // archive render directory if needed
+            if (params[0] == PostRenderAction.SHARE) {
+                File compressedLesson = getCompressedFile();
+                ZipUtility.zipFolder(getExternalCacheDir(), compressedLesson);
+            }
+
+            return params[0];
         }
 
         @Override
@@ -144,14 +155,27 @@ public class LessonActivity extends ActionBarActivity {
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(PostRenderAction result) {
             dialog.dismiss();
 
-            // execute preview intent
-            Uri uri = Uri.fromFile(new File(getExternalCacheDir(), "index.html"));
-            Intent intent = new Intent(LessonActivity.this, WebViewActivity.class);
-            intent.putExtra(WebViewActivity.EXTRA_WEB_URL, uri.toString());
-            startActivity(intent);
+            switch (result) {
+            case PREVIEW:
+                // execute preview intent
+                Uri uri = Uri.fromFile(new File(getExternalCacheDir(), "index.html"));
+                Intent intent = new Intent(LessonActivity.this, WebViewActivity.class);
+                intent.putExtra(WebViewActivity.EXTRA_WEB_URL, uri.toString());
+                startActivity(intent);
+                break;
+            case SHARE:
+                // execute share intent
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("application/zip");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Lesson " + lesson.getName());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Please unzip and open index.html file in your browser.");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(getCompressedFile()));
+                startActivity(Intent.createChooser(shareIntent, "Share lesson"));
+                break;
+            }
         }
     }
 
@@ -182,5 +206,10 @@ public class LessonActivity extends ActionBarActivity {
 
             return convertView;
         }
+    }
+
+    private static enum PostRenderAction {
+        PREVIEW,
+        SHARE
     }
 }

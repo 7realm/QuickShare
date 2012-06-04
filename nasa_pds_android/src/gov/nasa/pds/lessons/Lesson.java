@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ksoap2.transport.Streams;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.lib.Streams;
 
 public class Lesson {
     private String name;
