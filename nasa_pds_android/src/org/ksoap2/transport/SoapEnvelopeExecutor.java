@@ -28,6 +28,8 @@ import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Log;
 
+import com.lib.Streams;
+
 public class SoapEnvelopeExecutor {
     private static final String CONTENT_TYPE_XML_CHARSET_UTF_8 = "text/xml;charset=utf-8";
     private static final String CONTENT_TYPE_SOAP_XML_CHARSET_UTF_8 = "application/soap+xml;charset=utf-8";
@@ -101,22 +103,19 @@ public class SoapEnvelopeExecutor {
                     multipartStream.readBodyData(output);
 
                     Inflater decompressor = new Inflater();
-                    byte[] compressed = output.toByteArray();
-                    decompressor.setInput(compressed);
+                    decompressor.setInput(output.toByteArray());
                     ByteArrayOutputStream decompressed = new ByteArrayOutputStream();
-                    byte[] buf = new byte[1024];
+                    byte[] buf = new byte[Streams.DEFAULT_BUFFER_SIZE];
                     while (!decompressor.finished()) {
                         try {
                             int count = decompressor.inflate(buf);
                             decompressed.write(buf, 0, count);
                         } catch (DataFormatException e) {
-                            e.printStackTrace();
+                            Log.e("soap", "Failed to decompress attachment with content ID : " + contentId, e);
                         }
                     }
-                    try {
-                        decompressed.close();
-                    } catch (IOException e) {
-                    }
+
+                    Streams.close(decompressed);
 
                     // set content to data handler
                     DataHandler dataHandler = MarshalAttachment.ATTACHMENTS.get("cid:" + contentId);

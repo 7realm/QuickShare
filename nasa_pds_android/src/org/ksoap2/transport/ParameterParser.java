@@ -123,10 +123,10 @@ public class ParameterParser {
      * @return <tt>true</tt> if the character is present in the array of
      *   characters, <tt>false</tt> otherwise.
      */
-    private boolean isOneOf(char ch, final char[] charray) {
+    private static boolean isOneOf(char ch, final char[] charray) {
         boolean result = false;
-        for (int i = 0; i < charray.length; i++) {
-            if (ch == charray[i]) {
+        for (char element : charray) {
+            if (ch == element) {
                 result = true;
                 break;
             }
@@ -231,12 +231,12 @@ public class ParameterParser {
         char separator = separators[0];
         if (str != null) {
             int idx = str.length();
-            for (int i = 0;  i < separators.length;  i++) {
-                int tmp = str.indexOf(separators[i]);
+            for (char separator2 : separators) {
+                int tmp = str.indexOf(separator2);
                 if (tmp != -1) {
                     if (tmp < idx) {
                         idx = tmp;
-                        separator = separators[i];
+                        separator = separator2;
                     }
                 }
             }
