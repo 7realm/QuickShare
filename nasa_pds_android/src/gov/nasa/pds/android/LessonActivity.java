@@ -70,6 +70,9 @@ public class LessonActivity extends ActionBarActivity {
                     lesson.setName(newTitle.toString());
                     LessonRepository.save();
                 }
+
+                // hide keyboard for action bar edit field
+                hideKeyboard(R.id.actionbarTitleEdit);
             }
         });
 

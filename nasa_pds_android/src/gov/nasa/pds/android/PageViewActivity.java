@@ -87,9 +87,11 @@ public class PageViewActivity extends ActionBarActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // user press enter after search text
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
                     onSearchButtonClick(v);
                 }
+
+                hideKeyboard(v.getId());
                 return false;
             }
         });
@@ -127,7 +129,8 @@ public class PageViewActivity extends ActionBarActivity {
             @Override
             public void performAction(View view) {
                 searchGroup.setVisibility(View.VISIBLE);
-                searchTextView.requestFocus();
+                searchTextView.requestFocusFromTouch();
+                showKeyboard(R.id.browserSearchText);
             }
         });
 
@@ -166,6 +169,7 @@ public class PageViewActivity extends ActionBarActivity {
 
         // hide search group
         searchGroup.setVisibility(View.GONE);
+        hideKeyboard(R.id.browserSearchText);
     }
 
     /**
@@ -184,6 +188,7 @@ public class PageViewActivity extends ActionBarActivity {
 
         // hide search group
         searchGroup.setVisibility(View.GONE);
+        hideKeyboard(R.id.browserSearchText);
     }
 
     /**

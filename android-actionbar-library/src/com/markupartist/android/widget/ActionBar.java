@@ -3,22 +3,23 @@ package com.markupartist.android.widget;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.markupartist.android.widget.actionbar.R;
 
-public class ActionBar extends RelativeLayout implements OnClickListener, TextWatcher {
+public class ActionBar extends RelativeLayout implements OnClickListener {
     private final LayoutInflater layoutInflater;
     private final ViewGroup layoutView;
     private final ViewGroup actionListView;
@@ -62,7 +63,6 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
         switch (titleType) {
         case LABEL:
             titleTextView = (TextView) findViewById(R.id.actionbarTitleLabel);
-            titleTextView.removeTextChangedListener(this);
 
             findViewById(R.id.actionbarTitleLabel).setVisibility(VISIBLE);
             findViewById(R.id.actionbarTitleEdit).setVisibility(GONE);
@@ -71,7 +71,18 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
 
         case EDIT:
             titleTextView = (TextView) findViewById(R.id.actionbarTitleEdit);
-            titleTextView.addTextChangedListener(this);
+            titleTextView.setOnEditorActionListener(new OnEditorActionListener() {
+
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        if (titleChangeListener != null) {
+                            titleChangeListener.onTitleChanged(v.getText().toString(), -1);
+                        }
+                    }
+                    return false;
+                }
+            });
 
             findViewById(R.id.actionbarTitleLabel).setVisibility(GONE);
             findViewById(R.id.actionbarTitleEdit).setVisibility(VISIBLE);
@@ -118,23 +129,6 @@ public class ActionBar extends RelativeLayout implements OnClickListener, TextWa
             findViewById(R.id.actionbarTitleDrowDown).setVisibility(VISIBLE);
             break;
         }
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        if (titleChangeListener != null) {
-            titleChangeListener.onTitleChanged(s.toString(), -1);
-        }
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        // do nothing
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        // do nothing
     }
 
     public void setTitleChangeListener(TitleChangeListener titleChangeListener) {
