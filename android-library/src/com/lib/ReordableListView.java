@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -181,18 +182,29 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         return true;
     }
 
+    /**
+     * Overridden method to avoid casting in code.
+     *
+     * @return casted version of {@link ListAdapter}
+     */
     @Override
     public ReordableAdapter<?> getAdapter() {
         return (ReordableAdapter<?>) super.getAdapter();
     }
 
+    /**
+     * Checks if point is inside the view.
+     *
+     * @param x point's x-coordinate
+     * @param y point's y-coordinate
+     * @param view the view to check
+     * @return true if point is inside, false otherwise
+     */
     private static boolean isPointInsideView(float x, float y, View view) {
         if (view == null) {
             return false;
         }
 
-        int location[] = new int[2];
-        view.getLocationOnScreen(location);
         int viewX = view.getLeft();
         int viewY = view.getTop();
 
@@ -234,14 +246,8 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         getParentGroup().addView(dragView, layoutParams);
     }
 
-    private ViewGroup getParentGroup() {
-        return (ViewGroup) getParent();
-    }
-
     /**
      * Executed when dragging is finished to update views.
-     *
-     * @param itemView the clicked item
      */
     private void onStopDrag() {
         if (startItem != null) {
@@ -259,9 +265,36 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         }
     }
 
+    /**
+     * Gets casted parent to {@link ViewGroup}.
+     *
+     * @return casted parent view
+     */
+    private ViewGroup getParentGroup() {
+        return (ViewGroup) getParent();
+    }
+
+    /**
+     * Drag and drop listener for reordable view. Can be used for special behaviour while dropping the view.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     public static interface DragAndDropListner {
+        /**
+         * Triggered when list item is started being dragged.
+         *
+         * @param position the position of the item in the list
+         * @param v the dragged item
+         */
         void onStartDrag(int position, View v);
 
+        /**
+         * Triggered when list item is being dropped.
+         *
+         * @param position the position of the item in the list
+         * @param v the dropped item
+         */
         void onEndDrag(int position, View v);
     }
 
@@ -304,8 +337,8 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         }
 
         /**
-         * Since the data comes from an array, just returning the index is sufficient to get at the data. If we were using a more complex
-         * data structure, we would return whatever object represents one row in the list.
+         * Since the data comes from an array, just returning the index is sufficient to get at the data. If we were
+         * using a more complex data structure, we would return whatever object represents one row in the list.
          *
          * @see android.widget.ListAdapter#getItem(int)
          */
