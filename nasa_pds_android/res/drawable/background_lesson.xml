@@ -10,7 +10,12 @@
 <!--     <item android:drawable="@drawable/lesson_item_pressed" android:state_focused="true" android:state_pressed="false" android:state_selected="true"/> -->
 
     <!-- Pressed -->
-    <item android:drawable="@drawable/lesson_item_pressed" android:state_pressed="true"/>
+    <item android:drawable="@drawable/lesson_item_pressed" android:state_pressed="true" />
+    
+    <!-- Focused states -->
+    <item android:drawable="@drawable/lesson_item_pressed" android:state_focused="true" android:state_pressed="false" android:state_selected="false"/>
+    <item android:drawable="@drawable/lesson_item_pressed" android:state_focused="true" android:state_pressed="false" android:state_selected="true"/>
+    <item android:drawable="@drawable/lesson_item_pressed" android:state_focused="false" android:state_pressed="false" android:state_selected="true"/>
     
     <item android:drawable="@drawable/lesson_item_normal" android:state_focused="false" android:state_pressed="false" android:state_selected="false"/> 
 </selector>

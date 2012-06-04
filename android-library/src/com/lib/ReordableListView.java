@@ -33,8 +33,6 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
     private int startOffset;
     /** Image view id, is used to drag items. */
     private int imageViewId;
-    /** Id of view that will be used as bucket to remove items. */
-    private int removeViewId;
     /** Drag and drop listener for this list view. */
     private DragAndDropListner dragAndDropListner;
 
@@ -74,15 +72,6 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
     }
 
     /**
-     * Sets id of the in parent group that will be used as remove basket.
-     *
-     * @param removeViewId the id of the view
-     */
-    public void setRemoveViewId(int removeViewId) {
-        this.removeViewId = removeViewId;
-    }
-
-    /**
      * Set listener that will be triggered on drag events.
      *
      * @param dragAndDropListner the listener that will be triggered
@@ -109,24 +98,23 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      * Override of onTouch event.
      *
      * @param v the touched view
-     * @param ev the motion event
+     * @param event the motion event
      * @return true, if event was handled
      */
     @Override
-    public boolean onTouch(View v, MotionEvent ev) {
-        final int action = ev.getAction();
-        final int x = (int) ev.getX();
-        final int y = (int) ev.getY();
+    public boolean onTouch(View v, MotionEvent event) {
+        final int action = event.getAction();
+        final int x = (int) event.getX();
+        final int y = (int) event.getY();
 
         if (action == MotionEvent.ACTION_DOWN && isInsideImageView(x)) {
             isDragging = true;
         }
 
         Log.i("reorder", "Dragging: " + isDragging + ", action: " + action + ", x: " + x + ", y: " + y);
-        Log.i("reorder_id", "View id: " + v.getId());
 
         if (!isDragging) {
-            return super.onTouchEvent(ev);
+            return super.onTouchEvent(event);
         }
 
         int firstVisiblePosition = getFirstVisiblePosition();
@@ -152,11 +140,9 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
             isDragging = false;
 
             if (startPosition != INVALID_POSITION) {
-                // check if dragged view is removed
-                View removeView = getParentGroup().findViewById(removeViewId);
-                if (isPointInsideView(x, y, removeView)) {
-                    getAdapter().onRemove(startPosition);
-                } else {
+                // check if dragged view is dropped at special view
+                boolean isViewProcessed = getAdapter().checkDropView((int)event.getRawX(), (int) event.getRawY(), startPosition);
+                if (!isViewProcessed) {
                     // calculate drop position
                     int endPosition = pointToPosition(x, y);
                     if (endPosition == INVALID_POSITION) {
@@ -190,28 +176,6 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
     @Override
     public ReordableAdapter<?> getAdapter() {
         return (ReordableAdapter<?>) super.getAdapter();
-    }
-
-    /**
-     * Checks if point is inside the view.
-     *
-     * @param x point's x-coordinate
-     * @param y point's y-coordinate
-     * @param view the view to check
-     * @return true if point is inside, false otherwise
-     */
-    private static boolean isPointInsideView(float x, float y, View view) {
-        if (view == null) {
-            return false;
-        }
-
-        int viewX = view.getLeft();
-        int viewY = view.getTop();
-
-        Log.i("reorder_id", "Inside? " + y + " of " + view.getTop() + ", view Y " + viewY);
-
-        // point is inside view bounds
-        return x > viewX && x < viewX + view.getWidth() && y > viewY && y < viewY + view.getHeight();
     }
 
     /**
@@ -304,14 +268,13 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      * @author TCSASSEMBLER
      * @version 1.0
      */
-    public static class ReordableAdapter<T> extends BaseAdapter {
-
+    public static abstract class ReordableAdapter<T> extends BaseAdapter {
         /** The id of text item inside the layout. */
         private final int textViewId;
         /** The item layout id. */
         private final int itemLayoutId;
         /** Data content. */
-        private final List<T> content;
+        protected final List<T> content;
 
         /**
          * Constructor for ReordableAdapter type.
@@ -374,13 +337,14 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         }
 
         /**
-         * Executed when item with index is removed.
+         * Checks if view can be specially processed because of drop position.
          *
          * @param index the index of the item to remove
+         * @param y the y-coordinate of the view
+         * @param x the x-coordinate of the view
+         * @return true if view has been specially processed, otherwise false
          */
-        public void onRemove(int index) {
-            content.remove(index);
-        }
+        public abstract boolean checkDropView(int x, int y, int index);
 
         /**
          * Executed when adapter is requested to drop item from one position to another.
@@ -392,6 +356,31 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
             T temp = content.get(from);
             content.remove(from);
             content.add(to, temp);
+        }
+
+        /**
+         * Checks if point is inside the view.
+         *
+         * @param x point's x-coordinate
+         * @param y point's y-coordinate
+         * @param view the view to check
+         * @return true if point is inside, false otherwise
+         */
+        protected static boolean isPointInsideView(int x, int y, View view) {
+            if (view == null) {
+                return false;
+            }
+
+            int location[] = new int[2];
+            view.getLocationOnScreen(location);
+            int viewX = location[0];
+            int viewY = location[1];
+
+            Log.i("reorder", "Inside y: " + y + " inside (" + viewY + ", " + (viewY + view.getHeight())
+                + "), x: " + x + " inside (" + viewX + ", " + (viewX + view.getWidth()) + ")");
+
+            // point is inside view bounds
+            return x > viewX && x < viewX + view.getWidth() && y > viewY && y < viewY + view.getHeight();
         }
     }
 }

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lib.ReordableListView;
 import com.lib.ReordableListView.DragAndDropListner;
@@ -43,19 +44,18 @@ public class LessonActivity extends ActionBarActivity {
 
         // set adapter
         ReordableListView listView = (ReordableListView) findViewById(R.id.lessonPartsList);
-        listView.setRemoveViewId(R.id.lessonPartRemove);
         listView.setAdapter(new LessonPartAdapter());
 
         // set listener for drag and drop events
         listView.setDragAndDropListner(new DragAndDropListner() {
             @Override
             public void onStartDrag(int position, View v) {
-                findViewById(R.id.lessonPartRemove).setVisibility(View.VISIBLE);
+                findViewById(R.id.lessonPartMenu).setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onEndDrag(int position, View v) {
-                findViewById(R.id.lessonPartRemove).setVisibility(View.GONE);
+                findViewById(R.id.lessonPartMenu).setVisibility(View.GONE);
             }
         });
 
@@ -180,8 +180,15 @@ public class LessonActivity extends ActionBarActivity {
     }
 
     private final class LessonPartAdapter extends ReordableAdapter<LessonPart> {
+        private final View editBasket;
+        private final View removeBasket;
+
         public LessonPartAdapter() {
             super(android.R.layout.simple_list_item_2, android.R.id.text1, lesson.getParts());
+
+            // store basket views
+            editBasket = findViewById(R.id.lessonPartEdit);
+            removeBasket = findViewById(R.id.lessonPartRemove);
         }
 
         @Override
@@ -205,6 +212,24 @@ public class LessonActivity extends ActionBarActivity {
             imageView.setImageResource(lessonPart.getIconId());
 
             return convertView;
+        }
+
+        @Override
+        public boolean checkDropView(int x, int y, int index) {
+            // check if we dropped view to edit basket
+            if (isPointInsideView(x, y, editBasket)) {
+                Toast.makeText(LessonActivity.this, "Dropped view to edit basket.", Toast.LENGTH_LONG).show();
+                return true;
+            }
+
+            // check if we dropped view to remove basket
+            if (isPointInsideView(x, y, removeBasket)) {
+                Toast.makeText(LessonActivity.this, "Lesson part is removed.", Toast.LENGTH_LONG).show();
+                content.remove(index);
+                return true;
+            }
+
+            return false;
         }
     }
 
