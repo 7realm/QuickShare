@@ -180,33 +180,6 @@ public class LessonActivity extends ActionBarActivity {
             // store basket views
             editBasket = findViewById(R.id.lessonPartEdit);
             removeBasket = findViewById(R.id.lessonPartRemove);
-            // TODO editBasket.setFocusable(true);
-            // editBasket.setFocusableInTouchMode(true);
-            // editBasket.setOnTouchListener(new OnTouchListener() {
-            //
-            // @Override
-            // public boolean onTouch(View v, MotionEvent event) {
-            // Log.i("reorder", "Edit action: " + event.getAction());
-            // return false;
-            // }
-            // });
-            // editBasket.setOnFocusChangeListener(new OnFocusChangeListener() {
-            //
-            // @Override
-            // public void onFocusChange(View v, boolean hasFocus) {
-            // Log.i("reorder", "Focus change: " + hasFocus);
-            //
-            // }
-            // });
-            //
-            // removeBasket.setOnTouchListener(new OnTouchListener() {
-            //
-            // @Override
-            // public boolean onTouch(View v, MotionEvent event) {
-            // Log.i("reorder", "Remove action: " + event.getAction());
-            // return false;
-            // }
-            // });
         }
 
         @Override
@@ -246,7 +219,7 @@ public class LessonActivity extends ActionBarActivity {
 
             // check if we dropped view to remove basket
             if (isPointInsideView(x, y, removeBasket)) {
-                Toast.makeText(LessonActivity.this, "Lesson part is removed.", Toast.LENGTH_LONG).show();
+                Toast.makeText(LessonActivity.this, "Lesson part is removed.", Toast.LENGTH_SHORT).show();
                 content.remove(index);
                 return true;
             }

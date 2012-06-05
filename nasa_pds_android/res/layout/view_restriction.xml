@@ -12,16 +12,16 @@
 
     <ImageView
         android:id="@+id/restrictionObjectIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/object_icon_size"
+        android:layout_height="@dimen/object_icon_size"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
         android:layout_margin="2dp" />
 
     <ImageView
         android:id="@+id/restrictionDeleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/object_icon_size"
+        android:layout_height="@dimen/object_icon_size"
         android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
         android:layout_margin="2dp"

@@ -126,12 +126,13 @@ public class ObjectViewActivity extends ActionBarActivity {
 
                             // add lesson part to lesson
                             if (lessonPart != null) {
-                                lessons.get(item).getParts().add(lessonPart);
+                                Lesson lesson = lessons.get(item);
+                                lesson.getParts().add(lessonPart);
                                 LessonRepository.save();
 
                                 // show confirmation
                                 Toast.makeText(ObjectViewActivity.this,
-                                    lessonPart.getPrimaryText() + " is added to lesson.", Toast.LENGTH_LONG).show();
+                                    lessonPart.getPrimaryText() + " is added to lesson '" + lesson.getName() + "'.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }).create().show();
@@ -352,7 +353,7 @@ public class ObjectViewActivity extends ActionBarActivity {
                 // check compare size
                 if (Compare.ITEMS.size() < 2) {
                     Toast.makeText(ObjectViewActivity.this, "This item already exists in compare pull."
-                        + " Please select several other items to compare.", Toast.LENGTH_SHORT).show();
+                        + " Please add other items to compare.", Toast.LENGTH_LONG).show();
                 } else {
                     startActivity(new Intent(ObjectViewActivity.this, CompareActivity.class));
                 }

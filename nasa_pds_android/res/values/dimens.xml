@@ -3,4 +3,5 @@
     <dimen name="home_icon_size">72dp</dimen>
     <dimen name="theme_line_height">1dp</dimen>
     <dimen name="image_button_size">36dp</dimen>
+    <dimen name="object_icon_size">29dp</dimen>
 </resources>
