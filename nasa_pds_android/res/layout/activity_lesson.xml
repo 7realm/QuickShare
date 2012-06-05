@@ -28,67 +28,92 @@
         <LinearLayout
             android:id="@+id/lessonPartMenu"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:visibility="gone" >
 
-            <RelativeLayout
-                android:id="@+id/lessonPartEdit"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/background_part_menu"
-                android:padding="5dp" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@android:id/text1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:text="Edit"
-                    android:textAppearance="@android:style/TextAppearance.Small" />
+                <RelativeLayout
+                    android:id="@+id/lessonPartEdit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_part_menu"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" >
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@android:id/text1"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/lesson_part_edit" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@android:id/text1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="Drop to edit"
+                        android:textAppearance="@android:style/TextAppearance.Small" />
 
-            <RelativeLayout
-                android:id="@+id/lessonPartRemove"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/background_part_menu"
-                android:padding="5dp" >
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@android:id/text1"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/lesson_part_edit" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@android:id/text1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:text="Remove"
-                    android:textAppearance="@android:style/TextAppearance.Small" />
+                <RelativeLayout
+                    android:id="@+id/lessonPartRemove"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_part_menu"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" >
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@android:id/text1"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/lesson_part_remove" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@android:id/text1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="Drop to remove"
+                        android:textAppearance="@android:style/TextAppearance.Small" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@android:id/text1"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/lesson_part_remove" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shape_border"
+                android:gravity="center"
+                android:text="Drop to new position to change order"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textStyle="italic" />
         </LinearLayout>
 
         <com.lib.ReordableListView

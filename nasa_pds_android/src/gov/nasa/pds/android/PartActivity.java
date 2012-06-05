@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBarActivity;
@@ -173,6 +174,9 @@ public class PartActivity extends ActionBarActivity {
         // save changes
         LessonRepository.save();
         updateTextForce();
+
+        // notify about save
+        Toast.makeText(this, "Changes to lesson '" + lesson.getName() + "' saved.", Toast.LENGTH_SHORT).show();
     }
 
     private final class UndoTextWatcher implements TextWatcher {
