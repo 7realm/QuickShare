@@ -8,8 +8,8 @@
 
     <gradient
         android:angle="270"
-        android:endColor="@color/table_first"
-        android:startColor="@color/table_second" />
+        android:endColor="@color/lesson_button_first"
+        android:startColor="@color/lesson_button_second" />
 
     <corners android:radius="5dp" />
 
