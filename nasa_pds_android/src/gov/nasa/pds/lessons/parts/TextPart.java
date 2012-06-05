@@ -25,12 +25,6 @@ public abstract class TextPart extends CaptionedPart {
         this.text = text;
     }
 
-    public void processText(String text) {
-        this.text = DataCenter.processDescription(text).trim()
-            .replaceAll("(\\r\\n){2,}", "<br><br>\n")
-            .replaceAll("(?m)^(.*?)([=|_|-]{2,})(.*?)$", "<br>$1$2$3<br>");
-    }
-
     public void addLink(String description) {
         description = description.replaceAll("\\s+", " ").trim();
         links.put("http://www.google.com/#q=" + description, description);
@@ -41,9 +35,17 @@ public abstract class TextPart extends CaptionedPart {
         page.append("<h2>").append(caption).append("</h2>");
     }
 
+    protected String processText(String text) {
+        return DataCenter.processDescription(text).trim()
+            .replaceAll("(\\r\\n){2,}", "<br><br>\n")
+            .replaceAll("(?m)^(.*?)([=|_|-]{2,})(.*?)$", "<br>$1$2$3<br>");
+    }
+
     @SuppressWarnings("unused")
     protected void renderText(File filesDir, StringBuilder page) {
-        page.append("<div class=\"description\">").append(text).append("</div>");
+        // preprocess text by adding <br> tags
+        String processedText = processText(text);
+        page.append("<div class=\"description\">").append(processedText).append("</div>");
     }
 
     @SuppressWarnings("unused")

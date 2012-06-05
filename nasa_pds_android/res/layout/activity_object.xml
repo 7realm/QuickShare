@@ -35,24 +35,19 @@
                     android:layout_height="fill_parent" >
                 </FrameLayout>
 
-                <ScrollView
+                <com.lib.TwoDScrollView
                     android:id="@+id/objectDescriptionView"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="vertical" >
 
-                    <HorizontalScrollView
+                    <TextView
+                        android:id="@+id/objectDescription"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <TextView
-                            android:id="@+id/objectDescription"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:typeface="monospace" />
-                    </HorizontalScrollView>
-                </ScrollView>
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:typeface="monospace" />
+                </com.lib.TwoDScrollView>
 
                 <ListView
                     android:id="@+id/objectReferenceList"

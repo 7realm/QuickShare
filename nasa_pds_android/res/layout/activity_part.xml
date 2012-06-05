@@ -26,7 +26,8 @@
         android:layout_below="@android:id/text1"
         android:layout_margin="10dp"
         android:inputType="text"
-        android:textAppearance="@android:style/TextAppearance.Small" >
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:typeface="monospace" >
 
         <requestFocus />
     </EditText>
@@ -60,7 +61,7 @@
             android:layout_marginTop="14dp"
             android:text="Description" />
 
-        <HorizontalScrollView
+        <com.lib.TwoDScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
@@ -72,10 +73,11 @@
             <EditText
                 android:id="@+id/partDescriptionEdit"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
-                android:textAppearance="@android:style/TextAppearance.Small" />
-        </HorizontalScrollView>
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:typeface="monospace" />
+        </com.lib.TwoDScrollView>
     </RelativeLayout>
 
 </RelativeLayout>
