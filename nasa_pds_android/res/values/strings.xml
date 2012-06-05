@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, NasaSearchActivity!</string>
     <string name="app_name">NASA PDS</string>
 
     <string-array name="entities_type">
@@ -11,5 +10,7 @@
         <item>Instruments</item>
         <item>Files</item>
     </string-array>
+    
+     <string name="about">This app is designed to help teachers to conduct lessons involving various space-related data. You can easily create amazing training material while browsing!&lt;br&gt;&lt;br&gt;For more details about data itself, please visit:&lt;br&gt;&lt;i&gt;http://pds.nasa.gov/&lt;/i&gt;</string>
 
 </resources>

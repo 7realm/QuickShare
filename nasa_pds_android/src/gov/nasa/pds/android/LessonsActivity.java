@@ -6,8 +6,12 @@ package gov.nasa.pds.android;
 import gov.nasa.pds.data.EntityType;
 import gov.nasa.pds.lessons.Lesson;
 import gov.nasa.pds.lessons.LessonRepository;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +37,20 @@ public class LessonsActivity extends ActionBarActivity {
 
             @Override
             public void performAction(View view) {
-                // do nothing
+                new AlertDialog.Builder(LessonsActivity.this)
+                    .setIcon(R.drawable.logo)
+                    .setTitle(Html.fromHtml("<b>NASA</b><br>Planetary Data System"))
+                    .setMessage(Html.fromHtml(getResources().getString(R.string.about)))
+                    .setPositiveButton("View site", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Uri uri = Uri.parse("http://pds.nasa.gov/");
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("Close", null).create().show();
             }
         });
 
