@@ -17,13 +17,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="15dp"
+            android:duplicateParentState="true"
             android:gravity="center"
             android:lines="2"
             android:padding="30dp"
             android:text="You can add lesson parts\nwhile browsing."
             android:textAppearance="@android:style/TextAppearance.Medium"
             android:visibility="gone" />
-
+
         <LinearLayout
             android:id="@+id/lessonPartMenu"
             android:layout_width="match_parent"
@@ -38,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/background_image_button"
+                android:background="@drawable/background_part_menu"
                 android:padding="5dp" >
 
                 <TextView
@@ -66,7 +67,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/background_image_button"
+                android:background="@drawable/background_part_menu"
                 android:padding="5dp" >
 
                 <TextView
@@ -94,8 +95,9 @@
             android:id="@+id/lessonPartsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/lessonPartRemove"
-            android:layout_alignParentTop="true" />
+            android:layout_above="@id/lessonPartMenu"
+            android:layout_alignParentTop="true" >
+        </com.lib.ReordableListView>
     </RelativeLayout>
 
 </LinearLayout>

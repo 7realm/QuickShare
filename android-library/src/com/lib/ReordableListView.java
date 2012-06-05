@@ -29,8 +29,10 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
     private boolean isDragging;
     /** Start position of the item. */
     private int startPosition;
+    /** Start offset to item's left. */
+    private int startOffsetX;
     /** Start offset to item's top. */
-    private int startOffset;
+    private int startOffsetY;
     /** Image view id, is used to drag items. */
     private int imageViewId;
     /** Drag and drop listener for this list view. */
@@ -123,16 +125,25 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         case MotionEvent.ACTION_DOWN:
             startPosition = pointToPosition(x, y);
             if (startPosition != INVALID_POSITION) {
+                // calculate offset within item
                 int itemIndex = startPosition - firstVisiblePosition;
                 startItem = getChildAt(itemIndex);
-                startOffset = y - startItem.getTop();
-                onStartDrag(itemIndex, y - startOffset);
+                startOffsetX = x - startItem.getLeft();
+                startOffsetY = y - startItem.getTop();
+
+                onStartDrag(itemIndex, x - startOffsetX, y - startOffsetY);
             } else {
                 isDragging = false;
             }
             break;
         case MotionEvent.ACTION_MOVE:
-            onDrag(y - startOffset);
+            onDrag(x - startOffsetX, y - startOffsetY);
+            if (dragView != null) {
+                // notify listener
+                if (dragAndDropListner != null) {
+                    dragAndDropListner.onDrag((int) event.getRawX(), (int) event.getRawY(), startPosition, dragView);
+                }
+            }
             break;
         case MotionEvent.ACTION_CANCEL:
         case MotionEvent.ACTION_UP:
@@ -141,7 +152,7 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
 
             if (startPosition != INVALID_POSITION) {
                 // check if dragged view is dropped at special view
-                boolean isViewProcessed = getAdapter().checkDropView((int)event.getRawX(), (int) event.getRawY(), startPosition);
+                boolean isViewProcessed = getAdapter().checkDropView((int) event.getRawX(), (int) event.getRawY(), startPosition);
                 if (!isViewProcessed) {
                     // calculate drop position
                     int endPosition = pointToPosition(x, y);
@@ -165,7 +176,8 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
             invalidateViews();
             break;
         }
-        return true;
+
+        return false;
     }
 
     /**
@@ -182,9 +194,11 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      * Executed while dragging to update position of dragged item.
      *
      * @param y the y coordinate of item
+     * @param x the x coordinate of item
      */
-    private void onDrag(int y) {
+    private void onDrag(int x, int y) {
         if (dragView != null) {
+            layoutParams.leftMargin = x;
             layoutParams.topMargin = y;
             dragView.setLayoutParams(layoutParams);
         }
@@ -195,8 +209,9 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
      *
      * @param itemIndex the index of
      * @param y the y coordinate of item
+     * @param x the x coordinate of item
      */
-    private void onStartDrag(int itemIndex, int y) {
+    private void onStartDrag(int itemIndex, int x, int y) {
         // notify listener and hide dragged item
         startItem.setVisibility(View.INVISIBLE);
         if (dragAndDropListner != null) {
@@ -206,6 +221,7 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         // create floating item that will be dragged
         dragView = getAdapter().getView(itemIndex, null, this);
         layoutParams = new RelativeLayout.LayoutParams(startItem.getWidth(), startItem.getHeight());
+        layoutParams.leftMargin = x;
         layoutParams.topMargin = y;
         getParentGroup().addView(dragView, layoutParams);
     }
@@ -239,7 +255,7 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
     }
 
     /**
-     * Drag and drop listener for reordable view. Can be used for special behaviour while dropping the view.
+     * Drag and drop listener for reordable view. Can be used for special behavior while dropping the view.
      *
      * @author TCSASSEMBLER
      * @version 1.0
@@ -260,6 +276,16 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
          * @param v the dropped item
          */
         void onEndDrag(int position, View v);
+
+        /**
+         * TODO
+         *
+         * @param x
+         * @param y
+         * @param position
+         * @param v
+         */
+        void onDrag(int x, int y, int position, View v);
     }
 
     /**
@@ -300,8 +326,8 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         }
 
         /**
-         * Since the data comes from an array, just returning the index is sufficient to get at the data. If we were
-         * using a more complex data structure, we would return whatever object represents one row in the list.
+         * Since the data comes from an array, just returning the index is sufficient to get at the data. If we were using a more complex
+         * data structure, we would return whatever object represents one row in the list.
          *
          * @see android.widget.ListAdapter#getItem(int)
          */

@@ -47,17 +47,7 @@ public class LessonActivity extends ActionBarActivity {
         listView.setAdapter(new LessonPartAdapter());
 
         // set listener for drag and drop events
-        listView.setDragAndDropListner(new DragAndDropListner() {
-            @Override
-            public void onStartDrag(int position, View v) {
-                findViewById(R.id.lessonPartMenu).setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onEndDrag(int position, View v) {
-                findViewById(R.id.lessonPartMenu).setVisibility(View.GONE);
-            }
-        });
+        listView.setDragAndDropListner(new LessonPartAdapter());
 
         // get action bar
         getActionBar().setTitleType(TitleType.EDIT);
@@ -180,7 +170,7 @@ public class LessonActivity extends ActionBarActivity {
         }
     }
 
-    private final class LessonPartAdapter extends ReordableAdapter<LessonPart> {
+    private final class LessonPartAdapter extends ReordableAdapter<LessonPart> implements DragAndDropListner {
         private final View editBasket;
         private final View removeBasket;
 
@@ -190,6 +180,33 @@ public class LessonActivity extends ActionBarActivity {
             // store basket views
             editBasket = findViewById(R.id.lessonPartEdit);
             removeBasket = findViewById(R.id.lessonPartRemove);
+            // TODO editBasket.setFocusable(true);
+            // editBasket.setFocusableInTouchMode(true);
+            // editBasket.setOnTouchListener(new OnTouchListener() {
+            //
+            // @Override
+            // public boolean onTouch(View v, MotionEvent event) {
+            // Log.i("reorder", "Edit action: " + event.getAction());
+            // return false;
+            // }
+            // });
+            // editBasket.setOnFocusChangeListener(new OnFocusChangeListener() {
+            //
+            // @Override
+            // public void onFocusChange(View v, boolean hasFocus) {
+            // Log.i("reorder", "Focus change: " + hasFocus);
+            //
+            // }
+            // });
+            //
+            // removeBasket.setOnTouchListener(new OnTouchListener() {
+            //
+            // @Override
+            // public boolean onTouch(View v, MotionEvent event) {
+            // Log.i("reorder", "Remove action: " + event.getAction());
+            // return false;
+            // }
+            // });
         }
 
         @Override
@@ -219,8 +236,6 @@ public class LessonActivity extends ActionBarActivity {
         public boolean checkDropView(int x, int y, int index) {
             // check if we dropped view to edit basket
             if (isPointInsideView(x, y, editBasket)) {
-                Toast.makeText(LessonActivity.this, "Dropped view to edit basket.", Toast.LENGTH_LONG).show();
-
                 // start edit activity
                 Intent intent = new Intent(LessonActivity.this, PartActivity.class);
                 intent.putExtra(PartActivity.EXTRA_LESSON_ID, lesson.getId());
@@ -237,6 +252,22 @@ public class LessonActivity extends ActionBarActivity {
             }
 
             return false;
+        }
+
+        @Override
+        public void onStartDrag(int position, View v) {
+            findViewById(R.id.lessonPartMenu).setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onEndDrag(int position, View v) {
+            findViewById(R.id.lessonPartMenu).setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onDrag(int x, int y, int position, View v) {
+            editBasket.setSelected(isPointInsideView(x, y, editBasket));
+            removeBasket.setSelected(isPointInsideView(x, y, removeBasket));
         }
     }
 
