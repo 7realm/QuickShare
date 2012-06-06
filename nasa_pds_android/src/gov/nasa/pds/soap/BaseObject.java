@@ -8,7 +8,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Hashtable;
 import java.util.List;
 
 import org.ksoap2.serialization.KvmSerializable;
@@ -80,12 +79,10 @@ public abstract class BaseObject implements KvmSerializable {
      * Gets information about the property.
      *
      * @param i the property index
-     * @param hashtable the common data
      * @return the property information
      */
     @Override
-    @SuppressWarnings("rawtypes")
-    public PropertyInfo getPropertyInfo(int i, Hashtable hashtable) {
+    public PropertyInfo getPropertyInfo(int i) {
         PropertyInfo propertyinfo = new PropertyInfo();
         propertyinfo.name = getFieldName(i);
         propertyinfo.type = fields[i].getType();

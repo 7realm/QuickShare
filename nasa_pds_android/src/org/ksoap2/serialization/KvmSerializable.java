@@ -24,12 +24,9 @@
 
 package org.ksoap2.serialization;
 
-import java.util.Hashtable;
-
 /**
- * Provides get and set methods for properties. Can be used to replace
- * reflection (to some extend) for "serialization-aware" classes. Currently used
- * in kSOAP and the RMS based kobjects object repository
+ * Provides get and set methods for properties. Can be used to replace reflection (to some extend) for "serialization-aware" classes.
+ * Currently used in kSOAP and the RMS based kobjects object repository
  */
 
 public interface KvmSerializable {
@@ -47,24 +44,17 @@ public interface KvmSerializable {
     /**
      * Sets the property with the given index to the given value.
      *
-     * @param index
-     *            the index to be set
-     * @param value
-     *            the value of the property
+     * @param index the index to be set
+     * @param value the value of the property
      */
     void setProperty(int index, Object value);
 
     /**
      * Fills the given property info record.
      *
-     * @param index
-     *            the index to be queried
-     * @param properties
-     *            information about the (de)serializer.  Not frequently used.
-     * @return
-     *            The return parameter, to be filled with information about the
-     *            property with the given index.
+     * @param index the index to be queried
+     * @return the return parameter, to be filled with information about the property with the given index.
      */
-    PropertyInfo getPropertyInfo(int index, Hashtable properties);
+    PropertyInfo getPropertyInfo(int index);
 
 }

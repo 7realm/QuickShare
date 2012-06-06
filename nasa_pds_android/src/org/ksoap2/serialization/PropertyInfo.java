@@ -18,14 +18,7 @@ package org.ksoap2.serialization;
  * This class is used to store information about each property an implementation of KvmSerializable exposes.
  */
 
-public class PropertyInfo
-{
-    public static final Class OBJECT_CLASS = new Object().getClass();
-    public static final Class STRING_CLASS = "".getClass();
-    public static final Class INTEGER_CLASS = new Integer(0).getClass();
-    public static final Class LONG_CLASS = new Long(0).getClass();
-    public static final Class BOOLEAN_CLASS = new Boolean(true).getClass();
-    public static final Class VECTOR_CLASS = new java.util.Vector().getClass();
+public class PropertyInfo {
     public static final PropertyInfo OBJECT_TYPE = new PropertyInfo();
     public static final int TRANSIENT = 1;
     public static final int MULTI_REF = 2;
@@ -54,7 +47,7 @@ public class PropertyInfo
     /**
      * Type of the property/elements. Should usually be an instance of Class.
      */
-    public Object type = OBJECT_CLASS;
+    public Object type = Object.class;
 
     /**
      * if a property is multi-referenced, set this flag to true.
@@ -66,13 +59,11 @@ public class PropertyInfo
      */
     public PropertyInfo elementType;
 
-    public PropertyInfo()
-    {
+    public PropertyInfo() {
     }
 
-    public void clear()
-    {
-        type = OBJECT_CLASS;
+    public void clear() {
+        type = Object.class;
         flags = 0;
         name = null;
         namespace = null;
@@ -81,112 +72,98 @@ public class PropertyInfo
     /**
      * @return Returns the elementType.
      */
-    public PropertyInfo getElementType()
-    {
+    public PropertyInfo getElementType() {
         return elementType;
     }
 
     /**
      * @param elementType The elementType to set.
      */
-    public void setElementType(PropertyInfo elementType)
-    {
+    public void setElementType(PropertyInfo elementType) {
         this.elementType = elementType;
     }
 
     /**
      * @return Returns the flags.
      */
-    public int getFlags()
-    {
+    public int getFlags() {
         return flags;
     }
 
     /**
      * @param flags The flags to set.
      */
-    public void setFlags(int flags)
-    {
+    public void setFlags(int flags) {
         this.flags = flags;
     }
 
     /**
      * @return Returns the multiRef.
      */
-    public boolean isMultiRef()
-    {
+    public boolean isMultiRef() {
         return multiRef;
     }
 
     /**
      * @param multiRef The multiRef to set.
      */
-    public void setMultiRef(boolean multiRef)
-    {
+    public void setMultiRef(boolean multiRef) {
         this.multiRef = multiRef;
     }
 
     /**
      * @return Returns the name.
      */
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
     /**
      * @param name The name to set.
      */
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
     /**
      * @return Returns the namespace.
      */
-    public String getNamespace()
-    {
+    public String getNamespace() {
         return namespace;
     }
 
     /**
      * @param namespace The namespace to set.
      */
-    public void setNamespace(String namespace)
-    {
+    public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
     /**
      * @return Returns the type.
      */
-    public Object getType()
-    {
+    public Object getType() {
         return type;
     }
 
     /**
      * @param type The type to set.
      */
-    public void setType(Object type)
-    {
+    public void setType(Object type) {
         this.type = type;
     }
 
     /**
      * @return Returns the value.
      */
-    public Object getValue()
-    {
+    public Object getValue() {
         return value;
     }
 
     /**
      * @param value The value to set.
      */
-    public void setValue(Object value)
-    {
+    public void setValue(Object value) {
         this.value = value;
     }
 

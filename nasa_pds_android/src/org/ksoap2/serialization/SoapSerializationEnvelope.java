@@ -42,23 +42,15 @@ import org.xmlpull.v1.XmlSerializer;
  */
 public class SoapSerializationEnvelope extends SoapEnvelope {
     public static final String DEFAULT_NAMESPACE = "http://pds.nasa.gov/";
-    private static final String ANY_TYPE_LABEL = "anyType";
     private static final String ROOT_LABEL = "root";
     private static final String TYPE_LABEL = "type";
     private static final String ITEM_LABEL = "item";
     private static final Marshal DEFAULT_MARSHAL = new MarshalDefault();
 
     /**
-     * Public properties that will be passed to getPropertyInfo method.
-     * <p>
-     * This field is not used int this class.
-     */
-    public Hashtable properties = new Hashtable();
-
-    /**
      * Map from XML qualified names to Java classes
      */
-    protected Map<QNameBase, Object> qNameToClass = new Hashtable();
+    protected Map<QNameBase, Object> qNameToClass = new Hashtable<QNameBase, Object>();
 
     /**
      * Map from Java class names to XML type and namespace pairs
@@ -99,6 +91,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void readSerializable(XmlPullParser parser, String namespace, KvmSerializable obj) throws IOException,
         XmlPullParserException {
         int propertyCount = obj.getPropertyCount();
@@ -109,7 +102,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             int foundIndex = -1;
             PropertyInfo propertyInfo = null;
             for (int i = 0; i < propertyCount; i++) {
-                propertyInfo = obj.getPropertyInfo(i, properties);
+                propertyInfo = obj.getPropertyInfo(i);
                 if ((propertyInfo.namespace == null || propertyInfo.namespace.equals(parsedNamespace))
                     && parsedName.equals(propertyInfo.name)) {
                     foundIndex = i;
@@ -180,7 +173,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         }
 
         try {
-            obj = ((Class) obj).newInstance();
+            obj = ((Class<?>) obj).newInstance();
             if (obj instanceof KvmSerializable) {
                 readSerializable(parser, namespace, (KvmSerializable) obj);
             } else {
@@ -202,8 +195,8 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
         if (type == null) {
             type = instance.getClass();
         }
-        if (type != PropertyInfo.OBJECT_CLASS) {
-            QNameInfo tmp = classToQName.get(((Class) type).getName());
+        if (type != Object.class) {
+            QNameInfo tmp = classToQName.get(((Class<?>) type).getName());
             if (tmp != null) {
                 return tmp;
             }
@@ -215,7 +208,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
      * Defines a direct mapping from a namespace and type to a java class (and vice versa), using the given marshal
      * mechanism
      */
-    public SoapSerializationEnvelope addMapping(String namespace, String name, Class clazz, Marshal marshal) {
+    public SoapSerializationEnvelope addMapping(String namespace, String name, Class<?> clazz, Marshal marshal) {
         qNameToClass.put(new QNameBase(namespace, name), marshal == null ? (Object) clazz : marshal);
         classToQName.put(clazz.getName(), new QNameInfo(namespace, name, marshal));
         return this;
@@ -224,14 +217,14 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
     /**
      * Defines a direct mapping from a namespace and type to a java class (and vice versa)
      */
-    public SoapSerializationEnvelope addMapping(String namespace, String name, Class clazz) {
+    public SoapSerializationEnvelope addMapping(String namespace, String name, Class<?> clazz) {
         return addMapping(namespace, name, clazz, null);
     }
 
     /**
      * Defines a direct mapping from a namespace and type to a java class (and vice versa)
      */
-    public SoapSerializationEnvelope addMapping(String name, Class clazz) {
+    public SoapSerializationEnvelope addMapping(String name, Class<?> clazz) {
         return addMapping(DEFAULT_NAMESPACE, name, clazz, null);
     }
 
@@ -293,7 +286,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope {
             // get the property
             Object propertyValue = obj.getProperty(i);
             // and importantly also get the property info which holds the type potentially!
-            PropertyInfo propertyInfo = obj.getPropertyInfo(i, properties);
+            PropertyInfo propertyInfo = obj.getPropertyInfo(i);
 
             if (propertyValue == null) {
                 // skip null properties

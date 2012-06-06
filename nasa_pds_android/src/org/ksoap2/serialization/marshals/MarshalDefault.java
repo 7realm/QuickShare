@@ -33,11 +33,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 /**
- * This class is not public, so save a few bytes by using a short class name (MarshalDefault
- * stands for DefaultMarshal)...
+ * Default marshal for all primitive types.
  */
 public class MarshalDefault implements Marshal {
-
     @Override
     public Object readInstance(XmlPullParser parser, String namespace, String name, PropertyInfo expected)
             throws IOException, XmlPullParserException {
@@ -58,8 +56,7 @@ public class MarshalDefault implements Marshal {
 
     /**
      * Write the instance out. In case it is an AttributeContainer write those our first though.
-     * @param writer
-     *            the xml serializer.
+     * @param writer the xml serializer.
      * @param instance
      * @throws IOException
      */
@@ -86,7 +83,7 @@ public class MarshalDefault implements Marshal {
         cm.addMapping(cm.xsd, "long", Long.class, this);
         cm.addMapping(cm.xsd, "boolean", boolean.class, this);
         cm.addMapping(cm.xsd, "boolean", Boolean.class, this);
-        cm.addMapping(cm.xsd, "string", PropertyInfo.STRING_CLASS, this);
+        cm.addMapping(cm.xsd, "string", String.class, this);
 
     }
 }

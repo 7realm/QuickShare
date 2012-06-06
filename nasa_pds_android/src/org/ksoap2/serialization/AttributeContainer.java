@@ -3,7 +3,7 @@ package org.ksoap2.serialization;
 import java.util.Vector;
 
 public class AttributeContainer {
-    private Vector attributes = new Vector();
+    private Vector<AttributeInfo> attributes = new Vector<AttributeInfo>();
 
     /**
      * Places AttributeInfo of desired attribute into a designated AttributeInfo object
@@ -12,7 +12,7 @@ public class AttributeContainer {
      * @param attributeInfo designated retainer of desired attribute
      */
     public void getAttributeInfo(int index, AttributeInfo attributeInfo) {
-        AttributeInfo p = (AttributeInfo) attributes.elementAt(index);
+        AttributeInfo p = attributes.elementAt(index);
         attributeInfo.name = p.name;
         attributeInfo.namespace = p.namespace;
         attributeInfo.flags = p.flags;
@@ -25,14 +25,14 @@ public class AttributeContainer {
      * Get the attribute at the given index
      */
     public Object getAttribute(int index) {
-        return ((AttributeInfo) attributes.elementAt(index)).getValue();
+        return attributes.elementAt(index).getValue();
     }
 
      /**
      * Get the attribute's toString value.
      */
     public String getAttributeAsString(int index) {
-        AttributeInfo attributeInfo = (AttributeInfo) attributes.elementAt(index);
+        AttributeInfo attributeInfo = attributes.elementAt(index);
         return attributeInfo.getValue().toString();
     }
 
@@ -45,9 +45,9 @@ public class AttributeContainer {
         Integer i = attributeIndex(name);
         if (i != null) {
             return getAttribute(i.intValue());
-        } else {
-            throw new RuntimeException("illegal property: " + name);
         }
+
+        throw new RuntimeException("illegal property: " + name);
     }
 
     /**
@@ -59,20 +59,16 @@ public class AttributeContainer {
         Integer i = attributeIndex(name);
         if (i != null) {
             return getAttribute(i.intValue()).toString();
-        } else {
-            throw new RuntimeException("illegal property: " + name);
         }
+
+        throw new RuntimeException("illegal property: " + name);
     }
 
     /**
      * Knows whether the given attribute exists
      */
     public boolean hasAttribute(final String name) {
-        if (attributeIndex(name) != null) {
-            return true;
-        } else {
-            return false;
-        }
+       return attributeIndex(name) != null;
     }
 
     /**
@@ -83,11 +79,7 @@ public class AttributeContainer {
      */
     public Object getAttributeSafely(String name) {
         Integer i = attributeIndex(name);
-        if (i != null) {
-            return getAttribute(i.intValue());
-        } else {
-            return null;
-        }
+        return i == null ? null : getAttribute(i.intValue());
     }
 
     /**
@@ -100,23 +92,20 @@ public class AttributeContainer {
      */
     public Object getAttributeSafelyAsString(String name) {
         Integer i = attributeIndex(name);
-        if (i != null) {
-            return getAttribute(i.intValue()).toString();
-        } else {
-            return "";
-        }
+        return i == null ? "" : getAttribute(i.intValue()).toString();
     }
 
     /**
      * @deprecated use #getAttributeSafely
      */
+    @Deprecated
     public Object safeGetAttribute(String name) {
         return getAttributeSafely(name);
     }
 
     private Integer attributeIndex(String name) {
         for (int i = 0; i < attributes.size(); i++) {
-            if (name.equals(((AttributeInfo) attributes.elementAt(i)).getName())) {
+            if (name.equals(attributes.elementAt(i).getName())) {
                 return new Integer(i);
             }
         }
@@ -145,7 +134,7 @@ public class AttributeContainer {
         }
 
         for (int attribIndex = 0; attribIndex < numAttributes; attribIndex++) {
-            AttributeInfo thisAttrib = (AttributeInfo) this.attributes.elementAt(attribIndex);
+            AttributeInfo thisAttrib = attributes.elementAt(attribIndex);
             Object thisAttribValue = thisAttrib.getValue();
             if (!other.hasAttribute(thisAttrib.getName())) {
                 return false;
@@ -168,7 +157,7 @@ public class AttributeContainer {
     public void addAttribute(String name, Object value) {
         AttributeInfo attributeInfo = new AttributeInfo();
         attributeInfo.name = name;
-        attributeInfo.type = value == null ? PropertyInfo.OBJECT_CLASS : value.getClass();
+        attributeInfo.type = value == null ? Object.class : value.getClass();
         attributeInfo.value = value;
         addAttribute(attributeInfo);
     }

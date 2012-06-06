@@ -17,35 +17,37 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE. */
-
 package org.ksoap2.serialization.marshals;
 
+import java.io.IOException;
 import java.util.Date;
-import java.io.*;
-import org.xmlpull.v1.*;
-import org.kobjects.isodate.*;
+
+import org.kobjects.isodate.IsoDate;
 import org.ksoap2.serialization.Marshal;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
-
-/** 
- * Marshal class for Dates. 
+/**
+ * Marshal class for Dates.
  */
 public class MarshalDate implements Marshal {
-    public static Class DATE_CLASS = new Date().getClass();
-
+    @Override
     public Object readInstance(XmlPullParser parser, String namespace, String name, PropertyInfo expected)
             throws IOException, XmlPullParserException {
         return IsoDate.stringToDate(parser.nextText(), IsoDate.DATE_TIME);
     }
 
+    @Override
     public void writeInstance(XmlSerializer writer, Object obj) throws IOException {
         writer.text(IsoDate.dateToString((Date) obj, IsoDate.DATE_TIME));
     }
 
+    @Override
     public void register(SoapSerializationEnvelope cm) {
-        cm.addMapping(cm.xsd, "dateTime", MarshalDate.DATE_CLASS, this);
+        cm.addMapping(cm.xsd, "dateTime", Date.class, this);
     }
 
 }
