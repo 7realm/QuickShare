@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
  */
-package gov.nasa.pds.soap;
+package org.ksoap2.serialization;
 
 /**
  * Exception that will be thrown on serialization.

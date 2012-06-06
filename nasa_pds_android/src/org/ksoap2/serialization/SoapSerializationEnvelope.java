@@ -17,7 +17,6 @@
 
 package org.ksoap2.serialization;
 
-import gov.nasa.pds.soap.SerializationException;
 
 import java.io.IOException;
 import java.util.ArrayList;

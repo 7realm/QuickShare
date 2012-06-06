@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SerializationException;
 
 /**
  * Base serializable object for all entities and requests.
@@ -104,7 +105,7 @@ public abstract class BaseObject implements KvmSerializable {
      * @param fieldName the list property name
      * @return the name of list elements
      */
-    @SuppressWarnings({"static-method", "unused"})
+    @SuppressWarnings({"unused"})
     protected String getElementName(String fieldName) {
         return "items";
     }
