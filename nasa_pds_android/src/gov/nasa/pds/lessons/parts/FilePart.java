@@ -8,6 +8,12 @@ import gov.nasa.pds.soap.entities.WsDataFile;
 
 import java.io.File;
 
+/**
+ * Lesson part that represents file.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class FilePart extends TextPart {
     public FilePart() {
         // default empty constructor

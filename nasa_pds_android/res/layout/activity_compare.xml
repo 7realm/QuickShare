@@ -5,6 +5,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="5dip" >
+    
+     <com.markupartist.android.widget.ActionBar
+        android:id="@+id/actionbar"
+        style="@style/ActionBar" />
 
     <TextView
         android:layout_width="match_parent"

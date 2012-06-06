@@ -355,6 +355,7 @@ public class ObjectViewActivity extends ActionBarActivity {
                     Toast.makeText(ObjectViewActivity.this, "This item already exists in compare pull."
                         + " Please add other items to compare.", Toast.LENGTH_LONG).show();
                 } else {
+                    finish();
                     startActivity(new Intent(ObjectViewActivity.this, CompareActivity.class));
                 }
             } else {

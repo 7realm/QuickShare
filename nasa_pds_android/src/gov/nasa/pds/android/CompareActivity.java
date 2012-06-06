@@ -15,7 +15,6 @@ import gov.nasa.pds.soap.entities.Restriction;
 
 import java.util.Set;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,13 +27,17 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.markupartist.android.widget.ActionBar.AbstractAction;
+import com.markupartist.android.widget.ActionBarActivity;
+import com.markupartist.android.widget.actionbar.R;
+
 /**
  * Activity that will display comparison results.
  *
  * @author TCSASSEMBLER
  * @version 1.0
  */
-public class CompareActivity extends Activity {
+public class CompareActivity extends ActionBarActivity {
     private static final int CELL_PADDING = 2;
 
     /**
@@ -44,10 +47,19 @@ public class CompareActivity extends Activity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO change progress indicator
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compare);
+
+        // set action bar
+        getActionBar().setTitle("Compare");
+        // add back button
+        getActionBar().setUpAction(new AbstractAction(R.drawable.level_left, "Browse") {
+            @Override
+            public void performAction(View view) {
+                finish();
+            }
+        });
 
         // load data
         new DataLoadTast().execute();

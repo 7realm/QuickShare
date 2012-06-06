@@ -8,8 +8,17 @@ import gov.nasa.pds.data.ImageCenter;
 import gov.nasa.pds.lessons.LessonRepository;
 import android.app.Application;
 
+/**
+ * Current android application.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class NasaApplication extends Application {
 
+    /**
+     * Initializes application.
+     */
     @Override
     public void onCreate() {
         super.onCreate();

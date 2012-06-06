@@ -168,7 +168,6 @@ public class SoapEnvelopeExecutor {
         ParameterParser parser = new ParameterParser();
         parser.setLowerCaseNames(true);
 
-        // TODO make light
         // parameter parser can handle null input
         Map<String, String> params = parser.parse(contentType, new char[] {';', ','});
         String boundaryStr = params.get("boundary");

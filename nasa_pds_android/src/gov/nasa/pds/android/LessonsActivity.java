@@ -23,6 +23,14 @@ import android.widget.TextView;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBarActivity;
 
+/**
+ * Activity that displays list of all lessons.
+ * <p>
+ * First activity of the application.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class LessonsActivity extends ActionBarActivity {
     private BaseAdapter adapter;
 

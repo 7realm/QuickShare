@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.lessons.Lesson;
@@ -29,6 +32,12 @@ import com.markupartist.android.widget.ActionBar.TitleChangeListener;
 import com.markupartist.android.widget.ActionBar.TitleType;
 import com.markupartist.android.widget.ActionBarActivity;
 
+/**
+ * Activity that will display lesson.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class LessonActivity extends ActionBarActivity {
     public static final String EXTRA_LESSON_ID = "intent.extra.lesson.id";
     private Lesson lesson;
@@ -170,6 +179,12 @@ public class LessonActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Adapter that will load data to lesson part list.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     private final class LessonPartAdapter extends ReordableAdapter<LessonPart> implements DragAndDropListner {
         private final View editBasket;
         private final View removeBasket;
@@ -236,7 +251,6 @@ public class LessonActivity extends ActionBarActivity {
         public void onEndDrag(int position, View v) {
             findViewById(R.id.lessonPartMenu).setVisibility(View.GONE);
         }
-
         @Override
         public void onDrag(int x, int y, int position, View v) {
             editBasket.setSelected(isPointInsideView(x, y, editBasket));
@@ -244,8 +258,16 @@ public class LessonActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Action that will be done after rendering of the lesson.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     private static enum PostRenderAction {
+        /** Lesson will be previewed. */
         PREVIEW,
+        /** Lesson will be shared. */
         SHARE
     }
 }

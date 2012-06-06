@@ -13,6 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Base lesson part with caption and text content.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public abstract class TextPart extends CaptionedPart {
     private final Map<String, String> links = new HashMap<String, String>();
     private String text;
@@ -35,7 +41,7 @@ public abstract class TextPart extends CaptionedPart {
         page.append("<h2>").append(caption).append("</h2>");
     }
 
-    protected String processText(String text) {
+    protected static String processText(String text) {
         return DataCenter.processDescription(text).trim()
             .replaceAll("(\\r\\n){2,}", "<br><br>\n")
             .replaceAll("(?m)^(.*?)([=|_|-]{2,})(.*?)$", "<br>$1$2$3<br>");

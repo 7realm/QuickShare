@@ -12,6 +12,12 @@ import gov.nasa.pds.soap.calls.GetPreviewImageURLResponse;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
+/**
+ * Special query for preview image urls.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class GetPreviewImageQuery extends PagedQuery {
     private final long imageId;
 

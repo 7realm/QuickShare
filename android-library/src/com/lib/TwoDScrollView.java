@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package com.lib;
 
 import android.content.Context;
@@ -17,10 +20,10 @@ import android.widget.Scroller;
  * may itself be a layout manager with a complex hierarchy of objects.
  *
  * @author TCSASSEMBLER
+ * @version 1.0
  */
 public class TwoDScrollView extends FrameLayout {
-    static final int ANIMATED_SCROLL_GAP = 250;
-    static final float MAX_SCROLL_FACTOR = 0.5f;
+    private static final int ANIMATED_SCROLL_GAP = 250;
 
     private long mLastScroll;
     private Scroller mScroller;
@@ -352,7 +355,7 @@ public class TwoDScrollView extends FrameLayout {
      * Handles scrolling in response to a "home/end" shortcut press.
      * </p>
      *
-     * @param direction the scroll direction: {@link android.view.View#FOCUS_UP} to go the top of the view or
+     * @param direction_vert the scroll direction: {@link android.view.View#FOCUS_UP} to go the top of the view or
      * {@link android.view.View#FOCUS_DOWN} to go the bottom
      * @return true if the key event is consumed by this method, false otherwise
      */
@@ -394,7 +397,7 @@ public class TwoDScrollView extends FrameLayout {
     /**
      * Smooth scroll by a Y delta
      *
-     * @param delta the number of pixels to scroll by on the Y axis
+     * @param deltaX the number of pixels to scroll by on the Y axis
      */
     private void doScroll(int deltaX, int deltaY) {
         if (deltaX != 0 || deltaY != 0) {

@@ -278,12 +278,12 @@ public class ReordableListView extends ListView implements View.OnTouchListener 
         void onEndDrag(int position, View v);
 
         /**
-         * TODO
+         * Triggered when view is dragged.
          *
-         * @param x
-         * @param y
-         * @param position
-         * @param v
+         * @param x absolute coordinates of view
+         * @param y absolute coordinates of view
+         * @param position the dragged item position
+         * @param v the dragged view
          */
         void onDrag(int x, int y, int position, View v);
     }

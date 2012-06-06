@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package com.markupartist.android.widget;
 
 import android.app.AlertDialog;
@@ -19,6 +22,12 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.markupartist.android.widget.actionbar.R;
 
+/**
+ * Action bar that simulates android 4.0 action bar in android 2.3.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class ActionBar extends RelativeLayout implements OnClickListener {
     private final LayoutInflater layoutInflater;
     private final ViewGroup layoutView;
@@ -47,6 +56,11 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         setTitleType(titleType);
     }
 
+    /**
+     * Sets UP action.
+     *
+     * @param action the action
+     */
     public void setUpAction(Action action) {
         // make group visible
         ViewGroup upButtonLayout = (ViewGroup) layoutView.findViewById(R.id.actionbarUpLayout);
@@ -57,6 +71,11 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         upButtonLayout.addView(upActionView);
     }
 
+    /**
+     * Sets action bar title type.
+     *
+     * @param titleType the action bar title type
+     */
     public void setTitleType(TitleType titleType) {
         this.titleType = titleType;
 
@@ -135,10 +154,20 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         }
     }
 
+    /**
+     * Sets listener for title changes.
+     *
+     * @param titleChangeListener the listener
+     */
     public void setTitleChangeListener(TitleChangeListener titleChangeListener) {
         this.titleChangeListener = titleChangeListener;
     }
 
+    /**
+     * Sets title for label title types.
+     *
+     * @param title the title text
+     */
     public void setTitle(CharSequence title) {
         if (titleType == TitleType.LABEL) {
             titleTextView.setText(title);
@@ -147,6 +176,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         }
     }
 
+    /**
+     * Sets title for drop down title types.
+     *
+     * @param titleIndex the index of selected item
+     * @param dropDownItems the array of drop down items
+     */
     public void setTitle(int titleIndex, String[] dropDownItems) {
         this.dropDownItems = dropDownItems;
         if (titleType == TitleType.DROP_DOWN) {
@@ -157,6 +192,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         }
     }
 
+    /**
+     * Sets title for edit title types.
+     *
+     * @param title the title text
+     * @param selectAll if all text should be selected
+     */
     public void setTitle(CharSequence title, boolean selectAll) {
         if (titleType == TitleType.EDIT) {
             titleTextView.setText(title);
@@ -179,6 +220,11 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         progressBar.setVisibility(isVisible ? VISIBLE : GONE);
     }
 
+    /**
+     * OnClick listener for all action buttons.
+     *
+     * @param view the clicked action button
+     */
     @Override
     public void onClick(View view) {
         final Object tag = view.getTag();
@@ -191,6 +237,9 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         }
     }
 
+    /**
+     * Invalidate action button views.
+     */
     public void updateActions() {
         for (int i = 0; i < actionListView.getChildCount(); i++) {
             View childView = actionListView.getChildAt(i);
@@ -279,6 +328,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         return view;
     }
 
+    /**
+     * Update action button view with action data
+     *
+     * @param view the view to update
+     * @param action the action
+     */
     private static void updateView(View view, Action action) {
         // set action image
         ImageView imageView = (ImageView) view.findViewById(R.id.actionBarItemImage);
@@ -296,6 +351,9 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Definition of an action that could be performed, along with a icon to show.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
      */
     public static interface Action {
         int getDrawable();
@@ -305,10 +363,22 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         void performAction(View view);
     }
 
+    /**
+     * The base action that has drawable and text.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     public static abstract class AbstractAction implements Action {
         private final int drawable;
         private final String text;
 
+        /**
+         * Constructor for AbstractAction type.
+         *
+         * @param drawable the action icon
+         * @param text the action text
+         */
         public AbstractAction(int drawable, String text) {
             this.drawable = drawable;
             this.text = text;
@@ -325,6 +395,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         }
     }
 
+    /**
+     * The listener for title changes.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     public static interface TitleChangeListener {
         void onTitleChanged(CharSequence newTitle, int newTitlePosition);
     }
@@ -333,6 +409,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * Represents type of action bar title.
      *
      * @author TCSASSEMBLER
+     * @version 1.0
      */
     public static enum TitleType {
         LABEL,

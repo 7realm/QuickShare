@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package com.lib;
 
 import java.io.BufferedOutputStream;
@@ -12,7 +15,19 @@ import java.util.zip.ZipOutputStream;
 
 import android.util.Log;
 
+/**
+ * The zip utility that helps compressing and decompressing zip files.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class ZipUtility {
+    /**
+     * Zip folder to file.
+     *
+     * @param inputFolder the input folder
+     * @param zipFile the result file name
+     */
     public static final void zipFolder(File inputFolder, File zipFile) {
         ZipOutputStream zipStream = null;
         try {
@@ -26,6 +41,15 @@ public class ZipUtility {
         }
     }
 
+    /**
+     * Zip folder.
+     *
+     * @param inputFolder the current folder
+     * @param zipBaseFolder the root(initial input) folder
+     * @param zipFile the result zip file
+     * @param zipStream the result zip stream
+     * @throws IOException if error occurs
+     */
     private static final void zip(File inputFolder, File zipBaseFolder, File zipFile, ZipOutputStream zipStream) throws IOException {
         File[] files = inputFolder.listFiles();
         for (File file : files) {
@@ -43,6 +67,12 @@ public class ZipUtility {
         }
     }
 
+    /**
+     * Unzip file to path.
+     *
+     * @param zipFile the zip file
+     * @param extractTo the destination path
+     */
     public static final void unzip(File zipFile, File extractTo) {
         try {
             ZipFile archive = new ZipFile(zipFile);

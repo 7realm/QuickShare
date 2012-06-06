@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.data.ImageCenter;
@@ -27,15 +30,24 @@ import android.widget.Toast;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBarActivity;
 
+/**
+ * Activity that is used to edit lesson part.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class PartActivity extends ActionBarActivity {
-
+    /** Lesson ID intent extra. */
     public static final String EXTRA_LESSON_ID = "LESSON_ID";
+    /** Part ID intent extra. */
     public static final String EXTRA_PART_ID = "PART_ID";
+
     private Lesson lesson;
     private CaptionedPart lessonPart;
     private EditText captionEdit;
     private EditText descriptionEdit;
 
+    /** Change history per view for undo. */
     private final Map<View, Stack<CharSequence>> changeHistory = new HashMap<View, Stack<CharSequence>>();
 
     @Override

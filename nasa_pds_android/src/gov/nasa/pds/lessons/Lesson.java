@@ -16,9 +16,18 @@ import android.util.Log;
 
 import com.lib.Streams;
 
+/**
+ * Represents lesson.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class Lesson {
+    /** Lesson name. */
     private String name;
+    /** Lesson id.  */
     private int id;
+    /** List of lesson parts. */
     private final List<LessonPart> parts = new ArrayList<LessonPart>();
 
     public String getName() {
@@ -41,6 +50,12 @@ public class Lesson {
         return parts;
     }
 
+    /**
+     * Saves lesson.
+     *
+     * @param out the output stream
+     * @throws IOException if error occurs
+     */
     public void save(DataOutputStream out) throws IOException {
         // write general lesson information
         out.writeUTF(name);
@@ -56,6 +71,12 @@ public class Lesson {
         }
     }
 
+    /**
+     * Loads lesson.
+     *
+     * @param in input stream
+     * @throws IOException if error occurs
+     */
     public void load(DataInputStream in) throws IOException {
         try {
             // read general lesson information
@@ -79,6 +100,11 @@ public class Lesson {
         }
     }
 
+    /**
+     * Renders lesson to external cache dir.
+     *
+     * @param context the context
+     */
     public void render(Context context) {
         // create files dir
         File renderDir = context.getExternalCacheDir();

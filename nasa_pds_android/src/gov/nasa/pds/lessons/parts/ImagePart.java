@@ -17,6 +17,12 @@ import android.util.Log;
 
 import com.lib.Streams;
 
+/**
+ * Lesson part that represents image.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class ImagePart extends CaptionedPart{
     private long imageId;
 

@@ -13,6 +13,12 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Lesson part that represents {@link Mission}.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class MissionPart extends TextPart {
     private String duration;
     private String name;

@@ -18,6 +18,12 @@ import java.util.Map;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * The lesson repository. Manages lessons.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class LessonRepository {
     private static final String LESSON_DATA_FILE = "lesson.data.file";
     private static final Map<Integer, Lesson> LESSONS = new HashMap<Integer, Lesson>();
@@ -25,6 +31,11 @@ public class LessonRepository {
     private static int lastLessonId = 0;
     private static Context context;
 
+    /**
+     * Load lessons.
+     *
+     * @param context the context
+     */
     public static void load(Context context) {
         LessonRepository.context = context;
         DataInputStream in = null;
@@ -58,6 +69,9 @@ public class LessonRepository {
         }
     }
 
+    /**
+     * Save lessons.
+     */
     public static void save() {
         DataOutputStream out = null;
         try {
@@ -83,18 +97,40 @@ public class LessonRepository {
         }
     }
 
+    /**
+     * Get all lessons.
+     *
+     * @return lessons
+     */
     public static List<Lesson> getLessons() {
         return Collections.unmodifiableList(new ArrayList<Lesson>(LESSONS.values()));
     }
 
+    /**
+     * Count of lessons.
+     *
+     * @return the count of lessons
+     */
     public static int size() {
         return LESSONS.size();
     }
 
+    /**
+     * Get lesson by id.
+     *
+     * @param id the lesson id
+     * @return the lesson
+     */
     public static Lesson getLesson(int id) {
         return LESSONS.get(id);
     }
 
+    /**
+     * Add lesson.
+     *
+     * @param name lesson name
+     * @return created lesson
+     */
     public static Lesson addLesson(String name) {
         // create and add new lesson
         Lesson lesson = new Lesson();
@@ -107,6 +143,11 @@ public class LessonRepository {
         return lesson;
     }
 
+    /**
+     * Remove lesson by id.
+     *
+     * @param id the lesson id
+     */
     public static void removeLesson(int id) {
         LESSONS.remove(id);
         save();

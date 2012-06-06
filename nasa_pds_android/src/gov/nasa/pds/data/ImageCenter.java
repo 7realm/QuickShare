@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.data;
 
 import gov.nasa.pds.data.queries.ObjectQuery;
@@ -14,6 +17,12 @@ import android.util.Log;
 
 import com.lib.Streams;
 
+/**
+ * Class that loads and manages images.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class ImageCenter {
     private static File imagesDir;
 
@@ -22,14 +31,31 @@ public class ImageCenter {
             fileName.endsWith(".png") || fileName.endsWith(".gif") || fileName.endsWith(".jpg") || fileName.endsWith(".jpeg"));
     }
 
+    /**
+     * Init with context.
+     *
+     * @param context the context
+     */
     public static void init(Context context) {
         imagesDir = context.getDir("images", Context.MODE_PRIVATE);
     }
 
+    /**
+     * Check if file is image file.
+     *
+     * @param dataFile the file to check
+     * @return true if file is image file
+     */
     public static boolean isImageFile(WsDataFile dataFile) {
         return dataFile.getContent() == null ? isImage(dataFile.getFilename()) : isImage(dataFile.getName());
     }
 
+    /**
+     * Gets image file by given id.
+     *
+     * @param id the id of image
+     * @return the image file, can be null
+     */
     public static File getImage(long id) {
         // try get image from cache
         File imageFile = new File(imagesDir, Long.toString(id));
@@ -59,6 +85,12 @@ public class ImageCenter {
         return processDataFile(dataFile);
     }
 
+    /**
+     * Try to convert data file to image.
+     *
+     * @param dataFile the data file
+     * @return the converted image
+     */
     public static File processDataFile(WsDataFile dataFile) {
         if (dataFile == null) {
             return null;

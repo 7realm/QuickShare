@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package com.lib;
 
 import java.io.ByteArrayOutputStream;
@@ -8,6 +11,9 @@ import java.io.OutputStream;
 
 /**
  * Utility class for working with streams.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
  */
 public final class Streams {
     /**
@@ -130,11 +136,24 @@ public final class Streams {
         return baos.toString(pEncoding);
     }
 
-    // TODO to file
+    /**
+     * Write string content to stream.
+     *
+     * @param out the output stream
+     * @param content the content
+     * @throws IOException if error occurs
+     */
     public static void writeToStream(OutputStream out, String content) throws IOException {
         writeToStream(out, content.getBytes());
     }
 
+    /**
+     * Write byte content to stream.
+     *
+     * @param out the output stream
+     * @param content the content
+     * @throws IOException if error occurs
+     */
     public static void writeToStream(OutputStream out, byte[] content) throws IOException {
         try {
             out.write(content);
@@ -143,6 +162,11 @@ public final class Streams {
         }
     }
 
+    /**
+     * Close stream.
+     *
+     * @param stream the stream
+     */
     public static void close(Closeable stream) {
         try {
             if (stream != null) {

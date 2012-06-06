@@ -107,7 +107,6 @@ public enum EntityType {
         case FILE:
             return QueryType.GET_FILE;
         case IMAGE:
-            // TODO need this?
             return QueryType.GET_IMAGE;
         case TARGET_TYPE:
         default:

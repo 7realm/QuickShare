@@ -12,6 +12,12 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Lesson part that represents {@link Instrument}.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class InstrumentPart extends TextPart {
     private String type;
     private String host;

@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.android;
 
 import android.graphics.Bitmap;
@@ -10,6 +13,12 @@ import android.webkit.WebViewClient;
 import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBarActivity;
 
+/**
+ * Activity that previews lesson.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class WebViewActivity extends ActionBarActivity {
 
     public static final String EXTRA_WEB_URL = "WEB_URL";

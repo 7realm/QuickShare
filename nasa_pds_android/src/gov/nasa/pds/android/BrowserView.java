@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 TopCoder Inc., All Rights Reserved.
+ */
 package gov.nasa.pds.android;
 
 import gov.nasa.pds.data.DataCenter;
@@ -22,8 +25,14 @@ import android.widget.ViewFlipper;
 
 import com.markupartist.android.widget.actionbar.R;
 
+/**
+ * The view that shows paged results and allows navigation.
+ *
+ * @author TCSASSEMBLER
+ * @version 1.0
+ */
 public class BrowserView extends FrameLayout {
-    private ViewFlipper viewFlipper;
+    private final ViewFlipper viewFlipper;
     private final AtomicBoolean firstRun = new AtomicBoolean();
     private ResultsProvider provider;
     private Filter filter;
@@ -55,18 +64,36 @@ public class BrowserView extends FrameLayout {
         });
     }
 
+    /**
+     * Set listener for browse events.
+     *
+     * @param eventHandler the listener
+     */
     public void setEventHandler(BrowserEventHandler eventHandler) {
         this.eventHandler = eventHandler;
     }
 
+    /**
+     * Set filter for this browse view.
+     *
+     * @param filter the search filter
+     */
     public void setFilter(Filter filter) {
         this.filter = filter;
     }
 
+    /**
+     * Set browsed entity type.
+     *
+     * @param entityType the browsed entity type
+     */
     public void setEntityType(EntityType entityType) {
         this.entityType = entityType;
     }
 
+    /**
+     * Refresh view because of external changes.
+     */
     public void refresh() {
         // create provider for current filter
         provider = filter.createProvider(entityType);
@@ -209,7 +236,8 @@ public class BrowserView extends FrameLayout {
                 for (int i = 0; i < provider.getPageCount(); i++) {
                     ListView view = new ListView(getContext());
                     view.setAdapter(provider);
-                    viewFlipper.addView(view, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+                    viewFlipper.addView(view, new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT));
                 }
                 firstRun.set(false);
                 setPageCaption(1);
@@ -226,11 +254,30 @@ public class BrowserView extends FrameLayout {
         }
     }
 
+    /**
+     * The event listener for browse events.
+     *
+     * @author TCSASSEMBLER
+     * @version 1.0
+     */
     public static interface BrowserEventHandler {
+        /**
+         * When browse data is stated loading.
+         */
         void onStartDataLoad();
 
+        /**
+         * When browse data is finished loading.
+         *
+         */
         void onEndDataLoad();
 
+        /**
+         * When user navigates inside of some item.
+         *
+         * @param filter the current filter
+         * @param entityInfo the item that is navigated
+         */
         void onGoInside(Filter filter, EntityInfo entityInfo);
     }
 }
