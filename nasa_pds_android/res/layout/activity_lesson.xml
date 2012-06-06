@@ -56,7 +56,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:text="Drop to edit"
+                        android:text="Drop here to edit"
                         android:textAppearance="@android:style/TextAppearance.Small" />
 
                     <ImageView
@@ -87,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:text="Drop to remove"
+                        android:text="Drop here to remove"
                         android:textAppearance="@android:style/TextAppearance.Small" />
 
                     <ImageView

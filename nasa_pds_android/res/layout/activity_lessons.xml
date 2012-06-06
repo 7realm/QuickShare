@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/background"
     android:orientation="vertical" >
 
     <com.markupartist.android.widget.ActionBar
@@ -9,12 +10,13 @@
         style="@style/ActionBar" />
 
     <ListView
-        android:background="@drawable/background"
         android:id="@+id/lessonsList"
-        android:dividerHeight="0dp"
-        android:divider="@null"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:drawSelectorOnTop="false" />
+        android:background="@null"
+        android:cacheColorHint="@null"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:listSelector="@null" />
 
 </LinearLayout>

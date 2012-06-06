@@ -11,6 +11,6 @@
         <item>Files</item>
     </string-array>
     
-     <string name="about">This app is designed to help teachers to conduct lessons involving various space-related data. You can easily create amazing training material while browsing!&lt;br&gt;&lt;br&gt;For more details about data itself, please visit:&lt;br&gt;&lt;i&gt;http://pds.nasa.gov/&lt;/i&gt;</string>
+     <string name="about">This app is designed to help teachers to conduct lessons involving various space-related data. You can easily create amazing training material while browsing!&lt;br&gt;&lt;br&gt;&lt;i&gt;For more details about data itself, please visit NASA PDS website.&lt;/i&gt;</string>
 
 </resources>

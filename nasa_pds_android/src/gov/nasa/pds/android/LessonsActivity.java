@@ -41,7 +41,7 @@ public class LessonsActivity extends ActionBarActivity {
                     .setIcon(R.drawable.logo)
                     .setTitle(Html.fromHtml("<b>NASA</b><br>Planetary Data System"))
                     .setMessage(Html.fromHtml(getResources().getString(R.string.about)))
-                    .setPositiveButton("View site", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Visit website", new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
