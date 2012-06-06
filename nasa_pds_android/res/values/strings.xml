@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">NASA PDS</string>
+    <string name="url">50.19.174.233</string>
 
     <string-array name="entities_type">
         <item>Target Types</item>
@@ -11,6 +12,6 @@
         <item>Files</item>
     </string-array>
     
-     <string name="about">This app is designed to help teachers to conduct lessons involving various space-related data. You can easily create amazing training material while browsing!&lt;br&gt;&lt;br&gt;&lt;i&gt;For more details about data itself, please visit NASA PDS website.&lt;/i&gt;</string>
+    <string name="about">This app is designed to help teachers to conduct lessons involving various space-related data. You can easily create amazing training material while browsing!&lt;br&gt;&lt;br&gt;&lt;i&gt;For more details about data itself, please visit NASA PDS website.&lt;/i&gt;</string>
 
 </resources>

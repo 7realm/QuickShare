@@ -120,7 +120,7 @@ public class PartActivity extends ActionBarActivity {
         for (Stack<CharSequence> changes : changeHistory.values()) {
             if (changes.size() > 1) {
                 // show dialog if changes are not saved
-                new AlertDialog.Builder(this).setMessage("Lesson part has unsaved changed.")
+                new AlertDialog.Builder(this).setMessage("Lesson part has unsaved changes!")
                     .setPositiveButton("Save", new OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -176,7 +176,7 @@ public class PartActivity extends ActionBarActivity {
         updateTextForce();
 
         // notify about save
-        Toast.makeText(this, "Changes to lesson '" + lesson.getName() + "' saved.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Changes to lesson '" + lesson.getName() + "' are saved.", Toast.LENGTH_SHORT).show();
     }
 
     private final class UndoTextWatcher implements TextWatcher {

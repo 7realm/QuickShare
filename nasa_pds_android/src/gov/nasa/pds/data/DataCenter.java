@@ -4,6 +4,7 @@
 package gov.nasa.pds.data;
 
 import gov.nasa.pds.data.queries.FileQuery;
+import gov.nasa.pds.data.queries.GetPreviewImageQuery;
 import gov.nasa.pds.data.queries.ObjectQuery;
 import gov.nasa.pds.data.queries.PagedQuery;
 import gov.nasa.pds.soap.entities.PagedResults;
@@ -132,11 +133,7 @@ public class DataCenter {
         if (startIndent > 0 && startIndent < maxLength) {
             text = text.replaceAll("(?m)^\\s{" + startIndent + "}", "");
         }
-        // if (endIndent > 0 && endIndent < maxLength) {
-
-        text = text.replaceAll("(?m)[ |\\t]*$", "");
-        // }
-        return text;
+        return text.replaceAll("(?m)[ |\\t]*$", "");
     }
 
     /**
@@ -192,7 +189,7 @@ public class DataCenter {
     public static String executePreviewQuery(long id) {
         Log.i("soap", "Executing image preview query for image: " + id);
 
-        return executeObjectQuery(new ObjectQuery<String>(QueryType.GET_PREVIEW, id));
+        return (String) executeMethod(new GetPreviewImageQuery(id));
     }
 
     private static Object executeMethod(Query query) {

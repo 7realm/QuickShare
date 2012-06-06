@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><title>Archives</title><meta name="viewport" content="user-scalable=no, width=device-width" /><link rel="stylesheet" type="text/css" href="files/android.css" media="only screen and (max-width: 480px)" /><link rel="stylesheet" type="text/css" href="files/desktop.css" media="screen and (min-width: 481px)" /></head><body><h1>Archives</h1><hr><h2>File: fits_ihw.txt</h2><br><div class="description">***** File FITS_IHW.TXT<br><br>
+                        FITS Format Information<br><br>
+    All data were submitted to the International Halley Watch Lead Center on
+magnetic tape, written in FITS or ascii format.  There are three primary
+references to basic FITS (Wells et al, 1981) and its extensions (Greisen and
+Harten, 1981, Harten et al, 1988).  Although commonly viewed as a magnetic
+tape format, the actual FITS specifications can be interpreted to describe a
+general byte stream.  As such, FITS files may be written on any storage
+medium, including CD-ROM.  Note that there is no inherent record structure
+called for in the FITS agreements, only a blocking structure for block
+oriented media such as magnetic tape.<br><br>
+    The basic FITS agreements call for only a few required keywords (SIMPLE,
+BITPIX, NAXIS, END must be present; EXTEND may appear; keywords NAXIS1, ...,
+NAXISn appear as defined by the value of NAXIS).  We have also followed
+recommended conventions for the representation of values of keywords (dates in
+the format 'dd/mm/yy', SI units used where possible, etc.).  The IHW has
+defined an additional set of mandatory keywords for all submissions to the
+Lead Center.  These are presented in the table below:<br><br>
+    OBJECT   - Name of the object in the data file, a text string.
+    FILE-NUM - Unique 6-digit number of the file submitted to the Lead Center.
+               The first digit identifies the discipline, the other digits are
+               assigned by the individual Disciplines, but must uniquely
+               identify the file.
+    DATE-OBS - UT Date of mid-observation, in the format 'dd/mm/yy'.
+    TIME-OBS - UT Time of mid-observation, as fractional day.
+    DATE-REL - IHW internal release date for data, as date string.
+    DISCIPLN - Name of the network submitting the file, a text string.
+    LONG-OBS - Longitude of the submitting observatory, in the format
+               'ddd/mm/ss', with degrees from 0 to 360, increasing in the
+               eastward sense.
+<br>    LAT--OBS - Latitude of the submitting observatory, in the format<br>
+               'sdd/mm/ss'.
+    SYSTEM   - An 8-digit coded character string identifying the Discipline,
+               observatory and instrument which supplied the data. The first
+               character identifies the network, the next three identify the
+               observatory (by IAU code number, where one is assigned, 500
+               otherwise). The next four digits either identify the
+               telescope/instrument combination (if there is an IAU number for
+               the observatory) or the country and observatory (if no IAU
+               number).
+    OBSERVER - Name of the observer(s) who took the data, a text string. The
+               notation "ET AL." indicates that there were more than two
+               observers, and the names of the additional observers are given
+               in a COMMENT later in the header, with the subkeyword "ADD.
+               OBS."
+    SUBMITTR - Name of the person submitting the data to the Lead Center, a
+               text string.
+    SPEC-EVT - A logical value indicating that the observation is a special
+               event.  Either T or F.
+    DAT-FORM - A character string defining the form of the data, e.g.,
+               'ASCII', 'NODATA'.<br><br>
+                                REFERENCES<br><br>
+Greisen, E. W. and Harten, R. H.: 1981, Astron. Astrophys. Suppl. Ser.
+  44, 371.
+Harten, R. H., Grosbol, P., Greisen, E. W. and Wells, D. C.: 1988,
+  Astron. Astrophys. Suppl. Ser. 73, 365.
+Wells, D. C., Greisen, E. W. and Harten, R. H.: 1981, Astron. Astrophys.
+  Suppl. Ser. 44, 363.</div><ul class="links"></ul><hr><h2>File: pds_ihw.txt</h2><br><div class="description">***** File PDS_IHW.TXT<br><br>
+                               PDS LABELS<br><br>
+     The International Halley Watch agreed early in the project that all data
+would be submitted from the individual scientists to the Lead Center using
+the FITS format (Wells et al., 1981).  When the decision was made to
+distribute this information on CD-ROM, it was determined that the data had to
+have even broader accessibility.  For this reason the original FITS files,
+with contiguous headers and data, were split into separate files
+distinguishable by their filename extensions (.HDR for headers).  The file
+sizes were preserved as multiples of 2880 bytes, allowing the original FITS
+byte stream to be recovered by concatenating the appropriate header and
+datafile.<br><br>
+     In addition, detached (PDS) labels were constructed to allow parallel
+definition of the data files for the Planetary Data System (PDS). The
+reference for this project are as follows: SPIDS, Standards for the
+Preparation and Interchange of Data Sets, Martin, T. Z., et al, V1.1, JPL
+D-4683, 10/3/88; Planetary Data System, Data Preparation Workbook, Volume 2,
+Standards, V2.0, JPL D-7669, 05/03/91; and Planetary Data System, Standards
+Reference, V3.0, JPL D-7669, part 2, 11/20/92.<br><br>
+     There are three data objects in this archive: ARRAY (COLLECTION), IMAGE,
+TABLE (TIME_SERIES as a subset).  Our aim was to construct a PDS label for
+each data file on the CD-ROM. These PDS labels contain pointers to the actual
+data files (or to headers describing data submitted to the archive). There has
+been no effort to duplicate the documentation contained in the full FITS
+headers because the PDS and FITS headers for a given data file differ only in
+the filename extension.  Instead we have attempted to use the power of the PDS
+label syntax to fully describe the data structures and thus gain access to the
+powerful software already supported by that group.<br><br>
+     Most keywords were already in the Planetary Science Data Dictionary but a
+few dealing with the ARRAY and TIME_SERIES were introduced to specifically
+describe the IHW data.   A listing of these keywords with definitions follow.<br><br>
+BYTES
+    The number of bytes constituting a single data item<br><br>
+COLUMNS
+    The number of items of information in each row of a data table<br><br>
+CONTAINER
+    The container object allows for description of 2-d array data.<br><br>
+DATA_SET_ID
+    A unique alphanumeric identifier for a data set.  It is used as a
+    primary key in the PDS catalog.<br><br>
+DATA_SET_PARAMETER_NAME
+    The name of the physical parameter represented in an image.  Note
+    this definition differs from the PDS data dictionary definition.<br><br>
+DATA_TYPE
+    The data type of a data item.  Valid values are INTEGER, REAL, DATE,
+    TIME, and CHARACTER.<br><br>
+DERIVED_MAXIMUM
+    The maximum value occurring in the file for a given field<br><br>
+DERIVED_MINIMUM
+    The minimum value occurring in the file for a given field<br><br>
+DESCRIPTION
+    Text describing an object.  Sometimes this is expressed as a pointer
+    to another file containing the descriptive text; e.g., FITS header.<br><br>
+END_OBJECT
+    This keyword is used by ODL to indicate the end of a data object
+    definition.<br><br>
+FILE_RECORDS
+    The number of physical records in a data file<br><br>
+FORMAT
+    The Fortran 77 representation of the format statement needed to read
+    a data item in an ASCII file<br><br>
+IMAGE
+    The data in an image file, expressed as a pointer to the record
+    where the data begins.  For example, ^IMAGE = ("filename",3)
+    indicates that image data begins in record 3 of file "filename".<br><br>
+INTERCHANGE_FORMAT
+    The type of data stored in a file; either "ASCII" or "BINARY"<br><br>
+ITEMS
+    Elements held in any arbitrary variable<br><br>
+ITEM_BYTES
+    Number of bytes per item<br><br>
+LINES
+    The number of lines in an image<br><br>
+LINE_SAMPLES
+    The number of samples contained in each image line<br><br>
+MINIMUM_SAMPLING_PARAMETER
+    For the spectrum object, the first value along the fastest
+    varying axis<br><br>
+NAME
+    The name of a column in a table<br><br>
+NOTE
+    Descriptive text about a data file, referring to IHW disciplines<br><br>
+OBJECT
+    This keyword specifies the type of a data object.  It is used by ODL
+    to indicate the start of a data object definition.<br><br>
+OBSERVATION_TIME
+    As used by the International Halley Watch, the time at the midpoint of
+    an observation.<br><br>
+OBSERVATION_ID
+    A unique number which identifies each archived measurement gathered by
+    the International Halley Watch.<br><br>
+OFFSET
+    A shift in zero point required to properly calculate the reduced
+    value represented in a FITS data record<br><br>
+PRODUCER_FULL_NAME
+    The full name of those mainly responsible for production of
+    a data set<br><br>
+RECORDS
+    The number of records in the object being described; for example,
+    the number of records in a header object<br><br>
+RECORD_BYTES
+    The number of bytes in each record of a data file<br><br>
+RECORD_TYPE
+    The record structure type of a data file.  Valid values are
+    FIXED_LENGTH, VARIABLE_LENGTH, and STREAM.  Images and data tables
+    usually have fixed-length records, whereas text files have stream
+    format records.<br><br>
+REPETITIONS
+    The number times a repeating data item recurs<br><br>
+ROWS
+    The number of logical records in a data table<br><br>
+ROW_BYTES
+    The number of bytes in each row (i.e., logical record) of a data
+    table<br><br>
+SAMPLE_BITS
+    The number of bits of data comprising one sample or pixel in an
+    image, or element in other objects<br><br>
+SAMPLE_TYPE
+    The data type of an image sample or pixel.  The table below lists
+    the values used on this CD-ROM:
+      UNSIGNED_INTEGER   An unsigned integer value.  Samples with a
+                         length of 16 bits are in most-significant-byte
+                         first order.
+      MSB_INTEGER        A signed integer with most-significant-byte
+                         leading as required by FITS format
+      COMPLEX_INTEGER    The value represented in a process step
+                         (UVFITS) for certain types of radio data<br><br>
+SAMPLING_PARAMETER_INTERVAL
+    Unit of change of the independent variable (assumed to be constant)<br><br>
+SAMPLING_PARAMETER_ITEMS
+    Number of elements along independent axis<br><br>
+SAMPLING_PARAMETER_NAME
+    Name associated with the independent variable<br><br>
+SAMPLING_PARAMETER_UNIT
+    Unit associated with the independent variable<br><br>
+SCALING_FACTOR
+    The factor that must be applied to the FITS data record to scale
+    the values as described by UNIT<br><br>
+START_BYTE
+    The byte position of the beginning of a data item within a row of
+    data.  The first item will have a START_BYTE of 1.<br><br>
+START_TIME
+    The date and time of the beginning of an event, such as data
+    collection, in PDS standard (UTC) format<br><br>
+TARGET_NAME
+    The name of a planetary body, such as a planet or satellite<br><br>
+TEXT
+    The object which contains an ASCII string with no formatting characters<br><br>
+TIME_SERIES
+    The object in a form of a table that stores a sequence of measurements
+    taken at regular intervals of time<br><br>
+UNIT
+    The units of measure of a data item<br><br>
+REFERENCES<br><br>
+Martin, T.Z., Martin, M.D., Davis, R.L., Mehlman, R., Braun, M., Johnson
+M.: October 3, 1988, Standards for the Preparation and Interchange of
+Data Sets, Version 1.1, JPL D-4683.<br><br>
+Planetary Data System. Data Preparation Workbook, Volume 2, Standards,
+V2.0, JPL D-7669, May 3, 1991.<br><br>
+Planetary Data System, Standards Reference, V3.0, JPL D-7669, part 2,
+November 20, 1992.<br><br>
+Wells, D.C., Greisen, E.W., and Harten, R.H.: 1981, Astron. Astrophys.
+Suppl. Ser. 44, 363.</div><ul class="links"></ul><hr><div class="imageBlock"><img class="image" src="files/24407" alt="Image is not loaded"><br><div class="imageCaption">24407</div></div><hr></body>

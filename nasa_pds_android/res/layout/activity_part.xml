@@ -59,7 +59,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="14dp"
             android:layout_marginTop="14dp"
-            android:text="Description" />
+            android:text="Content:" />
 
         <com.lib.TwoDScrollView
             android:layout_width="match_parent"
