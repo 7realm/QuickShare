@@ -3,11 +3,14 @@
  */
 package gov.nasa.pds.data.queries;
 
+import gov.nasa.pds.data.Query;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.calls.GetDataFileResponse;
 import gov.nasa.pds.soap.calls.GetInstrumentResponse;
 import gov.nasa.pds.soap.calls.GetMissionResponse;
 import gov.nasa.pds.soap.calls.GetObjectRequest;
+import gov.nasa.pds.soap.calls.GetPreviewImageURLRequest;
+import gov.nasa.pds.soap.calls.GetPreviewImageURLResponse;
 import gov.nasa.pds.soap.calls.GetTargetResponse;
 
 import org.ksoap2.SoapEnvelope;
@@ -73,11 +76,30 @@ public class ObjectQuery<T> extends BaseQuery {
             envelope.addMapping("getDataFile", GetObjectRequest.class);
             envelope.addMapping("getDataFileResponse", GetDataFileResponse.class);
             break;
+        case GET_PREVIEW:
+            envelope.addMapping("getPreviewImageURL", GetPreviewImageURLRequest.class);
+            envelope.addMapping("getPreviewImageURLResponse", GetPreviewImageURLResponse.class);
+            break;
         default:
             Log.w("soap", "Not expected object request: " + getQueryType());
             break;
         }
         return envelope;
+    }
+
+    @Override
+    public boolean equalsQuery(Query other) {
+        if (other instanceof ObjectQuery<?>) {
+            ObjectQuery<?> objectQuery = (ObjectQuery<?>) other;
+
+            return super.equalsQuery(objectQuery) && objectQuery.id == id;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() * 23 + new Long(id).hashCode();
     }
 
 }

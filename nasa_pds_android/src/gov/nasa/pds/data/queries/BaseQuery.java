@@ -33,4 +33,24 @@ public abstract class BaseQuery implements Query {
     public QueryType getQueryType() {
         return queryType;
     }
+
+    @Override
+    public boolean equalsQuery(Query other) {
+        if (other instanceof BaseQuery) {
+            BaseQuery baseQuery = (BaseQuery) other;
+
+            return baseQuery.queryType == queryType;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Query ? equalsQuery((Query) other) : false;
+    }
+
+    @Override
+    public int hashCode() {
+        return queryType.hashCode();
+    }
 }

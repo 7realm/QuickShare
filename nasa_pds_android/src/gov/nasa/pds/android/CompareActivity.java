@@ -196,6 +196,7 @@ public class CompareActivity extends Activity {
                 PagedResults results = DataCenter.executePagedQuery(query);
 
                 // add all results to instruments data
+                item.getInstruments().clear();
                 for (Object object : results.getResults()) {
                     item.getInstruments().add((EntityInfo) object);
                 }

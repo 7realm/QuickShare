@@ -4,6 +4,7 @@
 package gov.nasa.pds.data.queries;
 
 import gov.nasa.pds.data.EntityType;
+import gov.nasa.pds.data.Query;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.calls.GetTargetTypesInfoRequest;
 import gov.nasa.pds.soap.calls.GetTargetTypesInfoResponse;
@@ -50,4 +51,8 @@ public class TypesPagedQuery extends PagedQuery {
             .addMapping("results", EntityInfo.class);
     }
 
+    @Override
+    public boolean equalsQuery(Query other) {
+        return other instanceof TypesPagedQuery;
+    }
 }

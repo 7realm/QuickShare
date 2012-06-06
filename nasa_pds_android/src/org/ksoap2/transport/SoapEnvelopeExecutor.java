@@ -71,7 +71,7 @@ public class SoapEnvelopeExecutor {
             // get multipart boundary
             byte[] boundary = getBoundary(contentTypeHeader.getValue());
 
-            // parse content as multi part stream
+            // parse content as multipart stream
             MultipartStream multipartStream = new MultipartStream(response.getEntity().getContent(), boundary);
             boolean nextPart = multipartStream.skipPreamble();
             if (nextPart) {

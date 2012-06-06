@@ -25,4 +25,12 @@ public interface Query {
      * @return created envelope
      */
     SoapSerializationEnvelope getEnvelope();
+
+    /**
+     * Checks if query is equal to other query.
+     *
+     * @param other the other query to compare
+     * @return true if queries are equal, false otherwise
+     */
+    boolean equalsQuery(Query other);
 }

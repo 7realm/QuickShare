@@ -4,7 +4,6 @@
 package gov.nasa.pds.data;
 
 import gov.nasa.pds.data.queries.FileQuery;
-import gov.nasa.pds.data.queries.GetPreviewImageQuery;
 import gov.nasa.pds.data.queries.ObjectQuery;
 import gov.nasa.pds.data.queries.PagedQuery;
 import gov.nasa.pds.soap.entities.PagedResults;
@@ -15,6 +14,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,6 +49,8 @@ public class DataCenter {
     private static final Pattern MAX_LENGTH = Pattern.compile("^.*$", Pattern.MULTILINE);
 
     private static final String URL_PATTERN = "http://%s:8080/nasa_pds_ws/services/PlanetaryDataSystemPort";
+
+    private static final Map<Query, Object> CACHE = new HashMap<Query, Object>();
 
     private static String url = "50.19.174.233";
 
@@ -145,7 +148,7 @@ public class DataCenter {
     public static PagedResults executePagedQuery(PagedQuery query) {
         Log.i("soap", "Executing paged query: " + query.getQueryType());
 
-        PagedResults result = (PagedResults) executeMethod(query.getEnvelope());
+        PagedResults result = (PagedResults) executeMethod(query);
 
         if (result == null) {
             result = new PagedResults();
@@ -169,7 +172,7 @@ public class DataCenter {
             if (query.getQueryType() == QueryType.GET_IMAGE) {
                 return (T) ImageCenter.getImage(query.getId());
             } else if (query.getQueryType() == QueryType.GET_FILE) {
-                WsDataFile dataFile = (WsDataFile) executeMethod(query.getEnvelope());
+                WsDataFile dataFile = (WsDataFile) executeMethod(query);
 
                 // try process result as image
                 File potentialImage = ImageCenter.processDataFile(dataFile);
@@ -177,7 +180,7 @@ public class DataCenter {
             }
         }
 
-        return (T) executeMethod(query.getEnvelope());
+        return (T) executeMethod(query);
     }
 
     /**
@@ -189,15 +192,25 @@ public class DataCenter {
     public static String executePreviewQuery(long id) {
         Log.i("soap", "Executing image preview query for image: " + id);
 
-        return (String) executeMethod(new GetPreviewImageQuery(id).getEnvelope());
+        return executeObjectQuery(new ObjectQuery<String>(QueryType.GET_PREVIEW, id));
     }
 
-    private static Object executeMethod(SoapSerializationEnvelope envelope) {
+    private static Object executeMethod(Query query) {
+        // check cache
+        if (CACHE.containsKey(query)) {
+            return CACHE.get(query);
+        }
+
         try {
             // execute soap call
+            SoapSerializationEnvelope envelope = query.getEnvelope();
             SoapEnvelopeExecutor.executeSoap(String.format(URL_PATTERN, url), envelope);
 
-            return envelope.getResponse();
+            // store response in cache
+            Object response = envelope.getResponse();
+            CACHE.put(query, response);
+
+            return response;
         } catch (SoapFault soapFault) {
             Log.e("soap", "Soap fault : " + soapFault.faultstring);
         } catch (IOException e) {

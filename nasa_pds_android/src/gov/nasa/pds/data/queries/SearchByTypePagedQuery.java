@@ -4,6 +4,7 @@
 package gov.nasa.pds.data.queries;
 
 import gov.nasa.pds.data.EntityType;
+import gov.nasa.pds.data.Query;
 import gov.nasa.pds.data.QueryType;
 import gov.nasa.pds.soap.calls.SearchEntitiesByTypeRequest;
 import gov.nasa.pds.soap.calls.SearchEntitiesByTypeResponse;
@@ -73,5 +74,22 @@ public class SearchByTypePagedQuery extends PagedQuery {
     @Override
     public EntityType getEntityType() {
         return entityType;
+    }
+
+    @Override
+    public boolean equalsQuery(Query other) {
+        if (other instanceof SearchByTypePagedQuery) {
+            SearchByTypePagedQuery searchQuery = (SearchByTypePagedQuery) other;
+
+            return super.equalsQuery(other) && text.equals(searchQuery.text) && entityType == searchQuery.entityType;
+        }
+        return super.equalsQuery(other);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode() * 23 + text.hashCode();
+        result = result * 23 + entityType.ordinal();
+        return result ;
     }
 }
