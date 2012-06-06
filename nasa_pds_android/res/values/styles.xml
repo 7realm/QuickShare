@@ -4,16 +4,10 @@
     <style name="NasaAppTheme" parent="android:Theme.NoTitleBar">
     </style>
 
-    <style name="homeIconStyle">
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:layout_width">@dimen/home_icon_size</item>
-        <item name="android:layout_height">@dimen/home_icon_size</item>
-    </style>
-
-    <style name="theme_line_style">
+    <style name="TableRowDivider">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/theme_line_height</item>
-        <item name="android:background">@color/theme_line</item>
+        <item name="android:layout_height">@dimen/table_row_divider_height</item>
+        <item name="android:background">@color/table_row_divider</item>
     </style>
 
 </resources>

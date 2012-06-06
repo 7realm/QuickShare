@@ -10,10 +10,10 @@
             android:layout_column="1"
             android:text="Name:" />
 
-        <TextView
-            android:id="@+id/instrumentName"/>
-
+        <TextView android:id="@+id/instrumentName" />
     </TableRow>
+
+    <FrameLayout style="@style/TableRowDivider" />
 
     <TableRow android:background="@color/table_second" >
 
@@ -24,6 +24,8 @@
         <TextView android:id="@+id/instrumentType" />
     </TableRow>
 
+    <FrameLayout style="@style/TableRowDivider" />
+
     <TableRow android:background="@color/table_first" >
 
         <TextView
@@ -32,5 +34,6 @@
 
         <TextView android:id="@+id/instrumentHost" />
     </TableRow>
+    <FrameLayout style="@style/TableRowDivider" />
 
 </TableLayout>

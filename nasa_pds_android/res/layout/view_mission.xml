@@ -14,7 +14,7 @@
         <TextView android:id="@+id/missionName" />
     </TableRow>
 
-    <FrameLayout style="@style/theme_line_style" />
+    <FrameLayout style="@style/TableRowDivider" />
 
     <TableRow android:background="@color/table_second" >
 
@@ -25,7 +25,7 @@
         <TextView android:id="@+id/missionStartDate" />
     </TableRow>
 
-    <FrameLayout style="@style/theme_line_style" />
+    <FrameLayout style="@style/TableRowDivider" />
 
     <TableRow android:background="@color/table_first" >
 
@@ -36,7 +36,7 @@
         <TextView android:id="@+id/missionEndDate" />
     </TableRow>
 
-    <FrameLayout style="@style/theme_line_style" />
+    <FrameLayout style="@style/TableRowDivider" />
 
     <TableRow android:background="@color/table_second" >
 
@@ -47,6 +47,6 @@
         <TextView android:id="@+id/missionDuration" />
     </TableRow>
 
-    <FrameLayout style="@style/theme_line_style" />
+    <FrameLayout style="@style/TableRowDivider" />
 
 </TableLayout>

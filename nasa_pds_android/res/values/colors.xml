@@ -3,11 +3,10 @@
 
     <color name="theme_main">#FF000000</color>
     <color name="theme_sub">#FFE35900</color>
-    <color name="theme_line">#000</color>
     
     <color name="table_first">#044766</color>
     <color name="table_second">#2b8ab3</color>
-    <color name="table_line">#0488c9</color>
+    <color name="table_row_divider">#000</color>
     
     <color name="lesson_button_first">#70044766</color>
     <color name="lesson_button_second">#702b8ab3</color>
